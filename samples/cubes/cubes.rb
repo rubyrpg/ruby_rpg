@@ -1,4 +1,4 @@
-require_relative "../../src/engine/engine"
+require_relative "../../lib/engine/engine"
 
 ROOT = File.expand_path(File.join(__dir__))
 ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))

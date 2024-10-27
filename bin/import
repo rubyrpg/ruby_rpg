@@ -2,11 +2,11 @@
 
 # frozen_string_literal: true
 
-require_relative '../src/engine/importers/font_importer'
-require_relative '../src/engine/importers/obj_importer'
-require_relative '../src/engine/importers/obj_file'
-require_relative '../src/engine/path'
-require_relative '../src/engine/tangent_calculator'
+require_relative '../lib/engine/importers/font_importer'
+require_relative '../lib/engine/importers/obj_importer'
+require_relative '../lib/engine/importers/obj_file'
+require_relative '../lib/engine/path'
+require_relative '../lib/engine/tangent_calculator'
 
 require 'fileutils'
 require "rmagick"

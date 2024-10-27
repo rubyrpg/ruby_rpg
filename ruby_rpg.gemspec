@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
   s.description = "A Ruby game engine using OpenGL and GLFW"
-  s.files = ["src/ruby_rpg.rb"]
+  s.files = ["lib/ruby_rpg.rb"]
   s.homepage = "https://github.com/rubyrpg/ruby_rpg"
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
