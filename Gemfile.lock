@@ -2,6 +2,8 @@ PATH
   remote: .
   specs:
     ruby_rpg (0.0.1)
+      concurrent-ruby
+      opengl-bindings2 (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
