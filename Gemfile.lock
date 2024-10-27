@@ -1,3 +1,8 @@
+PATH
+  remote: .
+  specs:
+    ruby_rpg (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -44,6 +49,7 @@ DEPENDENCIES
   pry (~> 0.14)
   rmagick (~> 6.0, >= 6.0.1)
   rspec (~> 3.13)
+  ruby_rpg!
 
 BUNDLED WITH
    2.5.6
