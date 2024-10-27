@@ -1,4 +1,4 @@
-require_relative "../../src/engine/engine"
+require_relative "../../lib/engine/engine"
 require "pry"
 
 ROOT = File.expand_path(File.join(__dir__))

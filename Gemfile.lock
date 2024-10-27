@@ -1,3 +1,14 @@
+PATH
+  remote: .
+  specs:
+    ruby_rpg (0.0.1)
+      chunky_png (~> 1.4)
+      concurrent-ruby
+      matrix (~> 0.3)
+      opengl-bindings2 (~> 2.0)
+      os
+      rmagick (~> 6.0, >= 6.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -36,14 +47,9 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
-  chunky_png (~> 1.4)
-  concurrent-ruby
-  matrix (~> 0.3)
-  opengl-bindings2 (~> 2.0)
-  os
   pry (~> 0.14)
-  rmagick (~> 6.0, >= 6.0.1)
   rspec (~> 3.13)
+  ruby_rpg!
 
 BUNDLED WITH
    2.5.6

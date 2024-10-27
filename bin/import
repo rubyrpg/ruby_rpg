@@ -2,11 +2,11 @@
 
 # frozen_string_literal: true
 
-require_relative '../src/engine/importers/font_importer'
-require_relative '../src/engine/importers/obj_importer'
-require_relative '../src/engine/importers/obj_file'
-require_relative '../src/engine/path'
-require_relative '../src/engine/tangent_calculator'
+require_relative '../lib/engine/importers/font_importer'
+require_relative '../lib/engine/importers/obj_importer'
+require_relative '../lib/engine/importers/obj_file'
+require_relative '../lib/engine/path'
+require_relative '../lib/engine/tangent_calculator'
 
 require 'fileutils'
 require "rmagick"
@@ -21,8 +21,8 @@ fonts = Dir.glob("#{assets_path}/**/*.ttf")
 puts "found #{fonts.size} fonts"
 fonts.each do |font|
   puts "importing #{font}"
-  destination_image = (font.gsub(assets_path, "")).gsub(/\.ttf$/, '.png')
-  destination_font_metrics = (font.gsub(assets_path, "")).gsub(/\.ttf$/, '.json')
+  destination_image = (font.delete_prefix(assets_path)).gsub(/\.ttf$/, '.png')
+  destination_font_metrics = (font.delete_prefix(assets_path)).gsub(/\.ttf$/, '.json')
 
   destination_path = File.join(assets_path, '_imported', destination_image)
   destination_font_metrics_file = File.join(assets_path, '_imported', destination_font_metrics)
@@ -35,8 +35,8 @@ obj_files = Dir.glob("#{assets_path}/**/*.obj")
 puts "found #{obj_files.size} obj files"
 obj_files.each do |obj_file|
   puts "importing #{obj_file}"
-  destination_vertex = (obj_file.gsub(assets_path, "")).gsub(/\.obj$/, '.vertex_data')
-  destination_index = (obj_file.gsub(assets_path, "")).gsub(/\.obj$/, '.index_data')
+  destination_vertex = (obj_file.delete_prefix(assets_path)).gsub(/\.obj$/, '.vertex_data')
+  destination_index = (obj_file.delete_prefix(assets_path)).gsub(/\.obj$/, '.index_data')
   destination_vertex_path = File.join(assets_path, '_imported', destination_vertex)
   destination_index_path = File.join(assets_path, '_imported', destination_index)
   puts "  -> #{destination_vertex_path}, #{destination_index_path}"
