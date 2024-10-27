@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_rpg (0.0.1)
+    ruby_rpg (0.0.2)
       chunky_png (~> 1.4)
       concurrent-ruby
       matrix (~> 0.3)

@@ -1,11 +1,12 @@
 Gem::Specification.new do |s|
   s.name = 'ruby_rpg'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.authors = ['Max Hatfull']
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
   s.description = "A Ruby game engine using OpenGL and GLFW"
-  s.files = ["lib/ruby_rpg.rb"]
+  s.files = Dir.glob("{lib,glfw-3.3.9.bin.MACOS,glfw-3.4.bin.WIN64,bin}/**/*") + ["README.md"]
+  s.require_paths = ["lib"]
   s.homepage = "https://github.com/rubyrpg/ruby_rpg"
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
