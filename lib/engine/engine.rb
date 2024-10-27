@@ -43,7 +43,7 @@ require_relative "physics/components/rigidbody"
 if OS.windows?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "..", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))
 elsif OS.mac?
-  GLFW.load_lib("libglfw.dylib") # Give path to "glfw3.dll (Windows)" or "libglfw.dylib (macOS)" if needed
+  GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "..", "glfw-3.3.9.bin.MACOS", "lib-arm64", "libglfw.3.dylib")))
 end
 GLFW.Init
 
