@@ -9,6 +9,8 @@ You can find full instructions on th [wiki](https://github.com/rubyrpg/ruby_rpg/
 
 ## Usage
 You can find docs and guides on the [wiki](https://github.com/rubyrpg/ruby_rpg/wiki).
+For a basic example to get you up off the ground take a look at [hello_ruby_rpg](https://github.com/rubyrpg/hello_ruby_rpg).
+For some more complex examples you can take a look in the samples folder of this repo.
 
 ## Contributing
 1. Fork it
