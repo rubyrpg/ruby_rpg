@@ -21,7 +21,7 @@ module Engine
       end
 
       if key == GLFW::KEY_BACKSPACE
-        Engine.breakpoint { binding.pry }
+        Engine::Debugging.breakpoint { binding.pry }
         # Engine.breakpoint { debugger }
       end
 
