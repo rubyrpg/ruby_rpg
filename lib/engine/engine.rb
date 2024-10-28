@@ -1,12 +1,5 @@
 # frozen_string_literal: true
 
-if OS.windows?
-  GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "..", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))
-elsif OS.mac?
-  GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "..", "glfw-3.3.9.bin.MACOS", "lib-arm64", "libglfw.3.dylib")))
-end
-GLFW.Init
-
 module Engine
   def self.start(base_dir:, &first_frame_block)
     load(base_dir)
@@ -104,11 +97,6 @@ module Engine
     @fps
   end
 
-  def self.terminate
-    GLFW.DestroyWindow(Window.window)
-    GLFW.Terminate
-  end
-
   def self.close
     GameObject.destroy_all
     GLFW.SetWindowShouldClose(Window.window, 1)
@@ -121,6 +109,11 @@ module Engine
   end
 
   private
+
+  def self.terminate
+    GLFW.DestroyWindow(Window.window)
+    GLFW.Terminate
+  end
 
   def self.print_fps(delta_time)
     @time_since_last_fps_print = (@time_since_last_fps_print || 0) + delta_time
