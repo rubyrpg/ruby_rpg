@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Engine
-  def self.start(base_dir:, &first_frame_block)
-    load(base_dir)
+  def self.start(&first_frame_block)
+    load(File.dirname($PROGRAM_NAME))
     return if ENV["BUILDING"] == "true"
 
     open_window

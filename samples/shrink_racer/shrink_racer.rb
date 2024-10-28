@@ -4,7 +4,7 @@ require "pry"
 ROOT = File.expand_path(File.join(__dir__))
 ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
 
-Engine.start(base_dir: File.dirname(__FILE__)) do
+Engine.start do
   include ShrinkRacer
 
   Engine::GameObject.new(

@@ -3,7 +3,7 @@ require_relative "../../lib/ruby_rpg"
 ROOT = File.expand_path(File.join(__dir__))
 ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
 
-Engine.start(base_dir: File.dirname(__FILE__)) do
+Engine.start do
   include Cubes
   # (-3..3).each do |x|
   #   Plane.create(Vector[x * 100, 100, -100], Vector[0,0,0], 100)
