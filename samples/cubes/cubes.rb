@@ -1,4 +1,4 @@
-require_relative "../../lib/engine/engine"
+require_relative "../../lib/ruby_rpg"
 
 ROOT = File.expand_path(File.join(__dir__))
 ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
