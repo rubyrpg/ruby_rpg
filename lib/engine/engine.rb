@@ -1,45 +1,4 @@
-require 'opengl'
-require 'glfw'
-require 'concurrent'
-require 'os'
-
-require_relative "debugging"
-require_relative 'rendering/render_pipeline'
-require_relative 'rendering/instance_renderer'
-require_relative 'screenshoter'
-require_relative 'input'
-require_relative "quaternion"
-require_relative 'game_object'
-require_relative 'texture'
-require_relative 'material'
-require_relative 'mesh'
-require_relative "font"
-require_relative 'path'
-require_relative 'polygon_mesh'
-require_relative 'importers/obj_file'
-require_relative 'tangent_calculator'
-require_relative 'shader'
-require_relative 'component'
-require_relative "camera"
-require_relative "window"
-require_relative "video_mode"
-require_relative "cursor"
-
-require_relative "components/orthographic_camera"
-require_relative "components/perspective_camera"
-require_relative "components/sprite_renderer"
-require_relative "components/ui_sprite_renderer"
-require_relative "components/mesh_renderer"
-require_relative "components/font_renderer"
-require_relative "components/ui_font_renderer"
-require_relative "components/point_light"
-require_relative "components/direction_light"
-
-require_relative "physics/physics_resolver"
-require_relative 'physics/collision'
-require_relative "physics/components/sphere_collider"
-require_relative "physics/components/cube_collider"
-require_relative "physics/components/rigidbody"
+# frozen_string_literal: true
 
 if OS.windows?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "..", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))

@@ -14,7 +14,7 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require_relative "../lib/engine/engine"
+require_relative "../lib/ruby_rpg"
 require_relative "support/test_driver"
 
 Dir[File.join(__dir__,"support", "**/*.rb")].each {|f| require f}
