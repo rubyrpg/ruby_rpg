@@ -5,10 +5,10 @@ It is designed to be easy to use and easy to extend.
 It is still in the early stages of development, but it is already capable of rendering both 2D and 3D graphics.
 
 ## Installation
-TODO: Write installation instructions here
+You can find full instructions on th [wiki](https://github.com/rubyrpg/ruby_rpg/wiki/Installation).
 
 ## Usage
-TODO: Write usage instructions here
+You can find docs and guides on the [wiki](https://github.com/rubyrpg/ruby_rpg/wiki).
 
 ## Contributing
 1. Fork it
