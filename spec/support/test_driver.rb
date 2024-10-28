@@ -46,10 +46,10 @@ module TestDriver
     $current_tick ||= 0
   end
 
-  def within_game_context(frame_duration: 0.1, load_path:, &block)
+  def within_game_context(frame_duration: 0.1, load_path: nil, &block)
     set_tick(0)
     allow(Time).to(receive(:now)) { current_tick * frame_duration }
-    Engine.load(load_path)
+    Engine::AutoLoader.load(load_path)
     if !Engine.engine_started?
       Engine.open_window
     end

@@ -5,6 +5,7 @@ require 'glfw'
 require 'concurrent'
 require 'os'
 
+require_relative 'engine/autoloader'
 require_relative "engine/debugging"
 require_relative 'engine/rendering/render_pipeline'
 require_relative 'engine/rendering/instance_renderer'

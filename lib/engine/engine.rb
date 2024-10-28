@@ -2,7 +2,7 @@
 
 module Engine
   def self.start(&first_frame_block)
-    load(File.dirname($PROGRAM_NAME))
+    Engine::AutoLoader.load
     return if ENV["BUILDING"] == "true"
 
     open_window
@@ -12,12 +12,6 @@ module Engine
 
   def self.engine_started?
     @engine_started
-  end
-
-  def self.load(base_dir)
-    base_dir = File.expand_path(base_dir)
-    Dir[File.join(base_dir, "components", "**/*.rb")].each { |file| require file }
-    Dir[File.join(base_dir, "game_objects", "**/*.rb")].each { |file| require file }
   end
 
   def self.open_window
