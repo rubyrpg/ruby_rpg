@@ -23,8 +23,8 @@ module Cubes
       @material ||=
         begin
           material = Engine::Material.new(Engine::Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl'))
-          material.set_texture("image", Engine::Texture.for(File.join(ROOT, "assets/chessboard.png")).texture)
-          material.set_texture("normalMap", Engine::Texture.for(File.join(ROOT, "assets/brick_normal.png")).texture)
+          material.set_texture("image", Engine::Texture.for("assets/chessboard.png").texture)
+          material.set_texture("normalMap", Engine::Texture.for("assets/brick_normal.png").texture)
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.7)
           material.set_float("specularPower", 32.0)

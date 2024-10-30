@@ -22,7 +22,7 @@ describe Engine::Font do
       }
     end
     before do
-      stub_const("ROOT", "spec")
+      stub_const("GAME_DIR", "spec")
     end
 
     it "returns the offsets of the string" do

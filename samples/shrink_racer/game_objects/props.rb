@@ -63,7 +63,7 @@ module ShrinkRacer
 
     def self.material(texture_file)
       material = Engine::Material.new(Engine::Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl'))
-      material.set_texture("image", Engine::Texture.for(File.join(ASSETS_DIR, texture_file), flip: true).texture)
+      material.set_texture("image", Engine::Texture.for(File.join("assets", texture_file), flip: true).texture)
       material.set_texture("normalMap", nil)
       material.set_float("diffuseStrength", 0.5)
       material.set_float("specularStrength", 0.6)

@@ -12,8 +12,9 @@ module Engine
       load_texture
     end
 
-    def self.for(file_path, flip: false)
-      texture_cache[[file_path, flip]]
+    def self.for(path, flip: false)
+      full_path = File.expand_path(File.join(GAME_DIR, path))
+      texture_cache[[full_path, flip]]
     end
 
     def self.texture_cache

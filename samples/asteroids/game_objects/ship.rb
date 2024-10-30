@@ -13,7 +13,7 @@ module Asteroids
            Gun.new,
            Engine::Components::SpriteRenderer.new(
              Vector[-25, 25], Vector[25, 25], Vector[25, -25], Vector[-25, -25],
-             Engine::Texture.for(File.join(ASSETS_DIR, "Player.png")).texture
+             Engine::Texture.for("assets/Player.png").texture
            )]
       )
 
@@ -29,7 +29,7 @@ module Asteroids
               Vector[50, 50],
               Vector[50, -50],
               Vector[-50, -50],
-              Engine::Texture.for(File.join(ASSETS_DIR, "Shield.png")).texture
+              Engine::Texture.for("assets/Shield.png").texture
             )
           ]
       )

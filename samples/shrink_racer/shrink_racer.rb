@@ -1,9 +1,6 @@
 require_relative "../../lib/ruby_rpg"
 require "pry"
 
-ROOT = File.expand_path(File.join(__dir__))
-ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
-
 Engine.start do
   include ShrinkRacer
 

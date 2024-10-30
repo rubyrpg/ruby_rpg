@@ -24,7 +24,7 @@ module Asteroids
     private
 
     def self.asteroid_texture
-      @asteroid_texture ||= Engine::Texture.for(File.join(ASSETS_DIR, "Asteroid_01.png")).texture
+      @asteroid_texture ||= Engine::Texture.for("assets/Asteroid_01.png").texture
     end
   end
 end
