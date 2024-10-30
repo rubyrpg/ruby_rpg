@@ -1,15 +1,13 @@
 require_relative "../../lib/ruby_rpg"
 
-ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
-
 Engine.start do
   include Cubes
-  # (-3..3).each do |x|
-  #   Plane.create(Vector[x * 100, 100, -100], Vector[0,0,0], 100)
-  #   (0..3).each do |y|
-  #     Plane.create(Vector[x * 100, 0, y * 100], Vector[90, 0, 0], 100)
-  #   end
-  # end
+  (-3..3).each do |x|
+    Plane.create(Vector[x * 100, 100, -100], Vector[0,0,0], 100)
+    (0..3).each do |y|
+      Plane.create(Vector[x * 100, 0, y * 100], Vector[90, 0, 0], 100)
+    end
+  end
 
   Sphere.create(Vector[7, 20, 0], 0, 5, [
     Engine::Physics::Components::SphereCollider.new(5),
@@ -65,19 +63,19 @@ Engine.start do
         )
     ])
 
-  #Text.create(Vector[500, 500, 0], Vector[0, 0, 0], 100, "Hello World\nNew Line")
+  Text.create(Vector[500, 500, 0], Vector[0, 0, 0], 100, "Hello World\nNew Line")
 
-  # ui_material = Engine::Material.new(Engine::Shader.new('./shaders/ui_sprite_vertex.glsl', './shaders/ui_sprite_frag.glsl'))
-  # ui_material.set_texture("image", Engine::Texture.for(ASSETS_DIR + "/cube.png").texture)
-  # ui_material.set_vec4("spriteColor", Vector[1, 1, 1, 1])
-  #
-  # Engine::GameObject.new(
-  #   "UI image",
-  #   pos: Vector[100, 100, 0], rotation: Vector[0, 0, 0], scale: Vector[1, 1, 1],
-  #   components: [
-  #     Engine::Components::UISpriteRenderer.new(
-  #       Vector[100, 100], Vector[200, 100], Vector[200, 0], Vector[100, 0],
-  #       ui_material
-  #       )
-  #   ])
+  ui_material = Engine::Material.new(Engine::Shader.new('./shaders/ui_sprite_vertex.glsl', './shaders/ui_sprite_frag.glsl'))
+  ui_material.set_texture("image", Engine::Texture.for("assets/cube.png").texture)
+  ui_material.set_vec4("spriteColor", Vector[1, 1, 1, 1])
+
+  Engine::GameObject.new(
+    "UI image",
+    pos: Vector[100, 100, 0], rotation: Vector[0, 0, 0], scale: Vector[1, 1, 1],
+    components: [
+      Engine::Components::UISpriteRenderer.new(
+        Vector[100, 100], Vector[200, 100], Vector[200, 0], Vector[100, 0],
+        ui_material
+        )
+    ])
 end

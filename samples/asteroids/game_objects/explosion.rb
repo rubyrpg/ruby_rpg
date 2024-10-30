@@ -33,7 +33,7 @@ module Asteroids
     private
 
     def self.explosion_texture
-      @explosion_texture ||= Engine::Texture.for(File.join(ASSETS_DIR, "boom.png"))
+      @explosion_texture ||= Engine::Texture.for("assets/boom.png")
     end
   end
 end

@@ -1,8 +1,6 @@
 require_relative "../../lib/ruby_rpg"
 require "pry"
 
-ASSETS_DIR = File.expand_path(File.join(__dir__, "assets"))
-
 Engine.start do
   include Asteroids
   Ship.create(Vector[Engine::Window.width / 2, Engine::Window.height / 2, 0], 20)

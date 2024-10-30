@@ -27,7 +27,7 @@ module ShrinkRacer
     }
 
     def self.create(track)
-      track = load_track(File.join(ASSETS_DIR, track[:file]))
+      track = load_track(File.join("assets", track[:file]))
       track.each_with_index do |row, x|
         row.reverse.each_with_index do |cell, z|
           pos = Vector[x * CELL_SIZE, 0, z * CELL_SIZE]
@@ -50,7 +50,7 @@ module ShrinkRacer
     end
 
     def self.load_track(file)
-      CSV.read(file).map do |row|
+      CSV.read(File.join(GAME_DIR, file)).map do |row|
         row.map do |cell|
           if cell.nil? || cell.empty?
             [nil, nil]

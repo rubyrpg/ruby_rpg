@@ -6,7 +6,7 @@ include TestDriver
 
 describe Asteroids::Bullet do
   before do
-    stub_const("ASSETS_DIR", File.expand_path(File.join(__dir__, "..", "..", "..", "..", "samples", "asteroids", "assets")))
+    stub_const("GAME_DIR", File.expand_path(File.join(__dir__, "..", "..", "..", "..", "samples", "asteroids")))
   end
 
   describe "When placed in the scene" do
