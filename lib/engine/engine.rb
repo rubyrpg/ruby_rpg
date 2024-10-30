@@ -59,6 +59,7 @@ module Engine
       print_fps(delta_time)
       Physics::PhysicsResolver.resolve
       GameObject.update_all(delta_time)
+      GameObject.erase_destroyed_objects
 
       @swap_buffers_promise.wait! if @swap_buffers_promise
       GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
@@ -95,6 +96,7 @@ module Engine
 
   def self.close
     GameObject.destroy_all
+    GameObject.erase_destroyed_objects
     GLFW.SetWindowShouldClose(Window.window, 1)
   end
 
@@ -102,6 +104,7 @@ module Engine
     @game_stopped = true
     @swap_buffers_promise.wait! if @swap_buffers_promise && !@swap_buffers_promise.complete?
     GameObject.destroy_all
+    GameObject.erase_destroyed_objects
   end
 
   private

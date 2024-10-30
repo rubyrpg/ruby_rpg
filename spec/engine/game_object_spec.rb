@@ -203,6 +203,7 @@ describe Engine::GameObject do
       object = Engine::GameObject.new
 
       object.destroy!
+      Engine::GameObject.erase_destroyed_objects
       expect(Engine::GameObject.objects).not_to include(object)
     end
 
@@ -222,6 +223,7 @@ describe Engine::GameObject do
       object2 = Engine::GameObject.new("b")
 
       Engine::GameObject.destroy_all
+      Engine::GameObject.erase_destroyed_objects
       expect(Engine::GameObject.objects).to be_empty
     end
   end
@@ -288,6 +290,7 @@ describe Engine::GameObject do
       object = Engine::GameObject.new(parent: parent)
 
       object.destroy!
+      Engine::GameObject.erase_destroyed_objects
 
       expect(parent.children).not_to include(object)
     end
@@ -297,6 +300,7 @@ describe Engine::GameObject do
       object = Engine::GameObject.new(parent: parent)
 
       parent.destroy!
+      Engine::GameObject.erase_destroyed_objects
 
       expect(Engine::GameObject.objects).not_to include(object)
     end
