@@ -15,7 +15,7 @@ module Engine
     def texture
       @texture ||=
         begin
-          path = File.expand_path(File.join(ROOT, "_imported", @font_file_path.gsub(".ttf", ".png")))
+          path = File.expand_path(File.join(GAME_DIR, "_imported", @font_file_path.gsub(".ttf", ".png")))
           Engine::Texture.for(path)
         end
     end
@@ -35,7 +35,7 @@ module Engine
       scale_factor = 1 / (1024.0 * 2)
       horizontal_offset = 0.0
       vertical_offset = 0.0
-      font_path = File.expand_path(File.join(ROOT, "_imported", @font_file_path.gsub(".ttf", ".json")))
+      font_path = File.expand_path(File.join(GAME_DIR, "_imported", @font_file_path.gsub(".ttf", ".json")))
       font_metrics = JSON.parse File.read(font_path)
       string.chars.each do |char|
         if char == "\n"

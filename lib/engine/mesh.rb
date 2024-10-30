@@ -21,7 +21,7 @@ module Engine
     end
 
     def self.open_vertex(mesh_file)
-      vertex_cache[File.join(ROOT, "_imported", mesh_file + ".vertex_data")]
+      vertex_cache[File.join(GAME_DIR, "_imported", mesh_file + ".vertex_data")]
     end
 
     def self.vertex_cache
@@ -31,7 +31,7 @@ module Engine
     end
 
     def self.open_index(mesh_file)
-      index_cache[File.join(ROOT, "_imported", mesh_file + ".index_data")]
+      index_cache[File.join(GAME_DIR, "_imported", mesh_file + ".index_data")]
     end
 
     def self.index_cache
