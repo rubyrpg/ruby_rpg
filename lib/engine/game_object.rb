@@ -132,15 +132,16 @@ module Engine
 
     def destroy!
       return unless GameObject.objects.include?(self)
-      @destroyed = true
       children.each(&:destroy!)
-      GameObject.destroyed_objects << self unless GameObject.destroyed_objects.include?(self)
-    end
-
-    def _erase!
       components.each(&:destroy!)
       ui_renderers.each(&:destroy!)
       renderers.each(&:destroy!)
+
+      GameObject.destroyed_objects << self unless @destroyed
+      @destroyed = true
+    end
+
+    def _erase!
       GameObject.objects.delete(self)
       parent.children.delete(self) if parent
       name = @name
@@ -185,6 +186,9 @@ module Engine
       GameObject.objects.each do |object|
         object.components.each { |component| component.update(delta_time) }
       end
+      
+      Component.erase_destroyed_components
+      GameObject.erase_destroyed_objects
     end
 
     def self.mesh_renderers
