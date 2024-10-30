@@ -3,3 +3,6 @@
 
 # /temp/ folders
 **/temp/
+
+# rspec examples
+spec/examples.txt

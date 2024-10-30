@@ -30,8 +30,12 @@ module Engine
     end
 
     def destroy!
+      Component.destroyed_components << self unless @destroyed
+      destroy unless @destroyed
       @destroyed = true
-      destroy
+    end
+
+    def _erase!
       game_object.components.delete(self)
       class_name = self.class.name.split('::').last
       self.class.instance_variable_get(:@methods).each do |method|
@@ -42,7 +46,18 @@ module Engine
       end
     end
 
+    def self.erase_destroyed_components
+      destroyed_components.each do |object|
+        object._erase!
+      end
+      @destroyed_components = []
+    end
+
     def destroy
+    end
+
+    def self.destroyed_components
+      @destroyed_components ||= []
     end
   end
 end

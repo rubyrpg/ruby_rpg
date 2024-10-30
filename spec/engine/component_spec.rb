@@ -25,12 +25,14 @@ describe Engine::Component do
       expect(component).to receive(:destroy)
 
       component.destroy!
+      Engine::Component.erase_destroyed_components
 
       expect(game_object.components).to be_empty
     end
 
     it 'undefines the methods' do
       component.destroy!
+      Engine::Component.erase_destroyed_components
 
       expect { component.start }.to raise_error("This Component has been destroyed but you are still trying to access start")
       expect { component.update(0) }.to raise_error("This Component has been destroyed but you are still trying to access update")

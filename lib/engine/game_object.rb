@@ -132,17 +132,30 @@ module Engine
 
     def destroy!
       return unless GameObject.objects.include?(self)
-      @destroyed = true
+      children.each(&:destroy!)
       components.each(&:destroy!)
       ui_renderers.each(&:destroy!)
       renderers.each(&:destroy!)
+
+      GameObject.destroyed_objects << self unless @destroyed
+      @destroyed = true
+    end
+
+    def _erase!
       GameObject.objects.delete(self)
       parent.children.delete(self) if parent
-      children.each(&:destroy!)
+      name = @name
       self.class.instance_variable_get(:@methods).each do |method|
         singleton_class.send(:undef_method, method)
-        singleton_class.send(:define_method, method) { raise "This object has been destroyed.  Object ID: #{self.object_id}" }
+        singleton_class.send(:define_method, method) { raise "This object has been destroyed: #{name}" }
       end
+    end
+
+    def self.erase_destroyed_objects
+      destroyed_objects.each do |object|
+        object._erase!
+      end
+      @destroyed_objects = []
     end
 
     def up
@@ -173,6 +186,9 @@ module Engine
       GameObject.objects.each do |object|
         object.components.each { |component| component.update(delta_time) }
       end
+      
+      Component.erase_destroyed_components
+      GameObject.erase_destroyed_objects
     end
 
     def self.mesh_renderers
@@ -193,6 +209,10 @@ module Engine
 
     def self.objects
       @objects ||= []
+    end
+
+    def self.destroyed_objects
+      @destroyed_objects ||= []
     end
   end
 end

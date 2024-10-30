@@ -95,6 +95,8 @@ module Engine
 
   def self.close
     GameObject.destroy_all
+    Component.erase_destroyed_components
+    GameObject.erase_destroyed_objects
     GLFW.SetWindowShouldClose(Window.window, 1)
   end
 
@@ -102,6 +104,8 @@ module Engine
     @game_stopped = true
     @swap_buffers_promise.wait! if @swap_buffers_promise && !@swap_buffers_promise.complete?
     GameObject.destroy_all
+    Component.erase_destroyed_components
+    GameObject.erase_destroyed_objects
   end
 
   private
