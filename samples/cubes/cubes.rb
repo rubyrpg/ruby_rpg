@@ -78,4 +78,7 @@ Engine.start do
         ui_material
         )
     ])
+  clip = NativeAudio::Clip.new("samples/cubes/assets/boom.wav")
+  audio_source = NativeAudio::AudioSource.new(clip)
+  audio_source.play
 end

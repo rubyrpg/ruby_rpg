@@ -4,6 +4,7 @@ require 'opengl'
 require 'glfw'
 require 'concurrent'
 require 'os'
+require 'native_audio'
 
 require_relative 'engine/autoloader'
 require_relative "engine/debugging"

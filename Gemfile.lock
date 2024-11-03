@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/rubyrpg/native_audio
+  revision: e053e52df90d3dd352a789c787675180c69ed00a
+  specs:
+    native_audio (0.1.0)
+
 PATH
   remote: .
   specs:
@@ -47,6 +53,7 @@ PLATFORMS
   x64-mingw-ucrt
 
 DEPENDENCIES
+  native_audio!
   pry (~> 0.14)
   rspec (~> 3.13)
   ruby_rpg!
