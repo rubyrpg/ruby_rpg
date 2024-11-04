@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
+  s.add_runtime_dependency "native_audio"
   s.add_runtime_dependency 'opengl-bindings2', '~> 2.0'
   s.add_runtime_dependency 'concurrent-ruby'
   s.add_runtime_dependency 'os'
