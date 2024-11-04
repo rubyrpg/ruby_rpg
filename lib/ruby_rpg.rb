@@ -38,6 +38,7 @@ require_relative "engine/components/font_renderer"
 require_relative "engine/components/ui_font_renderer"
 require_relative "engine/components/point_light"
 require_relative "engine/components/direction_light"
+require_relative "engine/components/audio_source"
 
 require_relative "engine/physics/physics_resolver"
 require_relative 'engine/physics/collision'
