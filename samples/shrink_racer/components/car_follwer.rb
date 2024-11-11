@@ -3,9 +3,6 @@
 module ShrinkRacer
   class CarFollower < Engine::Component
     OFFSET = Vector[0, 0.4, -0.8]
-    CAMERA_ANGLE = Vector[10, 180, 0]
-    FOLLOW_SPEED = 5
-    ROTATION_SPEED = 20
 
     def initialize(target)
       @target = target
@@ -17,8 +14,8 @@ module ShrinkRacer
     end
 
     def update(delta_time)
-      game_object.pos = target_pos #(target_pos - game_object.pos) * delta_time * FOLLOW_SPEED
-      game_object.rotation = target_rotation #(target_rotation - game_object.rotation) * delta_time * FOLLOW_SPEED
+      game_object.pos = target_pos
+      game_object.rotation = target_rotation
     end
 
     private
@@ -28,7 +25,9 @@ module ShrinkRacer
     end
 
     def target_rotation
-      @target.rotation + CAMERA_ANGLE
+      @target.rotation *
+        Engine::Quaternion.from_euler(Vector[0, 180, 0]) *
+        Engine::Quaternion.from_angle_axis(10, game_object.right)
     end
   end
 end

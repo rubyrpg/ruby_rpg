@@ -16,10 +16,10 @@ module ShrinkRacer
     def update(delta_time)
       if @spin_time < 1
         sign = { left: 1.0, right: -1.0 }[@spin_direction]
-        game_object.rotation = sign * Vector[0, 360, 0] * @spin_time
+        game_object.rotation = Engine::Quaternion.from_euler(Vector[0, 360 * sign, 0] * @spin_time)
         @spin_time += delta_time / SPIN_DURATION
       else
-        game_object.rotation = Vector[0, 0, 0]
+        game_object.rotation = Engine::Quaternion.from_euler(Vector[0, 0, 0])
       end
     end
   end
