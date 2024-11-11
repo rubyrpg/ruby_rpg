@@ -2,12 +2,12 @@ require_relative "../../lib/ruby_rpg"
 
 Engine.start do
   include Cubes
-  # (-3..3).each do |x|
-  #   Plane.create(Vector[x * 100, 100, -100], Vector[0, 0, 0], 100)
-  #   (0..3).each do |y|
-  #     Plane.create(Vector[x * 100, 0, y * 100], Vector[90, 0, 0], 100)
-  #   end
-  # end
+  (-3..3).each do |x|
+    Plane.create(Vector[x * 100, 100, -100], Vector[0, 0, 0], 100)
+    (0..3).each do |y|
+      Plane.create(Vector[x * 100, 0, y * 100], Vector[90, 0, 0], 100)
+    end
+  end
   #
   # Sphere.create(Vector[7, 20, 0], 0, 5, [
   #   Engine::Physics::Components::SphereCollider.new(5),
