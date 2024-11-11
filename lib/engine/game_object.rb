@@ -15,6 +15,8 @@ module Engine
       @pos = Vector[pos[0], pos[1], pos[2] || 0]
       if rotation.is_a?(Numeric)
         self.rotation = Quaternion.from_euler(Vector[0, 0, rotation])
+      elsif rotation.is_a?(Quaternion)
+        self.rotation = rotation
       else
         self.rotation = Quaternion.from_euler(rotation)
       end

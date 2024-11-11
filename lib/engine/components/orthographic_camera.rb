@@ -33,8 +33,8 @@ module Engine::Components
       @right = nil if game_object.rotation != @rotation
       @up = nil if game_object.rotation != @rotation
       @front = nil if game_object.rotation != @rotation
-      @matrix = nil if game_object.rotation.to_a != @rotation
-      @rotation = game_object.rotation.to_a
+      @matrix = nil if game_object.rotation.dup != @rotation
+      @rotation = game_object.rotation.dup
     end
 
     private
