@@ -39,7 +39,7 @@ module Engine::Components
     private
 
     def shader
-      @shader ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
+      @shader ||= Engine::Shader.ui_text
     end
 
     def set_shader_per_frame_data

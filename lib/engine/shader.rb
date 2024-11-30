@@ -1,5 +1,33 @@
 module Engine
   class Shader
+    def self.default
+      @default ||= Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl')
+    end
+
+    def self.vertex_lit
+      @vertex_lit ||= Engine::Shader.new('./shaders/vertex_lit_vertex.glsl', './shaders/vertex_lit_frag.glsl')
+    end
+
+    def self.skybox
+      @skybox ||= Shader.new('./shaders/skybox_vert.glsl', './shaders/skybox_frag.glsl')
+    end
+
+    def self.sprite
+      @sprite ||= Engine::Shader.new('./shaders/sprite_vertex.glsl', './shaders/sprite_frag.glsl')
+    end
+
+    def self.text
+      @text ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
+    end
+
+    def self.ui_text
+      @ui_text ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
+    end
+
+    def self.ui_sprite
+      @ui_sprite ||= Engine::Shader.new('./shaders/ui_sprite_vertex.glsl', './shaders/ui_sprite_frag.glsl')
+    end
+
     def initialize(vertex_shader, fragment_shader)
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)

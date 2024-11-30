@@ -35,9 +35,7 @@ module ShrinkRacer
     private
 
     def self.create_back_plane
-      material = Engine::Material.new(
-        Engine::Shader.new('./shaders/skybox_vert.glsl', './shaders/skybox_frag.glsl')
-      )
+      material = Engine::Material.new(Engine::Shader.skybox)
       Engine::GameObject.new(
         "Skybox",
         pos: Vector[0, 0, -FAR + 20],

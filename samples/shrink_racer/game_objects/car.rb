@@ -34,7 +34,7 @@ module ShrinkRacer
     def self.material
       @material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl'))
+          material = Engine::Material.new(Engine::Shader.default)
           material.set_texture("image", Engine::Texture.for("assets/cars/Textures/colormap.png", flip: true).texture)
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.5)

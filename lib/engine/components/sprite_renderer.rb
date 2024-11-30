@@ -44,7 +44,7 @@ module Engine::Components
     private
 
     def shader
-      @shader ||= Engine::Shader.new('./shaders/sprite_vertex.glsl', './shaders/sprite_frag.glsl')
+      @shader ||= Engine::Shader.sprite
     end
 
     def set_shader_per_frame_data
