@@ -4,7 +4,7 @@ module ShrinkRacer
   module UIText
     def self.create(pos, rotation, size, text, components: [])
       font_path = "assets/arial.ttf"
-      puts "making text"
+
       Engine::GameObject.new(
         "Text",
         pos: pos,

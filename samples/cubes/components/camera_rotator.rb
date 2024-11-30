@@ -5,19 +5,15 @@ module Cubes
     ROTATION_SPEED = 60
     MOVE_SPEED = 50
 
+    def start
+      Engine::Cursor.disable
+    end
+
     def update(delta_time)
-      if Engine::Input.key?(GLFW::KEY_LEFT)
-        game_object.rotation[1] -= ROTATION_SPEED * delta_time
-      end
-      if Engine::Input.key?(GLFW::KEY_RIGHT)
-        game_object.rotation[1] += ROTATION_SPEED * delta_time
-      end
-      if Engine::Input.key?(GLFW::KEY_UP)
-        game_object.rotation[0] -= ROTATION_SPEED * delta_time
-      end
-      if Engine::Input.key?(GLFW::KEY_DOWN)
-        game_object.rotation[0] += ROTATION_SPEED * delta_time
-      end
+      mouse_delta = Engine::Input.mouse_delta
+      game_object.rotate_around(Vector[1, 0, 0], mouse_delta[1] * ROTATION_SPEED * delta_time)
+      game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, mouse_delta[0], 0] * ROTATION_SPEED * delta_time)
+
       if Engine::Input.key?(GLFW::KEY_A)
         game_object.pos -= game_object.right * MOVE_SPEED * delta_time
       end

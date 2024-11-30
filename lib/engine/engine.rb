@@ -19,11 +19,11 @@ module Engine
   def self.open_window
     @old_time = Time.now
     @time = Time.now
-    @key_callback = create_key_callbacks # This must be an instance variable to prevent garbage collection
 
     Window.create_window
     GLFW.MakeContextCurrent(Window.window)
-    GLFW.SetKeyCallback(Window.window, @key_callback)
+
+    Input.init
     GL.load_lib
 
     set_opengl_blend_mode
@@ -34,8 +34,6 @@ module Engine
     GL.CullFace(GL::BACK)
 
     GLFW.SwapInterval(0)
-
-    Cursor.hide
   end
 
   def self.main_game_loop(&first_frame_block)
@@ -129,11 +127,5 @@ module Engine
   def self.set_opengl_blend_mode
     GL.Enable(GL::BLEND)
     GL.BlendFunc(GL::SRC_ALPHA, GL::ONE_MINUS_SRC_ALPHA)
-  end
-
-  def self.create_key_callbacks
-    GLFW::create_callback(:GLFWkeyfun) do |window, key, scancode, action, mods|
-      Input.key_callback(key, action)
-    end
   end
 end
