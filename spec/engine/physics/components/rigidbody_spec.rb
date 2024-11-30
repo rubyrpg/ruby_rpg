@@ -77,7 +77,7 @@ describe Engine::Physics::Components::Rigidbody do
         rigidbody.update(0.1)
 
         expect(rigidbody_object.pos).to eq(Vector[0, 0, 0])
-        expect(rigidbody_object.rotation).to eq(Vector[0.1, 0, 0])
+        expect(rigidbody_object.rotation.to_euler).to be_vector(Vector[0.1, 0, 0])
       end
     end
 
@@ -135,13 +135,13 @@ describe Engine::Physics::Components::Rigidbody do
           rigidbody.update(0.1)
 
           expect(rigidbody_object.pos).to eq(Vector[0, 0, 0])
-          expect(rigidbody_object.rotation).to eq(Vector[0.1, 0, 0])
+          expect(rigidbody_object.rotation.to_euler).to be_vector(Vector[0.1, 0, 0])
           expect(rigidbody.angular_velocity).to eq(Vector[1, 0, 0])
 
           rigidbody.update(0.1)
 
           expect(rigidbody_object.pos).to eq(Vector[0, 0, 0])
-          expect(rigidbody_object.rotation).to eq(Vector[0.2, 0, 0])
+          expect(rigidbody_object.rotation.to_euler).to be_vector(Vector[0.2, 0, 0])
           expect(rigidbody.angular_velocity).to eq(Vector[1, 0, 0])
         end
       end
@@ -158,13 +158,13 @@ describe Engine::Physics::Components::Rigidbody do
           rigidbody.update(0.1)
 
           expect(rigidbody_object.pos).to eq(Vector[0, 0, 0])
-          expect(rigidbody_object.rotation).to be_vector(Vector[0.1, 0.5, 0], tolerance: 0.001) # angle axis introduces a small error here
+          expect(rigidbody_object.rotation.to_euler).to be_vector(Vector[0.1, 0.5, 0], tolerance: 0.001) # angle axis introduces a small error here
           expect(rigidbody.angular_velocity).to eq(Vector[1, 5, 0])
 
           rigidbody.update(0.1)
 
           expect(rigidbody_object.pos).to eq(Vector[0, 0, 0])
-          expect(rigidbody_object.rotation).to be_vector(Vector[0.2, 1, 0], tolerance: 0.01) # angle axis introduces a small error here
+          expect(rigidbody_object.rotation.to_euler).to be_vector(Vector[0.2, 1, 0], tolerance: 0.01) # angle axis introduces a small error here
           expect(rigidbody.angular_velocity).to eq(Vector[1, 5, 0])
         end
       end

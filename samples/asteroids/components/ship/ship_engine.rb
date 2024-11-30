@@ -16,7 +16,7 @@ module Asteroids
       clamp_speed
       game_object.pos += @speed * delta_time
 
-      game_object.rotation += Vector[0, 0, torque * delta_time]
+      game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, 0, torque * delta_time])
     end
 
     private

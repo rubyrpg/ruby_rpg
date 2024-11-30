@@ -58,7 +58,7 @@ module ShrinkRacer
         torque += 60
       end
 
-      game_object.rotation += Vector[0, torque, 0] * delta_time
+      game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, torque, 0] * delta_time)
 
     end
 

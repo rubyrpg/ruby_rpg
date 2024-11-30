@@ -16,6 +16,12 @@ module Engine
       "Quaternion(w: #{@w}, x: #{@x}, y: #{@y}, z: #{@z})"
     end
 
+    def ==(other)
+      return false unless other.is_a?(Quaternion)
+
+      @w == other.w && @x == other.x && @y == other.y && @z == other.z
+    end
+
     def *(other)
       Quaternion.new(
         @w * other.w - @x * other.x - @y * other.y - @z * other.z,

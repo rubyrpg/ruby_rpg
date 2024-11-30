@@ -8,15 +8,17 @@ module Engine
       @methods.add(name)
     end
 
-    attr_accessor :name, :pos, :rotation, :scale, :components, :renderers, :ui_renderers, :created_at, :parent
+    attr_accessor :name, :pos, :scale, :components, :renderers, :ui_renderers, :created_at, :parent
 
     def initialize(name = "Game Object", pos: Vector[0, 0, 0], rotation: 0, scale: Vector[1, 1, 1], components: [], parent: nil)
       GameObject.object_spawned(self)
       @pos = Vector[pos[0], pos[1], pos[2] || 0]
       if rotation.is_a?(Numeric)
-        @rotation = Vector[0, 0, rotation]
+        self.rotation = Quaternion.from_euler(Vector[0, 0, rotation])
+      elsif rotation.is_a?(Quaternion)
+        self.rotation = rotation
       else
-        @rotation = rotation
+        self.rotation = Quaternion.from_euler(rotation)
       end
       @scale = scale
       @name = name
@@ -48,6 +50,20 @@ module Engine
       @parent.children.delete(self) if @parent
       @parent = parent
       parent.children << self if parent
+    end
+
+    def rotation
+      @rotation_quaternion
+    end
+
+    def rotation=(value)
+      raise "Rotation must be a Quaternion" unless value.is_a?(Quaternion)
+
+      @rotation_quaternion = value
+    end
+
+    def euler_angles
+      rotation.to_euler
     end
 
     def x
@@ -93,16 +109,16 @@ module Engine
     def rotate_around(axis, angle)
       rotation_quaternion = Quaternion.from_angle_axis(angle, axis)
 
-      @rotation = (rotation_quaternion * Quaternion.from_euler(rotation)).to_euler
+      self.rotation = rotation_quaternion * rotation
     end
 
     def model_matrix
-      cache_key = [@pos.dup, @rotation.dup, @scale.dup, @parent&.model_matrix&.to_a]
+      cache_key = [@pos.dup, rotation.dup, @scale.dup, @parent&.model_matrix&.to_a]
       @model_matrix = nil if @model_matrix_cache_key != cache_key
       @model_matrix_cache_key = cache_key
       @model_matrix ||=
         begin
-          rot = rotation * Math::PI / 180
+          rot = euler_angles * Math::PI / 180
 
           cos_x = Math.cos(rot[0])
           cos_y = Math.cos(rot[1])
@@ -186,7 +202,7 @@ module Engine
       GameObject.objects.each do |object|
         object.components.each { |component| component.update(delta_time) }
       end
-      
+
       Component.erase_destroyed_components
       GameObject.erase_destroyed_objects
     end

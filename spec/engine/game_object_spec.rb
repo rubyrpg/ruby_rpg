@@ -16,7 +16,7 @@ describe Engine::GameObject do
     it "sets the rotation of the object" do
       object = Engine::GameObject.new(rotation: 90)
 
-      expect(object.rotation).to eq(Vector[0, 0, 90])
+      expect(object.rotation.to_euler).to be_vector(Vector[0, 0, 90])
     end
 
     it "sets the name of the object" do
@@ -121,7 +121,7 @@ describe Engine::GameObject do
 
       result = object.local_to_world_coordinate(Vector[10, 0, 0])
 
-      expect(result).to eq(Vector[10, 10, 0])
+      expect(result).to be_vector(Vector[10, 10, 0])
     end
 
     context "when the object has a parent" do
@@ -144,14 +144,14 @@ describe Engine::GameObject do
         expect(object.local_to_world_coordinate(Vector[10, 0, 0])).to eq(Vector[230, 60, 0])
 
         parent.pos = Vector[0, 0, 0]
-        parent.rotation = Vector[0, 90, 0]
+        parent.rotation = Engine::Quaternion.from_euler(Vector[0, 90, 0])
         object.pos = Vector[0, 0, 0]
 
         expect(parent.local_to_world_coordinate(Vector[10, 0, 0])).to be_vector(Vector[0, 0, 10])
         expect(object.local_to_world_coordinate(Vector[10, 0, 0])).to be_vector(Vector[0, 0, 10])
 
         parent.pos = Vector[0, 0, 0]
-        parent.rotation = Vector[0, 90, 0]
+        parent.rotation = Engine::Quaternion.from_euler(Vector[0, 90, 0])
         object.pos = Vector[10, 0, 0]
 
         expect(object.local_to_world_coordinate(Vector[10, 0, 0])).to be_vector(Vector[0, 0, 20])
@@ -244,7 +244,7 @@ describe Engine::GameObject do
       expect((object.up - Vector[0, 1, 0]).magnitude).to be_within(0.0001).of(0)
       expect((object.forward - Vector[-1, 0, 0]).magnitude).to be_within(0.0001).of(0)
 
-      object.rotation = Vector[90, 0, 0]
+      object.rotation = Engine::Quaternion.from_euler(Vector[90, 0, 0])
 
       expect((object.right - Vector[1, 0, 0]).magnitude).to be_within(0.0001).of(0)
       expect((object.up - Vector[0, 0, -1]).magnitude).to be_within(0.0001).of(0)
@@ -330,7 +330,7 @@ describe Engine::GameObject do
 
       object.rotate_around(Vector[0, 0, 1], 90)
 
-      expect(object.rotation).to eq((Engine::Quaternion.from_angle_axis(90, Vector[0, 0, 1]) * Engine::Quaternion.from_euler(Vector[1, 2, 3])).to_euler)
+      expect(object.rotation).to eq((Engine::Quaternion.from_angle_axis(90, Vector[0, 0, 1]) * Engine::Quaternion.from_euler(Vector[1, 2, 3])))
     end
 
     it "rotates the object around multiple axes" do
@@ -339,7 +339,7 @@ describe Engine::GameObject do
       object.rotate_around(Vector[0, 1, 1], 90)
 
       expect(object.rotation)
-        .to eq((Engine::Quaternion.from_angle_axis(90, Vector[0, 1, 1]) * Engine::Quaternion.from_euler(Vector[1, 2, 3])).to_euler)
+        .to eq((Engine::Quaternion.from_angle_axis(90, Vector[0, 1, 1]) * Engine::Quaternion.from_euler(Vector[1, 2, 3])))
     end
   end
 end
