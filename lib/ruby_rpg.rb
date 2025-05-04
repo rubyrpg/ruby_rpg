@@ -23,6 +23,7 @@ require_relative 'engine/polygon_mesh'
 require_relative 'engine/importers/obj_file'
 require_relative 'engine/tangent_calculator'
 require_relative 'engine/shader'
+require_relative 'engine/compute_shader'
 require_relative 'engine/component'
 require_relative "engine/camera"
 require_relative "engine/window"

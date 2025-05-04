@@ -2,10 +2,17 @@ require_relative "../../lib/ruby_rpg"
 
 Engine.start do
   include Cubes
-  (-3..3).each do |x|
-    Plane.create(Vector[x * 100, 100, -100], Vector[0, 0, 0], 100)
-    (0..3).each do |y|
-      Plane.create(Vector[x * 100, 0, y * 100], Vector[90, 0, 0], 100)
+  ui_texture = Engine::Texture.for("assets/cube.png").texture
+  c_normal = Engine::Texture.for("assets/tiles.png").texture
+
+  c_shader = Engine::ComputeShader.new('assets/hello_cubes.comp')
+
+  Engine::GameObject.new(components: [ComputeShaderAnimator.new(c_shader, [ui_texture, c_normal])])
+
+  (-1..1).each do |x|
+    Plane.create(Vector[x * 200, 100, -100], Vector[0, 0, 0], 100, ui_texture, c_normal)
+    (0..1).each do |y|
+      Plane.create(Vector[x * 200, 0, y * 200], Vector[90, 0, 0], 100, ui_texture, c_normal)
     end
   end
   #
@@ -65,18 +72,18 @@ Engine.start do
 
   Text.create(Vector[500, 500, 0], Vector[0, 0, 0], 100, "Hello World\nNew Line")
 
-  ui_material = Engine::Material.new(Engine::Shader.ui_sprite)
-  ui_material.set_texture("image", Engine::Texture.for("assets/cube.png").texture)
-  ui_material.set_vec4("spriteColor", Vector[1, 1, 1, 1])
-  Engine::GameObject.new(
-    "UI image",
-    pos: Vector[100, 100, 0], rotation: Vector[0, 0, 0], scale: Vector[1, 1, 1],
-    components: [
-      Engine::Components::UISpriteRenderer.new(
-        Vector[100, 100], Vector[200, 100], Vector[200, 0], Vector[100, 0],
-        ui_material
-      )
-    ])
+  # ui_material = Engine::Material.new(Engine::Shader.ui_sprite)
+  # ui_material.set_texture("image", ui_texture)
+  # ui_material.set_vec4("spriteColor", Vector[1, 1, 1, 1])
+  # Engine::GameObject.new(
+  #   "UI image",
+  #   pos: Vector[100, 100, 0], rotation: Vector[0, 0, 0], scale: Vector[1, 1, 1],
+  #   components: [
+  #   Engine::Components::UISpriteRenderer.new(
+  #      Vector[100, 900], Vector[900, 900], Vector[900, 0], Vector[100, 0],
+  #      ui_material
+  #    )
+  #  ])
 
   clip = NativeAudio::Clip.new("samples/cubes/assets/boom.wav")
   sound_source = Engine::Components::AudioSource.new(clip)
@@ -85,6 +92,6 @@ Engine.start do
     "Sound", pos: pos,
     components: [sound_source]
   )
-  sound_source.play
+  # sound_source.play
   Sphere.create(Vector[0, 20, 0], 0, 10)
 end

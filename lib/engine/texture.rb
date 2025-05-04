@@ -38,7 +38,7 @@ module Engine
       image_width = image.width
       image_height = image.height
 
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, image_width, image_height, 0, GL::RGBA, GL::UNSIGNED_BYTE, image_data)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA32F, image_width, image_height, 0, GL::RGBA, GL::UNSIGNED_BYTE, image_data)
       GL.GenerateMipmap(GL::TEXTURE_2D)
     end
 
