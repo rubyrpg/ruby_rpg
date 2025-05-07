@@ -1,13 +1,14 @@
 PATH
   remote: .
   specs:
-    ruby_rpg (0.0.4)
+    ruby_rpg (0.0.6)
       chunky_png (~> 1.4)
-      concurrent-ruby
+      concurrent-ruby (~> 1.3, >= 1.3.5)
+      logger (~> 1.7)
       matrix (~> 0.3)
-      native_audio
-      opengl-bindings2 (~> 2.0)
-      os
+      native_audio (= 0.2.0)
+      opengl-bindings2 (= 2.0.2)
+      os (>= 1.1.4)
       rmagick (~> 6.0, >= 6.0.1)
 
 GEM
@@ -15,12 +16,13 @@ GEM
   specs:
     chunky_png (1.4.0)
     coderay (1.1.3)
-    concurrent-ruby (1.2.3)
+    concurrent-ruby (1.3.5)
     csv (3.2.8)
     diff-lcs (1.5.1)
+    logger (1.7.0)
     matrix (0.4.2)
     method_source (1.1.0)
-    native_audio (0.1.0)
+    native_audio (0.2.0)
     observer (0.1.2)
     opengl-bindings2 (2.0.2)
     os (1.1.4)

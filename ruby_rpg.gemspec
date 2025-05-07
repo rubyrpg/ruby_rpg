@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'ruby_rpg'
-  s.version = '0.0.5'
+  s.version = '0.0.6'
   s.authors = ['Max Hatfull']
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
@@ -11,15 +11,16 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
-  s.add_runtime_dependency "native_audio"
-  s.add_runtime_dependency 'opengl-bindings2', '~> 2.0'
-  s.add_runtime_dependency 'concurrent-ruby'
-  s.add_runtime_dependency 'os'
+  s.add_runtime_dependency "logger", "~> 1.7"
+  s.add_runtime_dependency "native_audio", "0.2.0"
+  s.add_runtime_dependency 'opengl-bindings2', '2.0.2'
+  s.add_runtime_dependency 'concurrent-ruby', '~> 1.3', '>= 1.3.5'
+  s.add_runtime_dependency 'os', '>= 1.1.4'
   s.add_runtime_dependency 'matrix', '~> 0.3'
   s.add_runtime_dependency 'chunky_png', '~> 1.4'
 
   s.bindir = 'bin'
-  s.executables = ['import']
+  s.executables = ['import', 'build.bash']
 
   s.add_runtime_dependency 'rmagick', '~> 6.0', '>= 6.0.1'
 end
