@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+gem install ocran
 
 input_file=$1
 output_file=$2

@@ -1,0 +1,74 @@
+#!/usr/bin/env ruby
+
+# bin/build
+
+require 'rubygems'
+require 'open3'
+
+begin
+  gem_spec = Gem::Specification.find_by_name("ruby_rpg")
+  gem_root = gem_spec.full_gem_path
+rescue Gem::LoadError
+  $stderr.puts "Error: Gem 'ruby_rpg' not found."
+  exit 1
+rescue StandardError => e
+  $stderr.puts "An error occurred while finding the gem: #{e.message}"
+  exit 1
+end
+
+bash_script_path = File.join(gem_root, 'bin', 'build.bash')
+
+
+unless File.exist?(bash_script_path)
+  $stderr.puts "Error: Bash script not found at #{bash_script_path}"
+  exit 1
+end
+
+# --- Execute the bash script using Open3 by explicitly calling 'bash' ---
+puts "Running bash script using Open3 via bash interpreter..."
+
+# You need to make sure 'bash.exe' is in your system's PATH,
+# or provide the full path to bash.exe (e.g., 'C:/Program Files/Git/bin/bash.exe')
+bash_command = 'bash' # Or provide the full path if bash is not in PATH
+
+# Optional: Set the working directory if your bash script needs it
+working_directory = gem_root # Or another directory, e.g., File.dirname(bash_script_path)
+
+begin
+  # Pass the script path as an argument to the bash interpreter
+  # If your script takes further arguments, add them after bash_script_path:
+  # Open3.popen3(bash_command, bash_script_path, *ARGV, chdir: working_directory) do ...
+  Open3.popen3(bash_command, bash_script_path, chdir: working_directory) do |stdin, stdout, stderr, wait_thr|
+    # Read and print standard output live
+    stdout_thread = Thread.new do
+      stdout.each { |line| puts "STDOUT: #{line.chomp}" }
+    end
+
+    # Read and print standard error live
+    stderr_thread = Thread.new do
+      stderr.each { |line| puts "STDERR: #{line.chomp}" }
+    end
+
+    # Wait for the output threads to finish
+    stdout_thread.join
+    stderr_thread.join
+
+    # Wait for the command to finish and get its exit status
+    exit_status = wait_thr.value
+
+    if exit_status.success?
+      puts "Bash script completed successfully."
+    else
+      puts "Bash script failed with exit status #{exit_status.exitstatus}."
+      # Optionally exit the Ruby process with the same status
+      # exit exit_status.exitstatus
+    end
+  end
+
+rescue Errno::ENOENT
+  $stderr.puts "Error: The 'bash' command was not found. Make sure bash is installed (e.g., Git Bash, WSL) and is in your system's PATH."
+  exit 1
+rescue StandardError => e
+  $stderr.puts "An error occurred during script execution: #{e.message}"
+  exit 1
+end
