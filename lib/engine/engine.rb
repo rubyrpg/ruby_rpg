@@ -59,13 +59,8 @@ module Engine
       GameObject.update_all(delta_time)
 
       @swap_buffers_promise.wait! if @swap_buffers_promise
-      GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
-      GL.Enable(GL::DEPTH_TEST)
-      GL.DepthFunc(GL::LESS)
 
-      Rendering::RenderPipeline.draw unless @game_stopped
-      GL.Disable(GL::DEPTH_TEST)
-      GameObject.render_ui(delta_time)
+      Rendering::RenderPipeline.draw(delta_time) unless @game_stopped
 
       if Screenshoter.scheduled_screenshot
         Screenshoter.take_screenshot

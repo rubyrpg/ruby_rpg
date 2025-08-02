@@ -2,7 +2,11 @@
 
 module Rendering
   module RenderPipeline
-    def self.draw
+    def self.draw(delta_time)
+      GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
+      GL.Enable(GL::DEPTH_TEST)
+      GL.DepthFunc(GL::LESS)
+
       Engine::GameObject.mesh_renderers.each do |mesh_renderer|
         mesh_renderer.update(0)
       end
@@ -10,6 +14,9 @@ module Rendering
       instance_renderers.values.each do |renderer|
         renderer.draw_all
       end
+
+      GL.Disable(GL::DEPTH_TEST)
+      Engine::GameObject.render_ui(delta_time)
     end
 
     def self.add_instance(mesh_renderer)
