@@ -32,6 +32,10 @@ module Engine
       @ui_sprite ||= Engine::Shader.new('./shaders/ui_sprite_vertex.glsl', './shaders/ui_sprite_frag.glsl')
     end
 
+    def self.fullscreen
+      @fullscreen ||= Engine::Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/fullscreen_frag.glsl')
+    end
+
     def initialize(vertex_shader, fragment_shader)
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)

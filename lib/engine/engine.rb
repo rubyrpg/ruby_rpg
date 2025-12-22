@@ -59,9 +59,6 @@ module Engine
       GameObject.update_all(delta_time)
 
       @swap_buffers_promise.wait! if @swap_buffers_promise
-      GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
-      GL.Enable(GL::DEPTH_TEST)
-      GL.DepthFunc(GL::LESS)
 
       Rendering::RenderPipeline.draw unless @game_stopped
 
