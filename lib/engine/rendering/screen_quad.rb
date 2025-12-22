@@ -7,11 +7,9 @@ module Rendering
       setup_vbo
     end
 
-    def draw(texture)
-      shader.use
-      GL.ActiveTexture(GL::TEXTURE0)
-      GL.BindTexture(GL::TEXTURE_2D, texture)
-      shader.set_int("screenTexture", 0)
+    def draw(material, texture)
+      material.set_texture("screenTexture", texture)
+      material.update_shader
 
       GL.BindVertexArray(@vao)
       GL.DrawArrays(GL::TRIANGLES, 0, 6)
@@ -19,10 +17,6 @@ module Rendering
     end
 
     private
-
-    def shader
-      @shader ||= Engine::Shader.fullscreen
-    end
 
     def setup_vao
       vao_buf = ' ' * 4

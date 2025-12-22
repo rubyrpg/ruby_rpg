@@ -10,6 +10,7 @@ require_relative 'engine/autoloader'
 require_relative "engine/debugging"
 require_relative 'engine/rendering/render_texture'
 require_relative 'engine/rendering/screen_quad'
+require_relative 'engine/rendering/post_processing_effect'
 require_relative 'engine/rendering/render_pipeline'
 require_relative 'engine/rendering/instance_renderer'
 require_relative 'engine/screenshoter'
