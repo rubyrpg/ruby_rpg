@@ -110,7 +110,7 @@ module Engine
 
       def set_opengl_version
         GLFW.WindowHint(GLFW::CONTEXT_VERSION_MAJOR, 4)
-        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MINOR, 3)
+        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MINOR, OS.mac? ? 1 : 3)
         GLFW.WindowHint(GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE)
         GLFW.WindowHint(GLFW::OPENGL_FORWARD_COMPAT, GLFW::TRUE)
       end
