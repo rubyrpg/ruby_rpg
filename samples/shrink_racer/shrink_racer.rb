@@ -4,7 +4,12 @@ require "pry"
 Engine.start do
   include ShrinkRacer
 
-  # Add tint post-processing effect
+  # Add post-processing effects
+  # focus_distance: higher = more sharp near camera, blur only very far things
+  # focus_range: smaller = sharper transition to blur
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.depth_of_field(focus_distance: 0.98, focus_range: 0.03, blur_amount: 4.0)
+  )
   Rendering::PostProcessingEffect.add(
     Rendering::PostProcessingEffect.tint(color: [1.0, 0.8, 0.6], intensity: 0.5)
   )
