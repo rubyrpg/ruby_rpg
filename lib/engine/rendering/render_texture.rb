@@ -31,7 +31,7 @@ module Rendering
       @height = height
 
       GL.BindTexture(GL::TEXTURE_2D, @texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, @width, @height, 0, GL::RGBA, GL::UNSIGNED_BYTE, nil)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
 
       GL.BindTexture(GL::TEXTURE_2D, @depth_texture)
       GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH_COMPONENT32F, @width, @height, 0, GL::DEPTH_COMPONENT, GL::FLOAT, nil)
@@ -51,7 +51,7 @@ module Rendering
       @texture = tex_buf.unpack1('L')
 
       GL.BindTexture(GL::TEXTURE_2D, @texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, @width, @height, 0, GL::RGBA, GL::UNSIGNED_BYTE, nil)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)

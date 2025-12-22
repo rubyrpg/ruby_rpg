@@ -116,5 +116,19 @@ module ShrinkRacer
           material
         end
     end
+
+    def self.tree_material
+      @tree_material ||=
+        begin
+          material = Engine::Material.new(Engine::Shader.vertex_lit)
+          material.set_texture("image", nil)
+          material.set_texture("normalMap", nil)
+          material.set_float("diffuseStrength", 0.8)
+          material.set_float("specularStrength", 5.0)
+          material.set_float("specularPower", 32.0)
+          material.set_vec3("ambientLight", Vector[0.6, 0.6, 0.6])
+          material
+        end
+    end
   end
 end

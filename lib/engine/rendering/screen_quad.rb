@@ -9,8 +9,11 @@ module Rendering
 
     def draw(material, texture)
       material.set_texture("screenTexture", texture)
-      material.update_shader
+      draw_with_material(material)
+    end
 
+    def draw_with_material(material)
+      material.update_shader
       GL.BindVertexArray(@vao)
       GL.DrawArrays(GL::TRIANGLES, 0, 6)
       GL.BindVertexArray(0)

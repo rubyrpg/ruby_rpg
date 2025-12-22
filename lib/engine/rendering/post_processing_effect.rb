@@ -93,6 +93,10 @@ module Rendering
         )
         new(Engine::Material.new(shader))
       end
+
+      def bloom(threshold: 0.7, intensity: 1.0, blur_passes: 2, blur_scale: 1.0)
+        BloomEffect.new(threshold: threshold, intensity: intensity, blur_passes: blur_passes, blur_scale: blur_scale)
+      end
     end
   end
 end

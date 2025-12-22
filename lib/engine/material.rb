@@ -12,6 +12,10 @@ module Engine
       mat4s[name] = value
     end
 
+    def set_vec2(name, value)
+      vec2s[name] = value
+    end
+
     def set_vec3(name, value)
       vec3s[name] = value
     end
@@ -33,6 +37,9 @@ module Engine
 
       mat4s.each do |name, value|
         shader.set_mat4(name, value)
+      end
+      vec2s.each do |name, value|
+        shader.set_vec2(name, value)
       end
       vec3s.each do |name, value|
         shader.set_vec3(name, value)
@@ -58,6 +65,10 @@ module Engine
 
     def mat4s
       @mat4s ||= {}
+    end
+
+    def vec2s
+      @vec2s ||= {}
     end
 
     def vec3s

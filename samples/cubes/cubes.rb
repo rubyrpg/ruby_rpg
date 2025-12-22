@@ -3,6 +3,10 @@ require_relative "../../lib/ruby_rpg"
 Engine.start do
   include Cubes
 
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
+  )
+
   Engine::GameObject.new(
     "Camera",
     pos: Vector[0, 50, 70],
@@ -17,22 +21,30 @@ Engine.start do
     rotation: Vector[-60, 180, 30],
     components: [
       Engine::Components::DirectionLight.new(
-        colour: Vector[1.4, 1.4, 1.2],
+        colour: Vector[0.5, 0.5, 0.5],
       )
     ])
 
-  # Create compute textures and shader (platform-agnostic)
-  color_texture = Engine::ComputeTexture.new(512, 512)
-  normal_texture = Engine::ComputeTexture.new(512, 512)
-  compute_shader = Engine::ComputeShader.new("assets/hello_cubes.comp")
-
-  Plane.create(Vector[0, 0, 0], Vector[90, 0, 0], 50, color_texture.gl_texture, normal_texture.gl_texture)
+  sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
+  Cube.create(Vector[25, 20, 0], Vector[0, 0, 0], 8)
 
   Engine::GameObject.new(
-    "Compute Animator",
+    "Purple Light",
+    pos: Vector[0, 20, 0],
     components: [
-      ComputeShaderAnimator.new(compute_shader, [color_texture, normal_texture])
-    ])
+      Engine::Components::PointLight.new(range: 50, colour: Vector[1.0, 0.0, 1.0])
+    ]
+  )
 
-  Sphere.create(Vector[0, 20, 0], 0, 10)
+  # Floor planes (3x3 grid)
+  chessboard = Engine::Texture.for("assets/chessboard.png").texture
+  tile_size = 50
+  (-1..1).each do |x|
+    (-1..1).each do |z|
+      Plane.create(Vector[x * tile_size, 0, z * tile_size], Vector[90, 0, 0], tile_size, chessboard)
+    end
+  end
+
+  # Back wall
+  Plane.create(Vector[0, 25, -50], Vector[0, 0, 0], 50, Engine::Texture.for("assets/chessboard.png").texture)
 end

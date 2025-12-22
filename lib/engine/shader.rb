@@ -36,6 +36,10 @@ module Engine
       @fullscreen ||= Engine::Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/fullscreen_frag.glsl')
     end
 
+    def self.colour
+      @colour ||= Engine::Shader.new('./shaders/colour_vertex.glsl', './shaders/colour_frag.glsl')
+    end
+
     def initialize(vertex_shader, fragment_shader)
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)
@@ -75,6 +79,12 @@ module Engine
 
     def use
       GL.UseProgram(@program)
+    end
+
+    def set_vec2(name, vec)
+      return if @uniform_cache[name] == vec
+      @uniform_cache[name] = vec
+      GL.Uniform2f(uniform_location(name), vec[0], vec[1])
     end
 
     def set_vec3(name, vec)
