@@ -48,6 +48,14 @@ require_relative "engine/physics/components/sphere_collider"
 require_relative "engine/physics/components/cube_collider"
 require_relative "engine/physics/components/rigidbody"
 
+# Metal compute shader support (Mac only)
+if OS.mac?
+  require_relative "engine/metal/metal_bindings"
+  require_relative "engine/metal/device"
+  require_relative "engine/metal/compute_shader"
+  require_relative "engine/metal/shared_texture"
+end
+
 if OS.windows?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))
 elsif OS.mac?
