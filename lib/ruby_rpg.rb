@@ -23,7 +23,6 @@ require_relative 'engine/polygon_mesh'
 require_relative 'engine/importers/obj_file'
 require_relative 'engine/tangent_calculator'
 require_relative 'engine/shader'
-require_relative 'engine/compute_shader'
 require_relative 'engine/component'
 require_relative "engine/camera"
 require_relative "engine/window"
@@ -48,13 +47,22 @@ require_relative "engine/physics/components/sphere_collider"
 require_relative "engine/physics/components/cube_collider"
 require_relative "engine/physics/components/rigidbody"
 
-# Metal compute shader support (Mac only)
+# Platform-specific compute shader implementations
 if OS.mac?
+  # Metal compute shaders (Mac)
   require_relative "engine/metal/metal_bindings"
   require_relative "engine/metal/device"
   require_relative "engine/metal/compute_shader"
-  require_relative "engine/metal/shared_texture"
+  require_relative "engine/metal/compute_texture"
+else
+  # OpenGL compute shaders (Windows/Linux)
+  require_relative "engine/opengl/compute_shader"
+  require_relative "engine/opengl/compute_texture"
 end
+
+# Platform-agnostic compute shader factories
+require_relative "engine/compute_shader"
+require_relative "engine/compute_texture"
 
 if OS.windows?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))

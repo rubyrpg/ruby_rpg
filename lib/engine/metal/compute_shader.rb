@@ -29,10 +29,11 @@ module Engine
         # Set the pipeline state
         ObjC.msg(encoder, 'setComputePipelineState:', @pipeline)
 
-        # Set textures
+        # Set textures (extract metal_texture from ComputeTexture objects)
         textures.each_with_index do |texture, index|
           next if texture.nil?
-          ObjC.msg(encoder, 'setTexture:atIndex:', texture, index)
+          metal_tex = texture.respond_to?(:metal_texture) ? texture.metal_texture : texture
+          ObjC.msg(encoder, 'setTexture:atIndex:', metal_tex, index)
         end
 
         # Create uniform buffer with floats and ints
@@ -53,6 +54,9 @@ module Engine
         ObjC.msg(encoder, 'endEncoding')
         ObjC.msg(command_buffer, 'commit')
         ObjC.msg(command_buffer, 'waitUntilCompleted')
+
+        # Sync textures to make results available for OpenGL rendering
+        textures.each { |tex| tex.sync if tex.respond_to?(:sync) }
       end
 
       private

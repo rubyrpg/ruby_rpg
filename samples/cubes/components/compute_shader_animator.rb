@@ -2,16 +2,22 @@
 
 module Cubes
   class ComputeShaderAnimator < Engine::Component
-    def initialize(compute_shader, textures)
+    def initialize(compute_shader, compute_textures)
       @compute_shader = compute_shader
-      @textures = textures
+      @compute_textures = compute_textures
       @time = 0.0
     end
 
     def update(delta_time)
       @time += delta_time
-      @compute_shader.dispatch(512, 512, 1, floats: {"u_time" => @time}, textures: @textures)
+
+      @compute_shader.dispatch(
+        @compute_textures.first.width,
+        @compute_textures.first.height,
+        1,
+        textures: @compute_textures,
+        floats: { "u_time" => @time }
+      )
     end
   end
 end
-  

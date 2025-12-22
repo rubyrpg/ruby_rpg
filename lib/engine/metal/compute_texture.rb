@@ -5,17 +5,10 @@ require_relative 'device'
 
 module Engine
   module Metal
-    class SharedTexture
+    class ComputeTexture
       include Fiddle
 
-      # gl_texture_2d is the regular TEXTURE_2D for use with existing shaders
-      # gl_texture_rect is the TEXTURE_RECTANGLE backed by IOSurface
-      attr_reader :gl_texture_2d, :gl_texture_rect, :metal_texture, :width, :height
-
-      # Alias for compatibility - returns the usable 2D texture
-      def gl_texture
-        @gl_texture_2d
-      end
+      attr_reader :width, :height, :gl_texture, :metal_texture
 
       # IOSurface property keys
       IOSURFACE_WIDTH = 'IOSurfaceWidth'
@@ -40,8 +33,7 @@ module Engine
         setup_blit_fbo
       end
 
-      # Call this after Metal compute to copy RECT texture to 2D texture
-      def blit_to_2d
+      def sync
         GL.BindFramebuffer(GL::READ_FRAMEBUFFER, @read_fbo)
         GL.BindFramebuffer(GL::DRAW_FRAMEBUFFER, @draw_fbo)
 
@@ -53,15 +45,12 @@ module Engine
         )
 
         GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
-
-        # Ensure GL operations complete for proper Metal/GL synchronization
         GL.Finish
       end
 
       private
 
       def create_iosurface
-        # Create properties dictionary
         props = create_iosurface_properties
         @iosurface = IOSurfaceFramework.IOSurfaceCreate(props)
 
@@ -73,7 +62,6 @@ module Engine
       end
 
       def create_iosurface_properties
-        # Create mutable dictionary
         dict = CoreFoundation.CFDictionaryCreateMutable(nil, 0, nil, nil)
 
         bytes_per_element = 16 # 4 floats * 4 bytes
@@ -97,7 +85,6 @@ module Engine
       end
 
       def create_metal_texture
-        # Create texture descriptor
         descriptor = ObjC.msg(ObjC.cls('MTLTextureDescriptor'), 'new')
 
         # MTLPixelFormatRGBA32Float = 125
@@ -109,7 +96,6 @@ module Engine
         # MTLStorageModeShared = 0
         ObjC.msg(descriptor, 'setStorageMode:', 0)
 
-        # Create texture from IOSurface
         @metal_texture = ObjC.msg(
           @device.device,
           'newTextureWithDescriptor:iosurface:plane:',
@@ -124,20 +110,16 @@ module Engine
       end
 
       def create_gl_rect_texture
-        # Generate GL texture for RECTANGLE (IOSurface-backed)
         tex_buf = ' ' * 4
         GL.GenTextures(1, tex_buf)
         @gl_texture_rect = tex_buf.unpack('L')[0]
 
-        # Bind as TEXTURE_RECTANGLE (required for IOSurface)
         GL.BindTexture(GL::TEXTURE_RECTANGLE, @gl_texture_rect)
-
         GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
         GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
         GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
         GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
 
-        # Bind IOSurface to GL texture
         cgl_context = OpenGLBridge.CGLGetCurrentContext()
 
         result = OpenGLBridge.CGLTexImageIOSurface2D(
@@ -158,25 +140,21 @@ module Engine
       end
 
       def create_gl_2d_texture
-        # Generate regular TEXTURE_2D for use with existing shaders
         tex_buf = ' ' * 4
         GL.GenTextures(1, tex_buf)
-        @gl_texture_2d = tex_buf.unpack('L')[0]
+        @gl_texture = tex_buf.unpack('L')[0]
 
-        GL.BindTexture(GL::TEXTURE_2D, @gl_texture_2d)
+        GL.BindTexture(GL::TEXTURE_2D, @gl_texture)
         GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
         GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
         GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::REPEAT)
         GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::REPEAT)
 
-        # Allocate storage
         GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA32F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
-
         GL.BindTexture(GL::TEXTURE_2D, 0)
       end
 
       def setup_blit_fbo
-        # Create FBO for reading from RECT texture
         read_fbo_buf = ' ' * 4
         GL.GenFramebuffers(1, read_fbo_buf)
         @read_fbo = read_fbo_buf.unpack('L')[0]
@@ -184,13 +162,12 @@ module Engine
         GL.BindFramebuffer(GL::FRAMEBUFFER, @read_fbo)
         GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_RECTANGLE, @gl_texture_rect, 0)
 
-        # Create FBO for writing to 2D texture
         draw_fbo_buf = ' ' * 4
         GL.GenFramebuffers(1, draw_fbo_buf)
         @draw_fbo = draw_fbo_buf.unpack('L')[0]
 
         GL.BindFramebuffer(GL::FRAMEBUFFER, @draw_fbo)
-        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, @gl_texture_2d, 0)
+        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, @gl_texture, 0)
 
         GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
       end
