@@ -8,7 +8,7 @@ module Asteroids
     end
 
     def update(delta_time)
-      toggle_visibility if Engine::Input.key?(GLFW::KEY_D)
+      toggle_visibility if Engine::Input.key_down?(GLFW::KEY_D)
       @fps_counter.update_string( @display ? onscreen_message : '' )
     end
 

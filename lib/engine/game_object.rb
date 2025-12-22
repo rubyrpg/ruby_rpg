@@ -213,9 +213,9 @@ module Engine
       end
     end
 
-    def self.render_ui(delta_time)
-      GameObject.objects.each do |object|
-        object.ui_renderers.each { |renderer| renderer.update(delta_time) }
+    def self.ui_renderers
+      GameObject.objects.flat_map do |object|
+        object.ui_renderers
       end
     end
 

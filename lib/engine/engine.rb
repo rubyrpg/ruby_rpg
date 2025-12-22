@@ -64,8 +64,6 @@ module Engine
       GL.DepthFunc(GL::LESS)
 
       Rendering::RenderPipeline.draw unless @game_stopped
-      GL.Disable(GL::DEPTH_TEST)
-      GameObject.render_ui(delta_time)
 
       if Screenshoter.scheduled_screenshot
         Screenshoter.take_screenshot
