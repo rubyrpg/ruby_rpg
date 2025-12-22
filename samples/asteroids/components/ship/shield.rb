@@ -33,7 +33,7 @@ module Asteroids
 
     def destroy_shield!
       game_object.destroy!
-      Explosion.create(@ship_pos, colour: { r: 0.5, g: 1, b: 1 })
+      Explosion.create(@ship_pos, colour: [0.5, 1, 1, 1])
     end
 
     def set_shield_colour

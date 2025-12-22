@@ -16,6 +16,10 @@ module Engine
       @sprite ||= Engine::Shader.new('./shaders/sprite_vertex.glsl', './shaders/sprite_frag.glsl')
     end
 
+    def self.instanced_sprite
+      @instanced_sprite ||= Engine::Shader.new('./shaders/instanced_sprite_vertex.glsl', './shaders/instanced_sprite_frag.glsl')
+    end
+
     def self.text
       @text ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
     end

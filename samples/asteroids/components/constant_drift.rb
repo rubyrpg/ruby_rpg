@@ -7,7 +7,8 @@ module Asteroids
     end
 
     def update(delta_time)
-      game_object.pos = game_object.local_to_world_coordinate(Vector[0, @drift * delta_time, 0])
+      direction = game_object.local_to_world_direction(Vector[0, 1, 0]).normalize
+      game_object.pos += direction * @drift * delta_time
     end
   end
 end

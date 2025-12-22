@@ -39,5 +39,9 @@ module Engine
         hash[key] = File.readlines(key).reject{|l| l == ""}.map(&:to_i)
       end
     end
+
+    def self.quad
+      @quad ||= QuadMesh.new
+    end
   end
 end

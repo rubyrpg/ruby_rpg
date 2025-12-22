@@ -7,24 +7,20 @@ module Asteroids
         "Asteroid",
         pos: pos,
         rotation: rotation,
+        scale: Vector[radius, radius, 1],
         components:
           [AsteroidComponent.new(radius),
            ConstantDrift.new(rand(150)),
            ClampToScreen.new,
-           Engine::Components::SpriteRenderer.new(
-             Vector[-radius / 2, radius / 2],
-             Vector[radius / 2, radius / 2],
-             Vector[radius / 2, -radius / 2],
-             Vector[-radius / 2, -radius / 2],
-             Asteroid.asteroid_texture
-           )]
+           Engine::Components::SpriteRenderer.new(asteroid_material)]
       )
     end
 
-    private
-
-    def self.asteroid_texture
-      @asteroid_texture ||= Engine::Texture.for("assets/Asteroid_01.png").texture
+    def self.asteroid_material
+      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material.set_texture("image", Engine::Texture.for("assets/Asteroid_01.png").texture)
+      material.set_vec4("spriteColor", [1, 1, 1, 1])
+      material
     end
   end
 end

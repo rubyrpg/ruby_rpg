@@ -9,23 +9,21 @@ module Asteroids
         "Bullet",
         pos: pos,
         rotation: rotation,
+        scale: Vector[BULLET_SIZE, BULLET_SIZE, 1],
         components: [
           Projectile.new,
           ConstantDrift.new(900),
           DestroyAfter.new(2),
-          Engine::Components::SpriteRenderer.new(
-            Vector[-BULLET_SIZE / 2, BULLET_SIZE / 2],
-            Vector[BULLET_SIZE / 2, BULLET_SIZE / 2],
-            Vector[BULLET_SIZE / 2, -BULLET_SIZE / 2],
-            Vector[-BULLET_SIZE / 2, -BULLET_SIZE / 2],
-            Bullet.texture
-          )
+          Engine::Components::SpriteRenderer.new(bullet_material)
         ]
       )
     end
 
-    def self.texture
-      @texture ||= Engine::Texture.for("assets/Square.png").texture
+    def self.bullet_material
+      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material.set_texture("image", Engine::Texture.for("assets/Square.png").texture)
+      material.set_vec4("spriteColor", [1, 1, 1, 1])
+      material
     end
   end
 end

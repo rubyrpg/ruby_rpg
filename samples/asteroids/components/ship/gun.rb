@@ -12,7 +12,9 @@ module Asteroids
       return if @last_fire && Time.now - @last_fire < COOLDOWN
       @last_fire = Time.now
 
-      Bullet.create(game_object.local_to_world_coordinate(Vector[0, 20, 0]), game_object.rotation)
+      direction = game_object.local_to_world_direction(Vector[0, 1, 0]).normalize
+      spawn_pos = game_object.pos + direction * 30
+      Bullet.create(spawn_pos, game_object.rotation)
     end
   end
 end

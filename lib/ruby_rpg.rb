@@ -17,6 +17,7 @@ require_relative 'engine/game_object'
 require_relative 'engine/texture'
 require_relative 'engine/material'
 require_relative 'engine/mesh'
+require_relative 'engine/standard_meshes/quad_mesh'
 require_relative "engine/font"
 require_relative 'engine/path'
 require_relative 'engine/polygon_mesh'

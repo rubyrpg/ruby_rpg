@@ -2,9 +2,9 @@
 
 module Asteroids
   class ShipEngine < Engine::Component
-    ACCELERATION = 800
-    DECELERATION = 800
-    MAX_SPEED = 600
+    ACCELERATION = 400
+    DECELERATION = 400
+    MAX_SPEED = 400
     TURNING_SPEED = 300
 
     def initialize
@@ -12,7 +12,8 @@ module Asteroids
     end
 
     def update(delta_time)
-      @speed += game_object.local_to_world_direction(Vector[0.0, acceleration * delta_time, 0.0])
+      direction = game_object.local_to_world_direction(Vector[0, 1, 0]).normalize
+      @speed += direction * acceleration * delta_time
       clamp_speed
       game_object.pos += @speed * delta_time
 

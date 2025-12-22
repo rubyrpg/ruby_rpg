@@ -7,34 +7,41 @@ module Asteroids
         "Ship",
         pos: pos,
         rotation: rotation,
+        scale: Vector[50, 50, 1],
         components:
           [ShipEngine.new,
            ClampToScreen.new,
            Gun.new,
-           Engine::Components::SpriteRenderer.new(
-             Vector[-25, 25], Vector[25, 25], Vector[25, -25], Vector[-25, -25],
-             Engine::Texture.for("assets/Player.png").texture
-           )]
+           Engine::Components::SpriteRenderer.new(ship_material)]
       )
 
       ship.add_child Engine::GameObject.new(
         "Shield",
         pos: Vector[0, 0, 0],
         rotation: Vector[0, 0, 0],
+        scale: Vector[2, 2, 1],  # 2x parent size (100/50)
         components:
           [
             ShieldComponent.new,
-            Engine::Components::SpriteRenderer.new(
-              Vector[-50, 50],
-              Vector[50, 50],
-              Vector[50, -50],
-              Vector[-50, -50],
-              Engine::Texture.for("assets/Shield.png").texture
-            )
+            Engine::Components::SpriteRenderer.new(shield_material)
           ]
       )
 
       ship
+    end
+
+    def self.ship_material
+      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material.set_texture("image", Engine::Texture.for("assets/Player.png").texture)
+      material.set_vec4("spriteColor", [1, 1, 1, 1])
+      material
+    end
+
+    def self.shield_material
+      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material.set_texture("image", Engine::Texture.for("assets/Shield.png").texture)
+      material.set_vec4("spriteColor", [1, 1, 1, 1])
+      material
     end
   end
 end
