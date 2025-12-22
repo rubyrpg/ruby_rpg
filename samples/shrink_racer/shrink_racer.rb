@@ -4,6 +4,11 @@ require "pry"
 Engine.start do
   include ShrinkRacer
 
+  # Add tint post-processing effect
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.tint(color: [1.0, 0.8, 0.6], intensity: 0.5)
+  )
+
   Engine::GameObject.new(
     "Direction Light",
     rotation: Vector[-60, 180, 30],
