@@ -28,6 +28,10 @@ module Engine
       floats[name] = value
     end
 
+    def set_int(name, value)
+      ints[name] = value
+    end
+
     def set_texture(name, value)
       textures[name] = value
     end
@@ -49,6 +53,9 @@ module Engine
       end
       floats.each do |name, value|
         shader.set_float(name, value)
+      end
+      ints.each do |name, value|
+        shader.set_int(name, value)
       end
       textures.each.with_index do |(name, value), slot|
         GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
@@ -81,6 +88,10 @@ module Engine
 
     def floats
       @floats ||= {}
+    end
+
+    def ints
+      @ints ||= {}
     end
 
     def textures

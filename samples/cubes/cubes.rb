@@ -21,31 +21,31 @@ Engine.start do
     rotation: Vector[-60, 180, 30],
     components: [
       Engine::Components::DirectionLight.new(
-        colour: Vector[0.5, 0.5, 0.5],
+        colour: Vector[1, 1, 1],
       )
     ])
 
   sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
   Cube.create(Vector[25, 20, -30], Vector[60, 0, 0], 8)
 
-  Engine::GameObject.new(
-    "Purple Light",
-    pos: Vector[0, 20, 0],
-    components: [
-      Engine::Components::PointLight.new(range: 50, colour: Vector[1.0, 0.0, 1.0])
-    ]
-  )
+  # Engine::GameObject.new(
+  #   "Purple Light",
+  #   pos: Vector[0, 20, 0],
+  #   components: [
+  #     Engine::Components::PointLight.new(range: 50, colour: Vector[1.0, 0.0, 1.0])
+  #   ]
+  # )
 
   spotlight_pos = Vector[25, 90, -30]
 
-  Engine::GameObject.new(
-    "Spotlight",
-    pos: spotlight_pos,
-    rotation: Vector[-100, 0, 0],
-    components: [
-      Engine::Components::SpotLight.new(range: 100, colour: Vector[1.0, 1.0, 0.0], inner_angle: 15, outer_angle: 35)
-    ]
-  )
+  # Engine::GameObject.new(
+  #   "Spotlight",
+  #   pos: spotlight_pos,
+  #   rotation: Vector[-100, 0, 0],
+  #   components: [
+  #     Engine::Components::SpotLight.new(range: 100, colour: Vector[1.0, 1.0, 0.0], inner_angle: 15, outer_angle: 35)
+  #   ]
+  # )
 
   Sphere.create(spotlight_pos, 0, 2)
 

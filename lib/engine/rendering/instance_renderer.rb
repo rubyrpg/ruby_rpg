@@ -45,6 +45,23 @@ module Rendering
       GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
+    def draw_depth_only(light_space_matrix)
+      return if @mesh_renderers.empty?
+
+      shadow_shader = Engine::Shader.shadow
+      shadow_shader.use
+      shadow_shader.set_mat4("lightSpaceMatrix", light_space_matrix)
+
+      GL.BindVertexArray(@vao)
+      update_vbo_buf
+      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+
+      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @mesh_renderers.count)
+      GL.BindVertexArray(0)
+      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+    end
+
     private
 
     def set_material_per_frame_data
@@ -61,10 +78,19 @@ module Rendering
         material.set_vec3("pointLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
         material.set_vec3("pointLights[#{i}].colour", light.colour)
       end
+
       Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|
-        material.set_vec3("directionalLights[#{i}].direction", light.game_object.local_to_world_direction(Vector[0, 0, 1]).normalize)
+        break if i >= 4
+        material.set_vec3("directionalLights[#{i}].direction", light.direction)
         material.set_vec3("directionalLights[#{i}].colour", light.colour)
+        material.set_int("directionalLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map ? 1 : 0)
+
+        if light.cast_shadows && light.shadow_map
+          material.set_mat4("directionalLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
+          material.set_texture("directionalShadowMaps[#{i}]", light.shadow_map.depth_texture)
+        end
       end
+
       Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
         material.set_vec3("spotLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
         material.set_vec3("spotLights[#{i}].direction", light.game_object.local_to_world_direction(Vector[0, 0, 1]).normalize)

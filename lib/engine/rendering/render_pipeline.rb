@@ -5,6 +5,8 @@ module Rendering
     def self.draw
       update_render_texture_size
 
+      draw_shadow_maps
+
       render_texture_a.bind
       clear_buffer
       draw_3d
@@ -17,6 +19,27 @@ module Rendering
       current_texture.unbind
 
       blit_to_screen(current_texture.texture)
+    end
+
+    def self.draw_shadow_maps
+      GL.Enable(GL::DEPTH_TEST)
+      GL.DepthFunc(GL::LESS)
+
+      Engine::Components::DirectionLight.direction_lights.each do |light|
+        next unless light.cast_shadows && light.shadow_map
+
+        light.shadow_map.bind
+        light_space_matrix = light.light_space_matrix
+
+        instance_renderers.values.each do |renderer|
+          renderer.draw_depth_only(light_space_matrix)
+        end
+
+        light.shadow_map.unbind
+      end
+
+      # Restore viewport to window size
+      GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
     end
 
     def self.draw_3d

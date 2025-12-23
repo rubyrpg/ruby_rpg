@@ -4,9 +4,12 @@
 struct DirectionalLight {
     vec3 direction;
     vec3 colour;
+    mat4 lightSpaceMatrix;
+    bool castsShadows;
 };
 #define NR_DIRECTIONAL_LIGHTS 4
 uniform DirectionalLight directionalLights[NR_DIRECTIONAL_LIGHTS];
+uniform sampler2D directionalShadowMaps[NR_DIRECTIONAL_LIGHTS];  // can't be in struct in GLSL 330
 
 struct PointLight {
     vec3 position;
@@ -68,8 +71,32 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, f
     return light.colour * (diffuse + specular) * attenuation;
 }
 
-vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
+float CalcShadow(DirectionalLight light, int lightIndex, vec3 fragPos)
 {
+    if (!light.castsShadows) {
+        return 0.0;
+    }
+
+    vec4 fragPosLightSpace = light.lightSpaceMatrix * vec4(fragPos, 1.0);
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5;
+
+    // Fragment is beyond the shadow map frustum
+    if (projCoords.z > 1.0) {
+        return 0.0;
+    }
+
+    float closestDepth = texture(directionalShadowMaps[lightIndex], projCoords.xy).r;
+    float currentDepth = projCoords.z;
+    float bias = 0.005;
+
+    return currentDepth - bias > closestDepth ? 1.0 : 0.0;
+}
+
+vec3 CalcDirectionalLight(DirectionalLight light, int lightIndex, vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
+{
+    float shadow = CalcShadow(light, lightIndex, fragPos);
+
     float diff = max(dot(normal, -light.direction), 0.0);
 
     vec3 reflectDir = reflect(-light.direction, normal);
@@ -78,7 +105,7 @@ vec3 CalcDirectionalLight(DirectionalLight light, vec3 normal, vec3 fragPos, vec
     float diffuse = diff * diffuseStrength;
     float specular = spec * specularStrength;
 
-    return light.colour * (diffuse + specular);
+    return light.colour * (diffuse + specular) * (1.0 - shadow);
 }
 
 vec3 CalcAllLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambientLight, float diffuseStrength, float specularStrength, float specularPower)
@@ -92,7 +119,7 @@ vec3 CalcAllLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambientLight, f
 
     for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
         if (directionalLights[i].colour == vec3(0.0)) break;
-        result += CalcDirectionalLight(directionalLights[i], normal, fragPos, viewDir, diffuseStrength, specularStrength, specularPower);
+        result += CalcDirectionalLight(directionalLights[i], i, normal, fragPos, viewDir, diffuseStrength, specularStrength, specularPower);
     }
 
     for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
