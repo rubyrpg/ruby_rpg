@@ -70,11 +70,25 @@ module Engine
     def compile_shader(shader, type)
       handle = GL.CreateShader(type)
       path = File.join(File.dirname(__FILE__), shader)
-      s_srcs = [File.read(path)].pack('p')
-      s_lens = [File.size(path)].pack('I')
+      source = preprocess_shader(path)
+      s_srcs = [source].pack('p')
+      s_lens = [source.bytesize].pack('I')
       GL.ShaderSource(handle, 1, s_srcs, s_lens)
       GL.CompileShader(handle)
       handle
+    end
+
+    def preprocess_shader(path, included = [])
+      return "" if included.include?(path)
+      included << path
+
+      source = File.read(path)
+      dir = File.dirname(path)
+
+      source.gsub(/#include\s+"([^"]+)"/) do
+        include_path = File.join(dir, $1)
+        preprocess_shader(include_path, included)
+      end
     end
 
     def use
