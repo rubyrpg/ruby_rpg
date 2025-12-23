@@ -92,12 +92,21 @@ module Rendering
       end
 
       Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
-        material.set_vec3("spotLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
-        material.set_vec3("spotLights[#{i}].direction", light.game_object.local_to_world_direction(Vector[0, 0, 1]).normalize)
+        break if i >= 8
+        material.set_vec3("spotLights[#{i}].position", light.position)
+        material.set_vec3("spotLights[#{i}].direction", light.direction)
         material.set_float("spotLights[#{i}].sqrRange", light.range * light.range)
         material.set_vec3("spotLights[#{i}].colour", light.colour)
         material.set_float("spotLights[#{i}].innerCutoff", light.inner_cutoff)
         material.set_float("spotLights[#{i}].outerCutoff", light.outer_cutoff)
+        material.set_int("spotLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map ? 1 : 0)
+
+        if light.cast_shadows && light.shadow_map
+          material.set_mat4("spotLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
+          material.set_texture("spotShadowMaps[#{i}]", light.shadow_map.depth_texture)
+          material.set_float("spotLights[#{i}].shadowNear", light.shadow_near)
+          material.set_float("spotLights[#{i}].shadowFar", light.shadow_far)
+        end
       end
     end
 

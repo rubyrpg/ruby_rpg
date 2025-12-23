@@ -38,7 +38,8 @@ module ShrinkRacer
             range: 30,
             colour: Vector[0.03, 0.028, 0.024],
             inner_angle: 0,
-            outer_angle: 10
+            outer_angle: 10,
+            cast_shadows: true
           )
         ]
       )

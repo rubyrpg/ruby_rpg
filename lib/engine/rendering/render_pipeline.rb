@@ -38,6 +38,19 @@ module Rendering
         light.shadow_map.unbind
       end
 
+      Engine::Components::SpotLight.spot_lights.each do |light|
+        next unless light.cast_shadows && light.shadow_map
+
+        light.shadow_map.bind
+        light_space_matrix = light.light_space_matrix
+
+        instance_renderers.values.each do |renderer|
+          renderer.draw_depth_only(light_space_matrix)
+        end
+
+        light.shadow_map.unbind
+      end
+
       # Restore viewport to window size
       GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
     end

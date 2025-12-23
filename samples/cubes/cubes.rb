@@ -1,11 +1,12 @@
 require_relative "../../lib/ruby_rpg"
+require_relative "components/spotlight_controller"
 
 Engine.start do
   include Cubes
 
-  Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
-  )
+  # Rendering::PostProcessingEffect.add(
+  #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
+  # )
 
   Engine::GameObject.new(
     "Camera",
@@ -16,14 +17,14 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  Engine::GameObject.new(
-    "Direction Light",
-    rotation: Vector[-60, 180, 30],
-    components: [
-      Engine::Components::DirectionLight.new(
-        colour: Vector[1, 1, 1],
-      )
-    ])
+  # Engine::GameObject.new(
+  #   "Direction Light",
+  #   rotation: Vector[-60, 180, 30],
+  #   components: [
+  #     Engine::Components::DirectionLight.new(
+  #       colour: Vector[1, 1, 1],
+  #     )
+  #   ])
 
   sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
   Cube.create(Vector[25, 20, -30], Vector[60, 0, 0], 8)
@@ -38,16 +39,17 @@ Engine.start do
 
   spotlight_pos = Vector[25, 90, -30]
 
-  # Engine::GameObject.new(
-  #   "Spotlight",
-  #   pos: spotlight_pos,
-  #   rotation: Vector[-100, 0, 0],
-  #   components: [
-  #     Engine::Components::SpotLight.new(range: 100, colour: Vector[1.0, 1.0, 0.0], inner_angle: 15, outer_angle: 35)
-  #   ]
-  # )
+  Engine::GameObject.new(
+    "Spotlight",
+    pos: spotlight_pos,
+    rotation: Vector[-100, 0, 0],
+    components: [
+      Engine::Components::SpotLight.new(range: 200, colour: Vector[1.0, 1.0, 0.0], inner_angle: 15, outer_angle: 35, cast_shadows: true),
+      Cubes::SpotlightController.new
+    ]
+  )
 
-  Sphere.create(spotlight_pos, 0, 2)
+  # Sphere.create(spotlight_pos, 0, 2)  # temporarily disabled for shadow debug
 
   # Floor planes (3x3 grid)
   chessboard = Engine::Texture.for("assets/chessboard.png").texture

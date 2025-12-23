@@ -2,13 +2,16 @@
 
 module Engine::Components
   class SpotLight < Engine::Component
-    attr_accessor :range, :colour, :inner_angle, :outer_angle
+    attr_accessor :range, :colour, :inner_angle, :outer_angle, :cast_shadows
+    attr_reader :shadow_map
 
-    def initialize(range: 300, colour: [1.0, 1.0, 1.0], inner_angle: 12.5, outer_angle: 17.5)
+    def initialize(range: 300, colour: [1.0, 1.0, 1.0], inner_angle: 12.5, outer_angle: 17.5, cast_shadows: false)
       @range = range
       @colour = colour
       @inner_angle = inner_angle
       @outer_angle = outer_angle
+      @cast_shadows = cast_shadows
+      @shadow_map = Rendering::ShadowMap.new if cast_shadows
     end
 
     def start
@@ -27,8 +30,92 @@ module Engine::Components
       Math.cos(@outer_angle * Math::PI / 180.0)
     end
 
+    def shadow_near
+      @range * 0.01
+    end
+
+    def shadow_far
+      # Factor of 2 needed to match shadow range with spotlight attenuation range
+      @range * 2.0
+    end
+
+    def direction
+      game_object.local_to_world_direction(Vector[0, 0, 1]).normalize
+    end
+
+    def position
+      game_object.local_to_world_coordinate(Vector[0, 0, 0])
+    end
+
+    def light_space_matrix
+      @cached_light_space_matrix ||= compute_light_space_matrix
+    end
+
+    def update(delta_time)
+      # Clear cache each frame so matrix is recomputed if light moves
+      @cached_light_space_matrix = nil
+    end
+
+    def compute_light_space_matrix
+      light_pos = position
+      light_dir = direction
+      target = light_pos + light_dir
+
+      # Choose up vector that's not parallel to light direction
+      # When light points mostly along Y axis, use Z as up instead
+      up = if light_dir[1].abs > 0.9
+        Vector[0, 0, 1]
+      else
+        Vector[0, 1, 0]
+      end
+
+      view_matrix = look_at(light_pos, target, up)
+
+      # Perspective projection based on spotlight cone angle
+      fov = (@outer_angle * 2.0 + 5.0) * Math::PI / 180.0
+      # near/far ratio affects depth precision
+      proj_matrix = perspective(fov, 1.0, shadow_near, shadow_far)
+
+      (proj_matrix * view_matrix).transpose
+    end
+
     def self.spot_lights
       @spot_lights ||= []
+    end
+
+    private
+
+    def look_at(eye, center, up)
+      f = (center - eye).normalize
+      s = f.cross(up).normalize
+      u = s.cross(f)
+
+      Matrix[
+        [s[0], s[1], s[2], -s.dot(eye)],
+        [u[0], u[1], u[2], -u.dot(eye)],
+        [-f[0], -f[1], -f[2], f.dot(eye)],
+        [0, 0, 0, 1]
+      ]
+    end
+
+    def perspective(fov, aspect, near, far)
+      tan_half_fov = Math.tan(fov / 2.0)
+
+      Matrix[
+        [1.0 / (aspect * tan_half_fov), 0, 0, 0],
+        [0, 1.0 / tan_half_fov, 0, 0],
+        [0, 0, -(far + near) / (far - near), -(2.0 * far * near) / (far - near)],
+        [0, 0, -1, 0]
+      ]
+    end
+
+    def ortho(left, right, bottom, top, near, far)
+      Matrix[
+        [2.0 / (right - left), 0, 0, -(right + left) / (right - left)],
+        [0, 2.0 / (top - bottom), 0, -(top + bottom) / (top - bottom)],
+        [0, 0, -2.0 / (far - near), -(far + near) / (far - near)],
+        [0, 0, 0, 1]
+      ]
     end
   end
 end
