@@ -30,6 +30,40 @@ struct PointLight {
 #define NR_POINT_LIGHTS 16
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    float sqrRange;
+    vec3 colour;
+    float innerCutoff;
+    float outerCutoff;
+};
+#define NR_SPOT_LIGHTS 8
+uniform SpotLight spotLights[NR_SPOT_LIGHTS];
+
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+    vec3 lightOffset = light.position - fragPos;
+    float sqrDistance = dot(lightOffset, lightOffset);
+    vec3 lightDir = normalize(lightOffset);
+
+    float theta = dot(lightDir, -light.direction);
+    float epsilon = light.innerCutoff - light.outerCutoff;
+    float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);
+
+    float diff = max(dot(normal, lightDir), 0.0);
+
+    vec3 reflectDir = reflect(lightDir, normal);
+    float spec = pow(max(dot(-viewDir, reflectDir), 0.0), specularPower);
+
+    float attenuation = light.sqrRange / sqrDistance;
+
+    float diffuse = diff * diffuseStrength;
+    float specular = spec * specularStrength;
+
+    return light.colour * (diffuse + specular) * attenuation * intensity;
+}
+
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightOffset = light.position - fragPos;
@@ -95,6 +129,14 @@ void main()
             break;
         }
         result += CalcDirectionalLight(directionalLights[i], norm, FragPos, viewDir);
+    }
+
+    for (int i = 0; i < NR_SPOT_LIGHTS; i++) {
+        if (spotLights[i].sqrRange == 0.0)
+        {
+            break;
+        }
+        result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
     }
 
     vec4 tex = texture(image, TexCoord);

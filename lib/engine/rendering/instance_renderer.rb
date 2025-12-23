@@ -65,6 +65,14 @@ module Rendering
         material.set_vec3("directionalLights[#{i}].direction", light.game_object.forward)
         material.set_vec3("directionalLights[#{i}].colour", light.colour)
       end
+      Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
+        material.set_vec3("spotLights[#{i}].position", light.game_object.pos)
+        material.set_vec3("spotLights[#{i}].direction", light.game_object.forward)
+        material.set_float("spotLights[#{i}].sqrRange", light.range * light.range)
+        material.set_vec3("spotLights[#{i}].colour", light.colour)
+        material.set_float("spotLights[#{i}].innerCutoff", light.inner_cutoff)
+        material.set_float("spotLights[#{i}].outerCutoff", light.outer_cutoff)
+      end
     end
 
     def setup_index_buffer

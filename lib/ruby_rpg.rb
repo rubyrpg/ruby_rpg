@@ -45,6 +45,7 @@ require_relative "engine/components/renderers/font_renderer"
 require_relative "engine/components/renderers/ui_font_renderer"
 require_relative "engine/components/point_light"
 require_relative "engine/components/direction_light"
+require_relative "engine/components/spot_light"
 require_relative "engine/components/audio_source"
 
 require_relative "engine/physics/physics_resolver"
