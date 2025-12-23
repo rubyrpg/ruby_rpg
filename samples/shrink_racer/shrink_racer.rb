@@ -6,18 +6,19 @@ Engine.start do
 
   # Add post-processing effects
   Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.bloom(threshold: 0.6, intensity: 0.3, blur_passes: 3, blur_scale: 3.0)
+    Rendering::PostProcessingEffect.bloom(threshold: 2.0, intensity: 0.2, blur_passes: 3, blur_scale: 3.0)
   )
-  #Rendering::PostProcessingEffect.add(
-  #  Rendering::PostProcessingEffect.tint(color: [1.0, 0.8, 0.6], intensity: 0.5)
-  #)
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.depth_of_field(focus_distance: 0.95, focus_range: 0.3, blur_amount: 3.0)
+  )
+
 
   Engine::GameObject.new(
     "Direction Light",
     rotation: Vector[-60, 180, 30],
     components: [
       Engine::Components::DirectionLight.new(
-        colour: Vector[1, 1, 1],
+        colour: Vector[1.0, 0.6, 0.4],  # warm orange-pink twilight
       ),
     ])
 

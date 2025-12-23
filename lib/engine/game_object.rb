@@ -103,7 +103,7 @@ module Engine
     end
 
     def local_to_world_direction(local)
-      local_to_world_coordinate(local) - pos
+      local_to_world_coordinate(local) - local_to_world_coordinate(Vector[0, 0, 0])
     end
 
     def rotate_around(axis, angle)

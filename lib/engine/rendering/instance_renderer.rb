@@ -58,16 +58,16 @@ module Rendering
     def update_light_data
       Engine::Components::PointLight.point_lights.each_with_index do |light, i|
         material.set_float("pointLights[#{i}].sqrRange", light.range * light.range)
-        material.set_vec3("pointLights[#{i}].position", light.game_object.pos)
+        material.set_vec3("pointLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
         material.set_vec3("pointLights[#{i}].colour", light.colour)
       end
       Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|
-        material.set_vec3("directionalLights[#{i}].direction", light.game_object.forward)
+        material.set_vec3("directionalLights[#{i}].direction", light.game_object.local_to_world_direction(Vector[0, 0, 1]).normalize)
         material.set_vec3("directionalLights[#{i}].colour", light.colour)
       end
       Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
-        material.set_vec3("spotLights[#{i}].position", light.game_object.pos)
-        material.set_vec3("spotLights[#{i}].direction", light.game_object.forward)
+        material.set_vec3("spotLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
+        material.set_vec3("spotLights[#{i}].direction", light.game_object.local_to_world_direction(Vector[0, 0, 1]).normalize)
         material.set_float("spotLights[#{i}].sqrRange", light.range * light.range)
         material.set_vec3("spotLights[#{i}].colour", light.colour)
         material.set_float("spotLights[#{i}].innerCutoff", light.inner_cutoff)

@@ -36,6 +36,8 @@ module ShrinkRacer
 
     def self.create_back_plane
       material = Engine::Material.new(Engine::Shader.skybox)
+      material.set_vec3("horizonColour", Vector[0.6, 0.3, 0.25])   # warm orange-pink
+      material.set_vec3("skyColour", Vector[0.08, 0.05, 0.2])       # deep purple-blue
       Engine::GameObject.new(
         "Skybox",
         pos: Vector[0, 0, -FAR + 20],

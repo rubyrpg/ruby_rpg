@@ -58,7 +58,16 @@ module ShrinkRacer
     end
 
     def self.coin_material
-      @coin_material ||= material("props/Textures/colormap.png")
+      @coin_material ||= begin
+        material = Engine::Material.new(Engine::Shader.default)
+        material.set_texture("image", Engine::Texture.for("assets/props/Textures/colormap.png", flip: true).texture)
+        material.set_texture("normalMap", nil)
+        material.set_float("diffuseStrength", 0.1)
+        material.set_float("specularStrength", 0.1)
+        material.set_float("specularPower", 32.0)
+        material.set_vec3("ambientLight", Vector[0.8, 0.7, 0.5])
+        material
+      end
     end
 
     def self.material(texture_file)
@@ -68,7 +77,7 @@ module ShrinkRacer
       material.set_float("diffuseStrength", 0.5)
       material.set_float("specularStrength", 0.6)
       material.set_float("specularPower", 32.0)
-      material.set_vec3("ambientLight", Vector[0.7, 0.7, 0.7])
+      material.set_vec3("ambientLight", Vector[0.17, 0.15, 0.22])
       material
     end
   end

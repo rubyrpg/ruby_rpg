@@ -102,13 +102,14 @@ module Engine
     end
 
     def set_vec3(name, vec)
-      return if @uniform_cache[name] == vec
-      @uniform_cache[name] = vec
       vector = if vec.is_a?(Vector)
                  vec
                else
                  Vector[vec[:r], vec[:g], vec[:b]]
                end
+      cache_key = [vector[0], vector[1], vector[2]]
+      return if @uniform_cache[name] == cache_key
+      @uniform_cache[name] = cache_key
       GL.Uniform3f(uniform_location(name), vector[0], vector[1], vector[2])
     end
 

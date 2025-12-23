@@ -26,6 +26,37 @@ module ShrinkRacer
         ],
         parent: parent
       )
+
+      # Headlights
+      Engine::GameObject.new(
+        "Headlight Left",
+        pos: Vector[-0.75, 1, 0],
+        rotation: Vector[0, 0, 0],
+        parent: parent,
+        components: [
+          Engine::Components::SpotLight.new(
+            range: 30,
+            colour: Vector[0.03, 0.028, 0.024],
+            inner_angle: 0,
+            outer_angle: 10
+          )
+        ]
+      )
+      Engine::GameObject.new(
+        "Headlight Right",
+        pos: Vector[0.75, 1, 0],
+        rotation: Vector[0, 0, 0],
+        parent: parent,
+        components: [
+          Engine::Components::SpotLight.new(
+            range: 30,
+            colour: Vector[0.03, 0.028, 0.024],
+            inner_angle: 0,
+            outer_angle: 10
+          )
+        ]
+      )
+
       parent
     end
 
@@ -40,7 +71,7 @@ module ShrinkRacer
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.6)
           material.set_float("specularPower", 32.0)
-          material.set_vec3("ambientLight", Vector[0.5, 0.5, 0.5])
+          material.set_vec3("ambientLight", Vector[0.25, 0.2, 0.35])
           material
         end
     end

@@ -3,10 +3,12 @@
 in vec3 FragPos;
 out vec4 color;
 
+uniform vec3 horizonColour;
+uniform vec3 skyColour;
+
 void main()
 {
-    vec4 ground = vec4(0.541176, 0.709804, 0.286275, 1);
-    vec4 sky = vec4(0.2, 0.6, 0.8, 1);
     float mixFactor = clamp(FragPos.y / 2.0, 0.0, 1.0);
-    color = mix(ground, sky, mixFactor);
+    vec3 result = mix(horizonColour, skyColour, mixFactor);
+    color = vec4(result, 1.0);
 }

@@ -112,7 +112,7 @@ module ShrinkRacer
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.7)
           material.set_float("specularPower", 32.0)
-          material.set_vec3("ambientLight", Vector[0.5, 0.5, 0.5])
+          material.set_vec3("ambientLight", Vector[0.12, 0.1, 0.18])
           material
         end
     end
@@ -126,7 +126,7 @@ module ShrinkRacer
           material.set_float("diffuseStrength", 0.8)
           material.set_float("specularStrength", 5.0)
           material.set_float("specularPower", 32.0)
-          material.set_vec3("ambientLight", Vector[0.6, 0.6, 0.6])
+          material.set_vec3("ambientLight", Vector[0.15, 0.12, 0.2])
           material
         end
     end
