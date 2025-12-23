@@ -47,4 +47,10 @@ Engine.start do
 
   # Back wall
   Plane.create(Vector[0, 25, -50], Vector[0, 0, 0], 50, Engine::Texture.for("assets/chessboard.png").texture)
+
+  # World-space text (follows camera perspective)
+  Text.create(Vector[0, 35, 0], Vector[0, 0, 0], 5, "Hello World")
+
+  # UI text (screen-space, fixed position)
+  UIText.create(Vector[50, 50, 0], Vector[0, 0, 0], 30, "UI Text")
 end
