@@ -40,6 +40,10 @@ module Engine::Components
       @mesh_renderer.update(delta_time)
     end
 
+    def sync_transform
+      @mesh_renderer.sync_transform
+    end
+
     def destroy
       @mesh_renderer.destroy
     end
