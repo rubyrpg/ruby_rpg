@@ -14,8 +14,7 @@ Engine.start do
     rotation: Vector[20, 0, 0],
     components: [
       Cubes::CameraRotator.new,
-      Engine::Components::OrthographicCamera.new(width: 200, height: 112, far: 500.0)
-      # Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
+      Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
   sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
