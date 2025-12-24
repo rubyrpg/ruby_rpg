@@ -2,6 +2,8 @@
 
 module Engine::Components
   class PerspectiveCamera < Engine::Component
+    include Engine::MatrixHelpers
+
     def initialize(fov:, aspect:, near:, far:)
       @fov = fov
       @aspect = aspect
@@ -34,13 +36,8 @@ module Engine::Components
     end
 
     def projection
-      fov = @fov * Math::PI / 180
-      Matrix[
-        [1 / (Math.tan(fov / 2) * @aspect), 0, 0, 0],
-        [0, 1 / Math.tan(fov / 2), 0, 0],
-        [0, 0, (@far + @near) / (@near - @far), 2 * @far * @near / (@near - @far)],
-        [0, 0, -1, 0]
-      ]
+      fov_radians = @fov * Math::PI / 180.0
+      perspective(fov_radians, @aspect, @near, @far)
     end
 
     def update(delta_time)
