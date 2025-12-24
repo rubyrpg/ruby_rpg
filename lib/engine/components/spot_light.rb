@@ -2,8 +2,7 @@
 
 module Engine::Components
   class SpotLight < Engine::Component
-    attr_accessor :range, :colour, :inner_angle, :outer_angle, :cast_shadows
-    attr_reader :shadow_map
+    attr_accessor :range, :colour, :inner_angle, :outer_angle, :cast_shadows, :shadow_layer_index
 
     def initialize(range: 300, colour: [1.0, 1.0, 1.0], inner_angle: 12.5, outer_angle: 17.5, cast_shadows: false)
       @range = range
@@ -11,7 +10,7 @@ module Engine::Components
       @inner_angle = inner_angle
       @outer_angle = outer_angle
       @cast_shadows = cast_shadows
-      @shadow_map = Rendering::ShadowMap.new if cast_shadows
+      @shadow_layer_index = nil  # Set by RenderPipeline when rendering shadows
     end
 
     def start

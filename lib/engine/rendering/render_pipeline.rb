@@ -25,10 +25,25 @@ module Rendering
     end
 
     def self.draw_shadow_maps
-      shadow_casting_lights.each do |light|
-        render_shadow_map(light)
+      # Render directional light shadows to shared texture array
+      directional_casters = Engine::Components::DirectionLight.direction_lights
+        .select(&:cast_shadows)
+        .take(4)
+      directional_casters.each_with_index do |light, layer_index|
+        light.shadow_layer_index = layer_index
+        render_shadow_map_to_layer(directional_shadow_map_array, layer_index, light.light_space_matrix)
       end
 
+      # Render spot light shadows to shared texture array
+      spot_casters = Engine::Components::SpotLight.spot_lights
+        .select(&:cast_shadows)
+        .take(4)
+      spot_casters.each_with_index do |light, layer_index|
+        light.shadow_layer_index = layer_index
+        render_shadow_map_to_layer(spot_shadow_map_array, layer_index, light.light_space_matrix)
+      end
+
+      # Render point light shadows (still uses individual cubemaps)
       Engine::Components::PointLight.shadow_casting_lights.each do |light|
         render_point_light_shadow_map(light)
       end
@@ -36,19 +51,20 @@ module Rendering
       reset_viewport
     end
 
-    def self.shadow_casting_lights
-      [
-        *Engine::Components::DirectionLight.direction_lights,
-        *Engine::Components::SpotLight.spot_lights
-      ].select { |light| light.cast_shadows && light.shadow_map }
+    def self.directional_shadow_map_array
+      @directional_shadow_map_array ||= ShadowMapArray.new(layer_count: 4)
     end
 
-    def self.render_shadow_map(light)
-      light.shadow_map.bind
+    def self.spot_shadow_map_array
+      @spot_shadow_map_array ||= ShadowMapArray.new(layer_count: 4)
+    end
+
+    def self.render_shadow_map_to_layer(shadow_map_array, layer_index, light_space_matrix)
+      shadow_map_array.bind_layer(layer_index)
       instance_renderers.values.each do |renderer|
-        renderer.draw_depth_only(light.light_space_matrix)
+        renderer.draw_depth_only(light_space_matrix)
       end
-      light.shadow_map.unbind
+      shadow_map_array.unbind
     end
 
     def self.render_point_light_shadow_map(light)

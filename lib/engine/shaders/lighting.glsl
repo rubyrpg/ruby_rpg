@@ -9,7 +9,7 @@ struct DirectionalLight {
 };
 #define NR_DIRECTIONAL_LIGHTS 4
 uniform DirectionalLight directionalLights[NR_DIRECTIONAL_LIGHTS];
-uniform sampler2D directionalShadowMaps[NR_DIRECTIONAL_LIGHTS];  // can't be in struct in GLSL 330
+uniform sampler2DArray directionalShadowMaps;  // texture array: 1 slot for all directional shadows
 
 struct PointLight {
     vec3 position;
@@ -37,7 +37,7 @@ struct SpotLight {
 #define NR_SPOT_LIGHTS 8
 #define NR_SHADOW_CASTING_SPOT_LIGHTS 4
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
-uniform sampler2D spotShadowMaps[NR_SHADOW_CASTING_SPOT_LIGHTS];  // can't be in struct in GLSL 330
+uniform sampler2DArray spotShadowMaps;  // texture array: 1 slot for all spot shadows
 
 // Convert non-linear depth buffer value to linear depth
 float LinearizeDepth(float depth, float near, float far)
@@ -69,7 +69,7 @@ float CalcSpotShadow(SpotLight light, int lightIndex, vec3 fragPos)
         return 0.0;
     }
 
-    float closestDepth = texture(spotShadowMaps[lightIndex], projCoords.xy).r;
+    float closestDepth = texture(spotShadowMaps, vec3(projCoords.xy, float(lightIndex))).r;
     float currentDepth = projCoords.z;
 
     // Convert to linear depth for more stable comparison
@@ -159,7 +159,7 @@ float CalcShadow(DirectionalLight light, int lightIndex, vec3 fragPos)
         return 0.0;
     }
 
-    float closestDepth = texture(directionalShadowMaps[lightIndex], projCoords.xy).r;
+    float closestDepth = texture(directionalShadowMaps, vec3(projCoords.xy, float(lightIndex))).r;
     float currentDepth = projCoords.z;
     float bias = 0.005;
 

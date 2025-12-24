@@ -17,33 +17,25 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  # Engine::GameObject.new(
-  #   "Direction Light",
-  #   rotation: Vector[-60, 180, 30],
-  #   components: [
-  #     Engine::Components::DirectionLight.new(
-  #       colour: Vector[1, 1, 1],
-  #     )
-  #   ])
+  Engine::GameObject.new(
+    "Direction Light",
+    rotation: Vector[-60, 180, 30],
+    components: [
+      Engine::Components::DirectionLight.new(
+        colour: Vector[1.0, 1.0, 1.0],
+        cast_shadows: true
+      )
+    ])
 
   sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
   Cube.create(Vector[25, 20, -30], Vector[60, 0, 0], 8)
 
-  # Engine::GameObject.new(
-  #   "Purple Light",
-  #   pos: Vector[0, 20, 0],
-  #   components: [
-  #     Engine::Components::PointLight.new(range: 50, colour: Vector[1.0, 0.0, 1.0])
-  #   ]
-  # )
-
-  pointlight_pos = Vector[25, 50, -30]
-
   Engine::GameObject.new(
-    "PointLight",
-    pos: pointlight_pos,
+    "SpotLight",
+    pos: Vector[25, 50, -30],
+    rotation: Vector[90, 0, 0],
     components: [
-      Engine::Components::PointLight.new(range: 100, colour: Vector[1.0, 1.0, 0.8], cast_shadows: true),
+      Engine::Components::SpotLight.new(range: 150, colour: Vector[2.0, 2.0, 1.6], cast_shadows: true, outer_angle: 45),
       Cubes::SpotlightController.new
     ]
   )

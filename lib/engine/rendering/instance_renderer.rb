@@ -92,6 +92,7 @@ module Rendering
     end
 
     def update_light_data
+      point_shadow_set = false
       Engine::Components::PointLight.point_lights.each_with_index do |light, i|
         break if i >= 16
         material.set_float("pointLights[#{i}].sqrRange", light.range * light.range)
@@ -101,20 +102,25 @@ module Rendering
         if light.cast_shadows && light.shadow_map && i == 0
           material.set_float("pointLights[#{i}].shadowFar", light.shadow_far)
           material.set_cubemap("pointShadowMap", light.shadow_map.depth_texture)
+          point_shadow_set = true
         end
       end
+      # Always set pointShadowMap to ensure shader has valid sampler
+      material.set_cubemap("pointShadowMap", nil) unless point_shadow_set
 
       Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|
         break if i >= 4
         material.set_vec3("directionalLights[#{i}].direction", light.direction)
         material.set_vec3("directionalLights[#{i}].colour", light.colour)
-        material.set_int("directionalLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map ? 1 : 0)
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        material.set_int("directionalLights[#{i}].castsShadows", has_shadow ? 1 : 0)
 
-        if light.cast_shadows && light.shadow_map
+        if has_shadow
           material.set_mat4("directionalLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
-          material.set_texture("directionalShadowMaps[#{i}]", light.shadow_map.depth_texture)
         end
       end
+      # Set shared directional shadow map array
+      material.set_texture_array("directionalShadowMaps", RenderPipeline.directional_shadow_map_array.depth_texture)
 
       Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
         break if i >= 8
@@ -124,15 +130,17 @@ module Rendering
         material.set_vec3("spotLights[#{i}].colour", light.colour)
         material.set_float("spotLights[#{i}].innerCutoff", light.inner_cutoff)
         material.set_float("spotLights[#{i}].outerCutoff", light.outer_cutoff)
-        material.set_int("spotLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map ? 1 : 0)
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        material.set_int("spotLights[#{i}].castsShadows", has_shadow ? 1 : 0)
 
-        if light.cast_shadows && light.shadow_map
+        if has_shadow
           material.set_mat4("spotLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
-          material.set_texture("spotShadowMaps[#{i}]", light.shadow_map.depth_texture)
           material.set_float("spotLights[#{i}].shadowNear", light.shadow_near)
           material.set_float("spotLights[#{i}].shadowFar", light.shadow_far)
         end
       end
+      # Set shared spot shadow map array
+      material.set_texture_array("spotShadowMaps", RenderPipeline.spot_shadow_map_array.depth_texture)
     end
 
     def setup_index_buffer

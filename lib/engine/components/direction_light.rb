@@ -2,14 +2,13 @@
 
 module Engine::Components
   class DirectionLight < Engine::Component
-    attr_accessor :colour, :cast_shadows, :shadow_distance
-    attr_reader :shadow_map
+    attr_accessor :colour, :cast_shadows, :shadow_distance, :shadow_layer_index
 
     def initialize(colour: [1.0, 1.0, 1.0], cast_shadows: true, shadow_distance: 50.0)
       @colour = colour
       @cast_shadows = cast_shadows
       @shadow_distance = shadow_distance
-      @shadow_map = Rendering::ShadowMap.new if cast_shadows
+      @shadow_layer_index = nil  # Set by RenderPipeline when rendering shadows
     end
 
     def start
