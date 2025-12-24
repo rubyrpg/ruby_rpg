@@ -22,10 +22,8 @@ module Engine::Components
       Rendering::RenderPipeline.add_instance(self)
     end
 
-    def update(delta_time)
-      unless static
-        Rendering::RenderPipeline.update_instance(self)
-      end
+    def sync_transform
+      Rendering::RenderPipeline.update_instance(self) unless static
     end
 
     def destroy

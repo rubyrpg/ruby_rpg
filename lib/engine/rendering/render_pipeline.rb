@@ -4,6 +4,7 @@ module Rendering
   module RenderPipeline
     def self.draw
       update_render_texture_size
+      sync_transforms
 
       draw_shadow_maps
 
@@ -47,17 +48,15 @@ module Rendering
       light.shadow_map.unbind
     end
 
+    def self.sync_transforms
+      Engine::GameObject.mesh_renderers.each(&:sync_transform)
+    end
+
     def self.draw_3d
       GL.Enable(GL::DEPTH_TEST)
       GL.DepthFunc(GL::LESS)
 
-      Engine::GameObject.mesh_renderers.each do |mesh_renderer|
-        mesh_renderer.update(0)
-      end
-
-      instance_renderers.values.each do |renderer|
-        renderer.draw_all
-      end
+      instance_renderers.values.each(&:draw_all)
     end
 
     def self.draw_ui
