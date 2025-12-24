@@ -16,11 +16,13 @@ struct PointLight {
     float sqrRange;
     vec3 colour;
     bool castsShadows;
+    int shadowLayerIndex;
     float shadowFar;
 };
 #define NR_POINT_LIGHTS 16
+#define NR_SHADOW_CASTING_POINT_LIGHTS 4
 uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform samplerCube pointShadowMap;  // Only 1 shadow-casting point light supported
+uniform samplerCubeArray pointShadowMaps;  // texture array: 1 slot for all point shadows
 
 struct SpotLight {
     vec3 position;
@@ -109,15 +111,15 @@ vec3 CalcSpotLight(SpotLight light, int lightIndex, vec3 normal, vec3 fragPos, v
 
 float CalcPointShadow(PointLight light, int lightIndex, vec3 fragPos)
 {
-    // Only first point light can cast shadows (GLSL 330 sampler limitation)
-    if (!light.castsShadows || lightIndex != 0) {
+    if (!light.castsShadows) {
         return 0.0;
     }
 
     vec3 fragToLight = fragPos - light.position;
     float currentDepth = length(fragToLight);
 
-    float closestDepth = texture(pointShadowMap, fragToLight).r;
+    // Sample from cubemap array using vec4(direction, layerIndex)
+    float closestDepth = texture(pointShadowMaps, vec4(fragToLight, float(light.shadowLayerIndex))).r;
     closestDepth *= light.shadowFar;  // Convert from [0,1] to world units
 
     float bias = 0.5;

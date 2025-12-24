@@ -43,9 +43,13 @@ module Rendering
         render_shadow_map_to_layer(spot_shadow_map_array, layer_index, light.light_space_matrix)
       end
 
-      # Render point light shadows (still uses individual cubemaps)
-      Engine::Components::PointLight.shadow_casting_lights.each do |light|
-        render_point_light_shadow_map(light)
+      # Render point light shadows to shared cubemap array
+      point_casters = Engine::Components::PointLight.point_lights
+        .select(&:cast_shadows)
+        .take(4)
+      point_casters.each_with_index do |light, layer_index|
+        light.shadow_layer_index = layer_index
+        render_point_shadow_to_layer(layer_index, light)
       end
 
       reset_viewport
@@ -59,6 +63,10 @@ module Rendering
       @spot_shadow_map_array ||= ShadowMapArray.new(layer_count: 4)
     end
 
+    def self.point_shadow_map_array
+      @point_shadow_map_array ||= CubemapShadowMapArray.new(layer_count: 4)
+    end
+
     def self.render_shadow_map_to_layer(shadow_map_array, layer_index, light_space_matrix)
       shadow_map_array.bind_layer(layer_index)
       instance_renderers.values.each do |renderer|
@@ -67,18 +75,18 @@ module Rendering
       shadow_map_array.unbind
     end
 
-    def self.render_point_light_shadow_map(light)
+    def self.render_point_shadow_to_layer(layer_index, light)
       light_pos = light.position
       far_plane = light.shadow_far
       matrices = light.light_space_matrices
 
       6.times do |face_index|
-        light.shadow_map.bind_face(face_index)
+        point_shadow_map_array.bind_face(layer_index, face_index)
         instance_renderers.values.each do |renderer|
           renderer.draw_point_light_depth(matrices[face_index], light_pos, far_plane)
         end
       end
-      light.shadow_map.unbind
+      point_shadow_map_array.unbind
     end
 
     def self.sync_transforms

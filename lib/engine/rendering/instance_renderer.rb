@@ -92,21 +92,20 @@ module Rendering
     end
 
     def update_light_data
-      point_shadow_set = false
       Engine::Components::PointLight.point_lights.each_with_index do |light, i|
         break if i >= 16
         material.set_float("pointLights[#{i}].sqrRange", light.range * light.range)
         material.set_vec3("pointLights[#{i}].position", light.position)
         material.set_vec3("pointLights[#{i}].colour", light.colour)
-        material.set_int("pointLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map && i == 0 ? 1 : 0)
-        if light.cast_shadows && light.shadow_map && i == 0
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        material.set_int("pointLights[#{i}].castsShadows", has_shadow ? 1 : 0)
+        if has_shadow
+          material.set_int("pointLights[#{i}].shadowLayerIndex", light.shadow_layer_index)
           material.set_float("pointLights[#{i}].shadowFar", light.shadow_far)
-          material.set_cubemap("pointShadowMap", light.shadow_map.depth_texture)
-          point_shadow_set = true
         end
       end
-      # Always set pointShadowMap to ensure shader has valid sampler
-      material.set_cubemap("pointShadowMap", nil) unless point_shadow_set
+      # Set shared point shadow map cubemap array
+      material.set_cubemap_array("pointShadowMaps", RenderPipeline.point_shadow_map_array.depth_texture)
 
       Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|
         break if i >= 4

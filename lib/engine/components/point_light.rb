@@ -2,8 +2,7 @@
 
 module Engine::Components
   class PointLight < Engine::Component
-    # Only 1 shadow-casting point light supported due to GLSL 330 sampler limitation
-    NR_SHADOW_CASTING_POINT_LIGHTS = 1
+    NR_SHADOW_CASTING_POINT_LIGHTS = 4
 
     # Cubemap face directions: +X, -X, +Y, -Y, +Z, -Z
     CUBE_DIRECTIONS = [
@@ -15,14 +14,13 @@ module Engine::Components
       { dir: Vector[0, 0, -1], up: Vector[0, -1, 0] }    # -Z
     ].freeze
 
-    attr_accessor :range, :colour, :cast_shadows
-    attr_reader :shadow_map
+    attr_accessor :range, :colour, :cast_shadows, :shadow_layer_index
 
     def initialize(range: 300, colour: [1.0, 1.0, 1.0], cast_shadows: false)
       @range = range
       @colour = colour
       @cast_shadows = cast_shadows
-      @shadow_map = Rendering::CubemapShadowMap.new if cast_shadows
+      @shadow_layer_index = nil
     end
 
     def start
