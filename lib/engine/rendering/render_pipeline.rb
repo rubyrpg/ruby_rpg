@@ -6,6 +6,7 @@ module Rendering
       update_render_texture_size
       sync_transforms
 
+      enable_depth_test
       draw_shadow_maps
 
       render_texture_a.bind
@@ -15,6 +16,7 @@ module Rendering
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
 
+      disable_depth_test
       current_texture.bind
       draw_ui
       current_texture.unbind
@@ -23,14 +25,11 @@ module Rendering
     end
 
     def self.draw_shadow_maps
-      GL.Enable(GL::DEPTH_TEST)
-      GL.DepthFunc(GL::LESS)
-
       shadow_casting_lights.each do |light|
         render_shadow_map(light)
       end
 
-      GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
+      reset_viewport
     end
 
     def self.shadow_casting_lights
@@ -53,14 +52,10 @@ module Rendering
     end
 
     def self.draw_3d
-      GL.Enable(GL::DEPTH_TEST)
-      GL.DepthFunc(GL::LESS)
-
       instance_renderers.values.each(&:draw_all)
     end
 
     def self.draw_ui
-      GL.Disable(GL::DEPTH_TEST)
       Engine::GameObject.ui_renderers.each(&:draw)
     end
 
@@ -83,9 +78,21 @@ module Rendering
     end
 
     def self.blit_to_screen(texture)
-      GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
-      GL.Disable(GL::DEPTH_TEST)
+      reset_viewport
       screen_quad.draw(blit_material, texture)
+    end
+
+    def self.enable_depth_test
+      GL.Enable(GL::DEPTH_TEST)
+      GL.DepthFunc(GL::LESS)
+    end
+
+    def self.disable_depth_test
+      GL.Disable(GL::DEPTH_TEST)
+    end
+
+    def self.reset_viewport
+      GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
     end
 
     def self.blit_material
