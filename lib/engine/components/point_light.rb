@@ -2,6 +2,8 @@
 
 module Engine::Components
   class PointLight < Engine::Component
+    include Engine::MatrixHelpers
+
     NR_SHADOW_CASTING_POINT_LIGHTS = 4
 
     # Cubemap face directions: +X, -X, +Y, -Y, +Z, -Z
@@ -70,30 +72,6 @@ module Engine::Components
         view = look_at(light_pos, target, face[:up])
         (proj * view).transpose
       end
-    end
-
-    def look_at(eye, center, up)
-      f = (center - eye).normalize
-      s = f.cross(up).normalize
-      u = s.cross(f)
-
-      Matrix[
-        [s[0], s[1], s[2], -s.dot(eye)],
-        [u[0], u[1], u[2], -u.dot(eye)],
-        [-f[0], -f[1], -f[2], f.dot(eye)],
-        [0, 0, 0, 1]
-      ]
-    end
-
-    def perspective(fov, aspect, near, far)
-      tan_half_fov = Math.tan(fov / 2.0)
-
-      Matrix[
-        [1.0 / (aspect * tan_half_fov), 0, 0, 0],
-        [0, 1.0 / tan_half_fov, 0, 0],
-        [0, 0, -(far + near) / (far - near), -(2.0 * far * near) / (far - near)],
-        [0, 0, -1, 0]
-      ]
     end
   end
 end

@@ -20,19 +20,32 @@ Engine.start do
   sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
   Cube.create(Vector[25, 20, -30], Vector[60, 0, 0], 8)
 
+  # Directional light (sun-like)
   Engine::GameObject.new(
-    "PointLight1",
-    pos: Vector[-20, 35, -10],
+    "DirectionalLight",
+    pos: Vector[0, 50, 0],
+    rotation: Vector[-30, 190, 0],
     components: [
-      Engine::Components::PointLight.new(range: 150, colour: Vector[0.4, 0.1, 0.1], cast_shadows: true)
+      Engine::Components::DirectionLight.new(colour: Vector[0.5, 1, 1], cast_shadows: true)
     ]
   )
 
+  # Point light (dimmed)
   Engine::GameObject.new(
-    "PointLight2",
-    pos: Vector[30, 35, -10],
+    "PointLight",
+    pos: Vector[-20, 35, 10],
     components: [
-      Engine::Components::PointLight.new(range: 180, colour: Vector[0.1, 0.1, 0.5], cast_shadows: true)
+      Engine::Components::PointLight.new(range: 150, colour: Vector[0.15, 0.05, 0.05], cast_shadows: true)
+    ]
+  )
+
+  # Spot light
+  Engine::GameObject.new(
+    "SpotLight",
+    pos: Vector[-30, 40, 20],
+    rotation: Vector[-180, -20, 0],
+    components: [
+      Engine::Components::SpotLight.new(range: 120, colour: Vector[0.1, 3, 0.3], inner_angle: 15, outer_angle: 25, cast_shadows: true)
     ]
   )
 
