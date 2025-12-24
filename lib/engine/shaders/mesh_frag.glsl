@@ -15,7 +15,7 @@ uniform float specularStrength;
 uniform float specularPower;
 uniform vec3 ambientLight;
 
-#include "lighting.glsl"
+#include "lighting/lighting.glsl"
 
 void main()
 {
