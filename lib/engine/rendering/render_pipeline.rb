@@ -25,34 +25,26 @@ module Rendering
       GL.Enable(GL::DEPTH_TEST)
       GL.DepthFunc(GL::LESS)
 
-      Engine::Components::DirectionLight.direction_lights.each do |light|
-        next unless light.cast_shadows && light.shadow_map
-
-        light.shadow_map.bind
-        light_space_matrix = light.light_space_matrix
-
-        instance_renderers.values.each do |renderer|
-          renderer.draw_depth_only(light_space_matrix)
-        end
-
-        light.shadow_map.unbind
+      shadow_casting_lights.each do |light|
+        render_shadow_map(light)
       end
 
-      Engine::Components::SpotLight.spot_lights.each do |light|
-        next unless light.cast_shadows && light.shadow_map
-
-        light.shadow_map.bind
-        light_space_matrix = light.light_space_matrix
-
-        instance_renderers.values.each do |renderer|
-          renderer.draw_depth_only(light_space_matrix)
-        end
-
-        light.shadow_map.unbind
-      end
-
-      # Restore viewport to window size
       GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
+    end
+
+    def self.shadow_casting_lights
+      [
+        *Engine::Components::DirectionLight.direction_lights,
+        *Engine::Components::SpotLight.spot_lights
+      ].select { |light| light.cast_shadows && light.shadow_map }
+    end
+
+    def self.render_shadow_map(light)
+      light.shadow_map.bind
+      instance_renderers.values.each do |renderer|
+        renderer.draw_depth_only(light.light_space_matrix)
+      end
+      light.shadow_map.unbind
     end
 
     def self.draw_3d
