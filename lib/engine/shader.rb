@@ -44,6 +44,10 @@ module Engine
       @shadow ||= Engine::Shader.new('./shaders/shadow_vertex.glsl', './shaders/shadow_frag.glsl')
     end
 
+    def self.point_shadow
+      @point_shadow ||= Engine::Shader.new('./shaders/point_shadow_vertex.glsl', './shaders/point_shadow_frag.glsl')
+    end
+
     def initialize(vertex_shader, fragment_shader)
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)

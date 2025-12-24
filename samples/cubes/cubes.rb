@@ -37,14 +37,13 @@ Engine.start do
   #   ]
   # )
 
-  spotlight_pos = Vector[25, 90, -30]
+  pointlight_pos = Vector[25, 50, -30]
 
   Engine::GameObject.new(
-    "Spotlight",
-    pos: spotlight_pos,
-    rotation: Vector[-100, 0, 0],
+    "PointLight",
+    pos: pointlight_pos,
     components: [
-      Engine::Components::SpotLight.new(range: 200, colour: Vector[1.0, 1.0, 0.0], inner_angle: 15, outer_angle: 35, cast_shadows: true),
+      Engine::Components::PointLight.new(range: 100, colour: Vector[1.0, 1.0, 0.8], cast_shadows: true),
       Cubes::SpotlightController.new
     ]
   )

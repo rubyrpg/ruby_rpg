@@ -29,6 +29,10 @@ module Rendering
         render_shadow_map(light)
       end
 
+      Engine::Components::PointLight.shadow_casting_lights.each do |light|
+        render_point_light_shadow_map(light)
+      end
+
       reset_viewport
     end
 
@@ -47,8 +51,24 @@ module Rendering
       light.shadow_map.unbind
     end
 
+    def self.render_point_light_shadow_map(light)
+      light_pos = light.position
+      far_plane = light.shadow_far
+      matrices = light.light_space_matrices
+
+      6.times do |face_index|
+        light.shadow_map.bind_face(face_index)
+        instance_renderers.values.each do |renderer|
+          renderer.draw_point_light_depth(matrices[face_index], light_pos, far_plane)
+        end
+      end
+      light.shadow_map.unbind
+    end
+
     def self.sync_transforms
-      Engine::GameObject.mesh_renderers.each(&:sync_transform)
+      Engine::GameObject.mesh_renderers.each do |renderer|
+        renderer.sync_transform if renderer.respond_to?(:sync_transform)
+      end
     end
 
     def self.draw_3d

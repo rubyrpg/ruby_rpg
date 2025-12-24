@@ -62,6 +62,25 @@ module Rendering
       GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
+    def draw_point_light_depth(light_space_matrix, light_pos, far_plane)
+      return if @mesh_renderers.empty?
+
+      shader = Engine::Shader.point_shadow
+      shader.use
+      shader.set_mat4("lightSpaceMatrix", light_space_matrix)
+      shader.set_vec3("lightPos", light_pos)
+      shader.set_float("farPlane", far_plane)
+
+      GL.BindVertexArray(@vao)
+      update_vbo_buf
+      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+
+      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @mesh_renderers.count)
+      GL.BindVertexArray(0)
+      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+    end
+
     private
 
     def set_material_per_frame_data
@@ -74,9 +93,15 @@ module Rendering
 
     def update_light_data
       Engine::Components::PointLight.point_lights.each_with_index do |light, i|
+        break if i >= 16
         material.set_float("pointLights[#{i}].sqrRange", light.range * light.range)
-        material.set_vec3("pointLights[#{i}].position", light.game_object.local_to_world_coordinate(Vector[0, 0, 0]))
+        material.set_vec3("pointLights[#{i}].position", light.position)
         material.set_vec3("pointLights[#{i}].colour", light.colour)
+        material.set_int("pointLights[#{i}].castsShadows", light.cast_shadows && light.shadow_map && i == 0 ? 1 : 0)
+        if light.cast_shadows && light.shadow_map && i == 0
+          material.set_float("pointLights[#{i}].shadowFar", light.shadow_far)
+          material.set_cubemap("pointShadowMap", light.shadow_map.depth_texture)
+        end
       end
 
       Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|

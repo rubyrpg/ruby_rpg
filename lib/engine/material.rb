@@ -36,6 +36,10 @@ module Engine
       textures[name] = value
     end
 
+    def set_cubemap(name, value)
+      cubemaps[name] = value
+    end
+
     def update_shader
       shader.use
 
@@ -63,6 +67,19 @@ module Engine
           GL.BindTexture(GL::TEXTURE_2D, value)
         else
           GL.BindTexture(GL::TEXTURE_2D, 0)
+        end
+        shader.set_int(name, slot)
+      end
+
+      # Cubemaps start after regular textures
+      cubemap_start_slot = textures.size
+      cubemaps.each.with_index do |(name, value), i|
+        slot = cubemap_start_slot + i
+        GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
+        if value
+          GL.BindTexture(GL::TEXTURE_CUBE_MAP, value)
+        else
+          GL.BindTexture(GL::TEXTURE_CUBE_MAP, 0)
         end
         shader.set_int(name, slot)
       end
@@ -96,6 +113,10 @@ module Engine
 
     def textures
       @textures ||= {}
+    end
+
+    def cubemaps
+      @cubemaps ||= {}
     end
   end
 end

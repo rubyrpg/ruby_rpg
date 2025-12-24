@@ -15,9 +15,12 @@ struct PointLight {
     vec3 position;
     float sqrRange;
     vec3 colour;
+    bool castsShadows;
+    float shadowFar;
 };
 #define NR_POINT_LIGHTS 16
 uniform PointLight pointLights[NR_POINT_LIGHTS];
+uniform samplerCube pointShadowMap;  // Only 1 shadow-casting point light supported
 
 struct SpotLight {
     vec3 position;
@@ -32,8 +35,9 @@ struct SpotLight {
     float shadowFar;
 };
 #define NR_SPOT_LIGHTS 8
+#define NR_SHADOW_CASTING_SPOT_LIGHTS 4
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
-uniform sampler2D spotShadowMaps[NR_SPOT_LIGHTS];  // can't be in struct in GLSL 330
+uniform sampler2D spotShadowMaps[NR_SHADOW_CASTING_SPOT_LIGHTS];  // can't be in struct in GLSL 330
 
 // Convert non-linear depth buffer value to linear depth
 float LinearizeDepth(float depth, float near, float far)
@@ -44,7 +48,7 @@ float LinearizeDepth(float depth, float near, float far)
 
 float CalcSpotShadow(SpotLight light, int lightIndex, vec3 fragPos)
 {
-    if (!light.castsShadows) {
+    if (!light.castsShadows || lightIndex >= NR_SHADOW_CASTING_SPOT_LIGHTS) {
         return 0.0;
     }
 
@@ -103,7 +107,24 @@ vec3 CalcSpotLight(SpotLight light, int lightIndex, vec3 normal, vec3 fragPos, v
     return light.colour * (diffuse + specular) * attenuation * intensity * (1.0 - shadow);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
+float CalcPointShadow(PointLight light, int lightIndex, vec3 fragPos)
+{
+    // Only first point light can cast shadows (GLSL 330 sampler limitation)
+    if (!light.castsShadows || lightIndex != 0) {
+        return 0.0;
+    }
+
+    vec3 fragToLight = fragPos - light.position;
+    float currentDepth = length(fragToLight);
+
+    float closestDepth = texture(pointShadowMap, fragToLight).r;
+    closestDepth *= light.shadowFar;  // Convert from [0,1] to world units
+
+    float bias = 0.5;
+    return currentDepth - bias > closestDepth ? 1.0 : 0.0;
+}
+
+vec3 CalcPointLight(PointLight light, int lightIndex, vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
 {
     vec3 lightOffset = light.position - fragPos;
     float sqrDistance = dot(lightOffset, lightOffset);
@@ -115,10 +136,12 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, f
 
     float attenuation = light.sqrRange / sqrDistance;
 
+    float shadow = CalcPointShadow(light, lightIndex, fragPos);
+
     float diffuse = diff * diffuseStrength;
     float specular = spec * specularStrength;
 
-    return light.colour * (diffuse + specular) * attenuation;
+    return light.colour * (diffuse + specular) * attenuation * (1.0 - shadow);
 }
 
 float CalcShadow(DirectionalLight light, int lightIndex, vec3 fragPos)
@@ -164,7 +187,7 @@ vec3 CalcAllLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambientLight, f
 
     for (int i = 0; i < NR_POINT_LIGHTS; i++) {
         if (pointLights[i].sqrRange == 0.0) break;
-        result += CalcPointLight(pointLights[i], normal, fragPos, viewDir, diffuseStrength, specularStrength, specularPower);
+        result += CalcPointLight(pointLights[i], i, normal, fragPos, viewDir, diffuseStrength, specularStrength, specularPower);
     }
 
     for (int i = 0; i < NR_DIRECTIONAL_LIGHTS; i++) {
