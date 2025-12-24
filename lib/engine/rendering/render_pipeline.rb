@@ -68,15 +68,15 @@ module Rendering
     end
 
     def self.add_instance(mesh_renderer)
-      instance_renderers[[mesh_renderer.mesh, mesh_renderer.material]].add_instance(mesh_renderer)
+      instance_renderers[mesh_renderer.renderer_key].add_instance(mesh_renderer)
     end
 
     def self.remove_instance(mesh_renderer)
-      instance_renderers[[mesh_renderer.mesh, mesh_renderer.material]].remove_instance(mesh_renderer)
+      instance_renderers[mesh_renderer.renderer_key].remove_instance(mesh_renderer)
     end
 
     def self.update_instance(mesh_renderer)
-      instance_renderers[[mesh_renderer.mesh, mesh_renderer.material]].update_instance(mesh_renderer)
+      instance_renderers[mesh_renderer.renderer_key].update_instance(mesh_renderer)
     end
 
     private

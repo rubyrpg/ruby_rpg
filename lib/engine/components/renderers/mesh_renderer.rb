@@ -10,6 +10,10 @@ module Engine::Components
       @static = static
     end
 
+    def renderer_key
+      @renderer_key ||= [mesh, material].freeze
+    end
+
     def renderer?
       true
     end
