@@ -53,15 +53,16 @@ Engine.start do
 
   # Floor planes (3x3 grid)
   chessboard = Engine::Texture.for("assets/chessboard.png").texture
+  brick_normal = Engine::Texture.for("assets/brick_normal.png").texture
   tile_size = 50
   (-1..1).each do |x|
     (-1..1).each do |z|
-      Plane.create(Vector[x * tile_size, 0, z * tile_size], Vector[90, 0, 0], tile_size, chessboard)
+      Plane.create(Vector[x * tile_size, 0, z * tile_size], Vector[90, 0, 0], tile_size, chessboard, brick_normal)
     end
   end
 
   # Back wall
-  Plane.create(Vector[0, 25, -50], Vector[0, 0, 0], 50, Engine::Texture.for("assets/chessboard.png").texture)
+  Plane.create(Vector[0, 25, -50], Vector[0, 0, 0], 50, chessboard, brick_normal)
 
   # World-space text (follows camera perspective)
   Text.create(Vector[0, 35, 0], Vector[0, 0, 0], 5, "Hello World")

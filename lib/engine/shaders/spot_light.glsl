@@ -1,5 +1,7 @@
 // Spot light structure and calculation functions
 
+#include "lighting_common.glsl"
+
 struct SpotLight {
     vec3 position;
     vec3 direction;
@@ -71,16 +73,8 @@ vec3 CalcSpotLight(SpotLight light, int lightIndex, vec3 normal, vec3 fragPos, v
     float intensity = clamp((theta - light.outerCutoff) / epsilon, 0.0, 1.0);
 
     float shadow = CalcSpotShadow(light, lightIndex, fragPos);
-
-    float diff = max(dot(normal, lightDir), 0.0);
-
-    vec3 reflectDir = reflect(lightDir, normal);
-    float spec = pow(max(dot(-viewDir, reflectDir), 0.0), specularPower);
-
     float attenuation = light.sqrRange / sqrDistance;
 
-    float diffuse = diff * diffuseStrength;
-    float specular = spec * specularStrength;
-
-    return light.colour * (diffuse + specular) * attenuation * intensity * (1.0 - shadow);
+    vec2 phong = CalcPhong(normal, lightDir, viewDir, diffuseStrength, specularStrength, specularPower);
+    return light.colour * (phong.x + phong.y) * attenuation * intensity * (1.0 - shadow);
 }

@@ -1,5 +1,7 @@
 // Directional light structure and calculation functions
 
+#include "lighting_common.glsl"
+
 struct DirectionalLight {
     vec3 direction;
     vec3 colour;
@@ -35,14 +37,7 @@ float CalcDirectionalShadow(DirectionalLight light, int lightIndex, vec3 fragPos
 vec3 CalcDirectionalLight(DirectionalLight light, int lightIndex, vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
 {
     float shadow = CalcDirectionalShadow(light, lightIndex, fragPos);
-
-    float diff = max(dot(normal, -light.direction), 0.0);
-
-    vec3 reflectDir = reflect(-light.direction, normal);
-    float spec = pow(max(dot(-viewDir, reflectDir), 0.0), specularPower);
-
-    float diffuse = diff * diffuseStrength;
-    float specular = spec * specularStrength;
-
-    return light.colour * (diffuse + specular) * (1.0 - shadow);
+    vec3 lightDir = -light.direction;
+    vec2 phong = CalcPhong(normal, lightDir, viewDir, diffuseStrength, specularStrength, specularPower);
+    return light.colour * (phong.x + phong.y) * (1.0 - shadow);
 }

@@ -1,5 +1,7 @@
 // Point light structure and calculation functions
 
+#include "lighting_common.glsl"
+
 struct PointLight {
     vec3 position;
     float sqrRange;
@@ -35,17 +37,10 @@ vec3 CalcPointLight(PointLight light, int lightIndex, vec3 normal, vec3 fragPos,
     vec3 lightOffset = light.position - fragPos;
     float sqrDistance = dot(lightOffset, lightOffset);
     vec3 lightDir = normalize(lightOffset);
-    float diff = max(dot(normal, lightDir), 0.0);
-
-    vec3 reflectDir = reflect(lightDir, normal);
-    float spec = pow(max(dot(-viewDir, reflectDir), 0.0), specularPower);
 
     float attenuation = light.sqrRange / sqrDistance;
-
     float shadow = CalcPointShadow(light, lightIndex, fragPos);
 
-    float diffuse = diff * diffuseStrength;
-    float specular = spec * specularStrength;
-
-    return light.colour * (diffuse + specular) * attenuation * (1.0 - shadow);
+    vec2 phong = CalcPhong(normal, lightDir, viewDir, diffuseStrength, specularStrength, specularPower);
+    return light.colour * (phong.x + phong.y) * attenuation * (1.0 - shadow);
 }
