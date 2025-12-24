@@ -12,17 +12,19 @@ module Asteroids
     ]
 
     def self.create(pos, colour: [1, 1, 1, 1])
+      material = explosion_material(colour)
       Engine::GameObject.new(
         "Explosion",
         pos: pos,
         scale: Vector[200, 200, 1],
         components: [
-          Engine::Components::SpriteRenderer.new(
-            explosion_material(colour),
+          Engine::Components::SpriteAnimator.new(
+            material,
             frame_coords: EXPLOSION_FRAMES,
             frame_rate: 20,
             loop: false
           ),
+          Engine::Components::SpriteRenderer.new(material),
           DestroyAfter.new(1)
         ]
       )
