@@ -2,6 +2,7 @@
 
 module Engine::Components
   class OrthographicCamera < Engine::Component
+    include Engine::MatrixHelpers
 
     def initialize(width:, height:, far:)
       @width = width
@@ -19,36 +20,31 @@ module Engine::Components
     def matrix
       @matrix ||=
         begin
-          camera_pos = game_object.pos - game_object.forward * (@far / 2)
-          Matrix[
-            [right[0], up[0], -front[0], 0],
-            [right[1], up[1], -front[1], 0],
-            [right[2], up[2], -front[2], 0],
-            [-camera_pos.dot(right), -camera_pos.dot(up), camera_pos.dot(front), 1]
+          right = game_object.right
+          up = game_object.up
+          forward = game_object.forward
+
+          view_matrix = Matrix[
+            [right[0], right[1], right[2], -right.dot(game_object.pos)],
+            [up[0], up[1], up[2], -up.dot(game_object.pos)],
+            [forward[0], forward[1], forward[2], -forward.dot(game_object.pos)],
+            [0, 0, 0, 1]
           ]
+
+          (projection * view_matrix).transpose
         end
     end
 
+    def projection
+      half_w = @width / 2.0
+      half_h = @height / 2.0
+      ortho(-half_w, half_w, -half_h, half_h, -@far, @far)
+    end
+
     def update(delta_time)
-      @right = nil if game_object.rotation != @rotation
-      @up = nil if game_object.rotation != @rotation
-      @front = nil if game_object.rotation != @rotation
-      @matrix = nil if game_object.rotation.dup != @rotation
+      @matrix = nil if game_object.rotation != @rotation || game_object.pos != @pos
       @rotation = game_object.rotation.dup
-    end
-
-    private
-
-    def right
-      @right ||= game_object.right / (@width / 2)
-    end
-
-    def up
-      @up ||= game_object.up / (@height / 2)
-    end
-
-    def front
-      @front ||= game_object.forward / (@far / 2)
+      @pos = game_object.pos.dup
     end
   end
 end
