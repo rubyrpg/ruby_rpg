@@ -25,7 +25,7 @@ module Engine::Components
       update_vbo_buf
     end
 
-    def update(delta_time)
+    def draw
       shader.use
       GL.BindVertexArray(@vao)
       GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)

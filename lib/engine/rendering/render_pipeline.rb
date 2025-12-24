@@ -61,9 +61,7 @@ module Rendering
 
     def self.draw_ui
       GL.Disable(GL::DEPTH_TEST)
-      Engine::GameObject.ui_renderers.each do |ui_renderer|
-        ui_renderer.update(0)
-      end
+      Engine::GameObject.ui_renderers.each(&:draw)
     end
 
     def self.add_instance(mesh_renderer)

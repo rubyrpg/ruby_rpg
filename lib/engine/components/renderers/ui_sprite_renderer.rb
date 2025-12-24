@@ -22,7 +22,7 @@ module Engine::Components
       setup_index_buffer
     end
 
-    def update(delta_time)
+    def draw
       GL.BindVertexArray(@vao)
       GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
 
