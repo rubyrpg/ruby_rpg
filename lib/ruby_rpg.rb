@@ -10,7 +10,6 @@ require_relative 'engine/autoloader'
 require_relative "engine/debugging"
 require_relative 'engine/rendering/render_texture'
 require_relative 'engine/rendering/shadow_map_array'
-require_relative 'engine/rendering/cubemap_shadow_map'
 require_relative 'engine/rendering/cubemap_shadow_map_array'
 require_relative 'engine/rendering/screen_quad'
 require_relative 'engine/rendering/post_processing_effect'
