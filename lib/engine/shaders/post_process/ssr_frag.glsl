@@ -54,10 +54,13 @@ void main() {
 
     vec3 rayPos = worldPos + reflectDir * 2.0;
 
-    // Track previous depth difference to detect crossing
-    float prevDepthDiff = -1.0;  // Start negative (in front)
+    // Track previous state
+    float prevDepthDiff = -1.0;
+    vec2 prevScreenPos = TexCoords;
     bool hitFound = false;
     vec2 hitScreenPos;
+
+    float maxScreenStep = 0.05;  // Max allowed screen-space jump per step
 
     for (int i = 0; i < int(maxSteps); i++) {
         rayPos += reflectDir * stepSize;
@@ -71,24 +74,41 @@ void main() {
             break;
         }
 
+        // Check for screen-space jump (reject teleporting rays)
+        float screenDist = length(screenPos - prevScreenPos);
+        if (screenDist > maxScreenStep) {
+            prevScreenPos = screenPos;
+            prevDepthDiff = -1.0;  // Reset crossing detection
+            continue;
+        }
+
         float rayDepth = getDepthAt(rayPos);
         float sceneDepth = texture(depthTexture, screenPos).r;
 
         if (sceneDepth >= 1.0) {
-            prevDepthDiff = -1.0;  // Reset when hitting sky
+            prevDepthDiff = -1.0;
+            prevScreenPos = screenPos;
             continue;
         }
 
         float depthDiff = rayDepth - sceneDepth;
 
-        // Only hit when crossing from in-front (negative) to behind (positive)
+        // Only hit when crossing from in-front to behind
         if (prevDepthDiff < 0.0 && depthDiff > 0.0 && depthDiff < thickness) {
-            hitFound = true;
-            hitScreenPos = screenPos;
-            break;
+            // Verify: is the ray actually close to the geometry in WORLD space?
+            vec3 hitWorldPos = worldPosFromDepth(screenPos, sceneDepth);
+            float worldDist = length(rayPos - hitWorldPos);
+
+            // Only accept if world positions are close (reject false screen-space hits)
+            if (worldDist < stepSize * 3.0) {
+                hitFound = true;
+                hitScreenPos = screenPos;
+                break;
+            }
         }
 
         prevDepthDiff = depthDiff;
+        prevScreenPos = screenPos;
     }
 
     vec4 baseColor = texture(screenTexture, TexCoords);
@@ -97,7 +117,7 @@ void main() {
         vec4 reflectionColor = texture(screenTexture, hitScreenPos);
         float reflectivity = 1.0 - roughness;
 
-        // Fading
+        // Edge fading
         float edgeFadeX = 1.0 - pow(abs(hitScreenPos.x - 0.5) * 2.0, 2.0);
         float edgeFadeY = 1.0 - pow(abs(hitScreenPos.y - 0.5) * 2.0, 2.0);
         float edgeFade = clamp(edgeFadeX * edgeFadeY, 0.0, 1.0);
