@@ -33,40 +33,31 @@ vec2 worldToScreen(vec3 worldPos, out bool valid) {
 }
 
 void main() {
-    vec4 baseColor = texture(screenTexture, TexCoords);
+    // DEBUG: Ray march hit detection
     float depth = texture(depthTexture, TexCoords).r;
-
-    // Skip sky/background
     if (depth >= 1.0) {
-        FragColor = baseColor;
+        FragColor = vec4(0.0, 0.0, 0.0, 1.0);  // Sky = black
         return;
     }
 
-    // Get roughness early to skip non-reflective surfaces
     vec4 normalRough = texture(normalTexture, TexCoords);
     float roughness = normalRough.a;
-
-    // Skip very rough (matte) surfaces - no point ray marching
     if (roughness > 0.9) {
-        FragColor = baseColor;
+        FragColor = vec4(0.0, 0.0, 0.0, 1.0);  // Matte = black
         return;
     }
 
-    // Convert roughness to reflectivity (0 = rough/matte, 1 = smooth/mirror)
-    float reflectivity = 1.0 - roughness;
-
-    // Reconstruct world position and normal
     vec3 worldPos = worldPosFromDepth(TexCoords, depth);
     vec3 normal = normalize(normalRough.rgb * 2.0 - 1.0);
-
-    // Calculate reflection direction
     vec3 viewDir = normalize(worldPos - cameraPos);
     vec3 reflectDir = reflect(viewDir, normal);
 
+    vec3 rayPos = worldPos + reflectDir * 2.0;
 
-    // Ray march in world space
-    vec3 rayPos = worldPos + reflectDir * 2.0;  // Larger offset to avoid self-hit
-    vec4 reflectionColor = vec4(0.0);
+    // Track previous depth difference to detect crossing
+    float prevDepthDiff = -1.0;  // Start negative (in front)
+    bool hitFound = false;
+    vec2 hitScreenPos;
 
     for (int i = 0; i < int(maxSteps); i++) {
         rayPos += reflectDir * stepSize;
@@ -75,34 +66,44 @@ void main() {
         vec2 screenPos = worldToScreen(rayPos, validProj);
         if (!validProj) break;
 
-        // Check bounds
         if (screenPos.x < 0.0 || screenPos.x > 1.0 ||
             screenPos.y < 0.0 || screenPos.y > 1.0) {
             break;
         }
 
-        // Compare depths directly (avoid world pos reconstruction)
         float rayDepth = getDepthAt(rayPos);
         float sceneDepth = texture(depthTexture, screenPos).r;
 
-        // Skip sky
-        if (sceneDepth >= 1.0) continue;
+        if (sceneDepth >= 1.0) {
+            prevDepthDiff = -1.0;  // Reset when hitting sky
+            continue;
+        }
 
-        // Check if ray is close to scene surface (either side)
         float depthDiff = rayDepth - sceneDepth;
 
-        if (abs(depthDiff) < thickness) {
-            // Hit! Apply fading
-            float edgeFadeX = 1.0 - pow(abs(screenPos.x - 0.5) * 2.0, 2.0);
-            float edgeFadeY = 1.0 - pow(abs(screenPos.y - 0.5) * 2.0, 2.0);
-            float edgeFade = clamp(edgeFadeX * edgeFadeY, 0.0, 1.0);
-            float distanceFade = 1.0 - (float(i) / maxSteps);
-
-            reflectionColor = texture(screenTexture, screenPos);
-            reflectionColor.a = edgeFade * distanceFade;
+        // Only hit when crossing from in-front (negative) to behind (positive)
+        if (prevDepthDiff < 0.0 && depthDiff > 0.0 && depthDiff < thickness) {
+            hitFound = true;
+            hitScreenPos = screenPos;
             break;
         }
+
+        prevDepthDiff = depthDiff;
     }
 
-    FragColor = mix(baseColor, reflectionColor, reflectionColor.a * reflectivity);
+    vec4 baseColor = texture(screenTexture, TexCoords);
+
+    if (hitFound) {
+        vec4 reflectionColor = texture(screenTexture, hitScreenPos);
+        float reflectivity = 1.0 - roughness;
+
+        // Fading
+        float edgeFadeX = 1.0 - pow(abs(hitScreenPos.x - 0.5) * 2.0, 2.0);
+        float edgeFadeY = 1.0 - pow(abs(hitScreenPos.y - 0.5) * 2.0, 2.0);
+        float edgeFade = clamp(edgeFadeX * edgeFadeY, 0.0, 1.0);
+
+        FragColor = mix(baseColor, reflectionColor, edgeFade * reflectivity);
+    } else {
+        FragColor = baseColor;
+    }
 }
