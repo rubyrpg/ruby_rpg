@@ -24,7 +24,7 @@ module Cubes
           material.set_float("specularStrength", 0.7)
           material.set_float("specularPower", 32.0)
           material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
-          material.set_float("roughness", 0.0)
+          material.set_float("roughness", 0.5)
           material
     end
   end
