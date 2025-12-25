@@ -43,6 +43,6 @@ void main()
 
     FragColour = tex * vec4(result, 1.0);
 
-    // Output world-space normal (encoded to 0-1) and roughness
+    // Output world-space normal (encoded to 0-1) and roughness in alpha
     normalRoughness = vec4(norm * 0.5 + 0.5, roughness);
 }

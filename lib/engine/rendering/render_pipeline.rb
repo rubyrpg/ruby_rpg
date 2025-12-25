@@ -11,7 +11,9 @@ module Rendering
 
       render_texture_a.bind
       clear_buffer
+      GL.Disable(GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
       draw_3d
+      GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
       render_texture_a.unbind
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)

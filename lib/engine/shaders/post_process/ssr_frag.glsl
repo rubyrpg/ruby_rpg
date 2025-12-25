@@ -44,9 +44,16 @@ void main() {
 
     // Get roughness early to skip non-reflective surfaces
     vec4 normalRough = texture(normalTexture, TexCoords);
+    float roughness = normalRough.a;
 
-    // Skip roughness check for now - assume everything is shiny
-    float reflectivity = 1.0;
+    // Skip very rough (matte) surfaces - no point ray marching
+    if (roughness > 0.9) {
+        FragColor = baseColor;
+        return;
+    }
+
+    // Convert roughness to reflectivity (0 = rough/matte, 1 = smooth/mirror)
+    float reflectivity = 1.0 - roughness;
 
     // Reconstruct world position and normal
     vec3 worldPos = worldPosFromDepth(TexCoords, depth);
