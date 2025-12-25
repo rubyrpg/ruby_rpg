@@ -40,6 +40,7 @@ module Rendering
         return render_texture_a if enabled_effects.empty?
 
         @depth_texture = render_texture_a.depth_texture
+        @normal_texture = render_texture_a.normal_texture
         textures = [render_texture_a, render_texture_b]
         current_index = 0
 
@@ -56,6 +57,10 @@ module Rendering
 
       def depth_texture
         @depth_texture
+      end
+
+      def normal_texture
+        @normal_texture
       end
 
       def effects
@@ -97,6 +102,65 @@ module Rendering
       def bloom(threshold: 0.7, intensity: 1.0, blur_passes: 2, blur_scale: 1.0)
         BloomEffect.new(threshold: threshold, intensity: intensity, blur_passes: blur_passes, blur_scale: blur_scale)
       end
+
+      def debug_normals
+        shader = Engine::Shader.new(
+          './shaders/fullscreen_vertex.glsl',
+          './shaders/post_process/debug_normals_frag.glsl'
+        )
+        DebugNormalsEffect.new(Engine::Material.new(shader))
+      end
+
+      def ssr(max_steps: 64, step_size: 0.1, thickness: 0.5)
+        shader = Engine::Shader.new(
+          './shaders/fullscreen_vertex.glsl',
+          './shaders/post_process/ssr_frag.glsl'
+        )
+        material = Engine::Material.new(shader)
+        material.set_float("maxSteps", max_steps.to_f)
+        material.set_float("stepSize", step_size)
+        material.set_float("thickness", thickness)
+        SSREffect.new(material)
+      end
+    end
+  end
+
+  class DebugNormalsEffect < PostProcessingEffect
+    def apply(input_rt, output_rt, screen_quad)
+      output_rt.bind
+      GL.Clear(GL::COLOR_BUFFER_BIT)
+      GL.Disable(GL::DEPTH_TEST)
+
+      material.set_texture("normalTexture", PostProcessingEffect.normal_texture)
+      screen_quad.draw(material, input_rt.texture)
+
+      output_rt.unbind
+    end
+  end
+
+  class SSREffect < PostProcessingEffect
+    def apply(input_rt, output_rt, screen_quad)
+      output_rt.bind
+      GL.Clear(GL::COLOR_BUFFER_BIT)
+      GL.Disable(GL::DEPTH_TEST)
+
+      # Clear textures hash to ensure consistent ordering
+      material.instance_variable_set(:@textures, nil)
+
+      # Set textures - screen first (color texture at slot 0), then depth, then normal
+      material.set_texture("screenTexture", input_rt.texture)
+      material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+      material.set_texture("normalTexture", PostProcessingEffect.normal_texture)
+
+      # Set camera matrices
+      camera = Engine::Camera.instance
+      material.set_mat4("inverseVP", camera.inverse_vp_matrix)
+      material.set_mat4("viewProj", camera.matrix)
+      material.set_vec3("cameraPos", camera.position)
+
+      screen_quad.draw_with_material(material)
+
+      output_rt.unbind
     end
   end
 end

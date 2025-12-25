@@ -2,17 +2,29 @@
 
 module Rendering
   class RenderTexture
-    attr_reader :width, :height, :framebuffer, :texture, :depth_texture
+    attr_reader :width, :height, :framebuffer, :depth_texture, :color_textures
 
-    def initialize(width, height)
+    def initialize(width, height, num_color_attachments: 1)
       @width = width
       @height = height
+      @num_color_attachments = num_color_attachments
+      @color_textures = []
       create_framebuffer
-      create_texture
+      create_color_textures
       create_depth_texture
       attach_to_framebuffer
       check_framebuffer_complete
       unbind
+    end
+
+    # Backwards compatible accessor for first color attachment
+    def texture
+      @color_textures[0]
+    end
+
+    # Accessor for normal+roughness texture (second attachment)
+    def normal_texture
+      @color_textures[1]
     end
 
     def bind
@@ -30,8 +42,10 @@ module Rendering
       @width = width
       @height = height
 
-      GL.BindTexture(GL::TEXTURE_2D, @texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
+      @color_textures.each do |tex|
+        GL.BindTexture(GL::TEXTURE_2D, tex)
+        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
+      end
 
       GL.BindTexture(GL::TEXTURE_2D, @depth_texture)
       GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH_COMPONENT32F, @width, @height, 0, GL::DEPTH_COMPONENT, GL::FLOAT, nil)
@@ -45,17 +59,21 @@ module Rendering
       @framebuffer = fbo_buf.unpack1('L')
     end
 
-    def create_texture
-      tex_buf = ' ' * 4
-      GL.GenTextures(1, tex_buf)
-      @texture = tex_buf.unpack1('L')
+    def create_color_textures
+      @num_color_attachments.times do
+        tex_buf = ' ' * 4
+        GL.GenTextures(1, tex_buf)
+        texture = tex_buf.unpack1('L')
 
-      GL.BindTexture(GL::TEXTURE_2D, @texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+        GL.BindTexture(GL::TEXTURE_2D, texture)
+        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+
+        @color_textures << texture
+      end
     end
 
     def create_depth_texture
@@ -77,8 +95,20 @@ module Rendering
 
     def attach_to_framebuffer
       GL.BindFramebuffer(GL::FRAMEBUFFER, @framebuffer)
-      GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, @texture, 0)
+
+      # Attach all color textures
+      @color_textures.each_with_index do |tex, i|
+        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0 + i, GL::TEXTURE_2D, tex, 0)
+      end
+
+      # Attach depth texture
       GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::DEPTH_ATTACHMENT, GL::TEXTURE_2D, @depth_texture, 0)
+
+      # Tell OpenGL which color attachments to draw to (MRT)
+      if @num_color_attachments > 1
+        attachments = (0...@num_color_attachments).map { |i| GL::COLOR_ATTACHMENT0 + i }
+        GL.DrawBuffers(@num_color_attachments, attachments.pack('L*'))
+      end
     end
 
     def check_framebuffer_complete

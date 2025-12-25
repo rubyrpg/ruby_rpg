@@ -151,7 +151,11 @@ module Rendering
     end
 
     def self.render_texture_a
-      @render_texture_a ||= RenderTexture.new(Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
+      @render_texture_a ||= RenderTexture.new(
+        Engine::Window.framebuffer_width,
+        Engine::Window.framebuffer_height,
+        num_color_attachments: 2  # Color + Normal/Roughness for SSR
+      )
     end
 
     def self.render_texture_b

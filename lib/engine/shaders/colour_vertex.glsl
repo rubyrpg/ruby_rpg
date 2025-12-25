@@ -10,9 +10,12 @@ uniform vec3 colour;
 uniform mat4 camera;
 
 out vec4 ourColour;
+out vec3 Normal;
 
 void main()
 {
     gl_Position = camera * model * vec4(vertex, 1.0);
     ourColour = vec4(colour, 1.0);
+    // Transform normal to world space (using upper-left 3x3 of model matrix)
+    Normal = mat3(model) * normal;
 }
