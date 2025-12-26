@@ -35,13 +35,26 @@ module Engine::Components
         end
     end
 
+    def inverse_vp_matrix
+      # matrix is already transposed for OpenGL column-major format
+      # inverse of A^T is (A^-1)^T, so matrix.inverse gives us the inverse in column-major
+      @inverse_vp_matrix ||= matrix.inverse
+    end
+
+    def position
+      game_object.pos
+    end
+
     def projection
       fov_radians = @fov * Math::PI / 180.0
       perspective(fov_radians, @aspect, @near, @far)
     end
 
     def update(delta_time)
-      @matrix = nil if game_object.rotation != @rotation || game_object.pos != @pos || game_object.scale != @scale
+      if game_object.rotation != @rotation || game_object.pos != @pos || game_object.scale != @scale
+        @matrix = nil
+        @inverse_vp_matrix = nil
+      end
       @rotation = game_object.rotation.dup
       @pos = game_object.pos.dup
       @scale = game_object.scale.dup

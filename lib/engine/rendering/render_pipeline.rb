@@ -11,7 +11,9 @@ module Rendering
 
       render_texture_a.bind
       clear_buffer
+      GL.Disable(GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
       draw_3d
+      GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
       render_texture_a.unbind
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
@@ -21,7 +23,7 @@ module Rendering
       draw_ui
       current_texture.unbind
 
-      blit_to_screen(current_texture.texture)
+      blit_to_screen(current_texture.color_texture)
     end
 
     def self.draw_shadow_maps
@@ -151,7 +153,11 @@ module Rendering
     end
 
     def self.render_texture_a
-      @render_texture_a ||= RenderTexture.new(Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
+      @render_texture_a ||= RenderTexture.new(
+        Engine::Window.framebuffer_width,
+        Engine::Window.framebuffer_height,
+        num_color_attachments: 2  # Color + Normal/Roughness for SSR
+      )
     end
 
     def self.render_texture_b

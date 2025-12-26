@@ -1,26 +1,7 @@
 # frozen_string_literal: true
 
 module Rendering
-  class PostProcessingEffect
-    attr_reader :material
-    attr_accessor :enabled
-
-    def initialize(material, enabled: true)
-      @material = material
-      @enabled = enabled
-    end
-
-    def apply(input_rt, output_rt, screen_quad)
-      output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
-      GL.Disable(GL::DEPTH_TEST)
-
-      material.set_texture("depthTexture", self.class.depth_texture)
-      screen_quad.draw(material, input_rt.texture)
-
-      output_rt.unbind
-    end
-
+  module PostProcessingEffect
     class << self
       def add(effect)
         effects << effect
@@ -40,6 +21,7 @@ module Rendering
         return render_texture_a if enabled_effects.empty?
 
         @depth_texture = render_texture_a.depth_texture
+        @normal_texture = render_texture_a.normal_texture
         textures = [render_texture_a, render_texture_b]
         current_index = 0
 
@@ -58,6 +40,10 @@ module Rendering
         @depth_texture
       end
 
+      def normal_texture
+        @normal_texture
+      end
+
       def effects
         @effects ||= []
       end
@@ -65,37 +51,23 @@ module Rendering
       # Built-in effects
 
       def tint(color: [1.0, 1.0, 1.0], intensity: 0.5)
-        shader = Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/tint_frag.glsl'
-        )
-        material = Engine::Material.new(shader)
-        material.set_vec4("tintColor", [color[0], color[1], color[2], intensity])
-        new(material)
+        TintEffect.new(color: color, intensity: intensity)
       end
 
       def depth_of_field(focus_distance: 0.5, focus_range: 0.1, blur_amount: 3.0)
-        shader = Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/dof_frag.glsl'
-        )
-        material = Engine::Material.new(shader)
-        material.set_float("focusDistance", focus_distance)
-        material.set_float("focusRange", focus_range)
-        material.set_float("blurAmount", blur_amount)
-        new(material)
+        DepthOfFieldEffect.new(focus_distance: focus_distance, focus_range: focus_range, blur_amount: blur_amount)
       end
 
       def depth_debug
-        shader = Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/depth_debug_frag.glsl'
-        )
-        new(Engine::Material.new(shader))
+        DepthDebugEffect.new
       end
 
       def bloom(threshold: 0.7, intensity: 1.0, blur_passes: 2, blur_scale: 1.0)
         BloomEffect.new(threshold: threshold, intensity: intensity, blur_passes: blur_passes, blur_scale: blur_scale)
+      end
+
+      def ssr(max_steps: 64, step_size: 0.1, thickness: 0.5)
+        SSREffect.new(max_steps: max_steps, step_size: step_size, thickness: thickness)
       end
     end
   end
