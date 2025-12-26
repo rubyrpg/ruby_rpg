@@ -103,14 +103,6 @@ module Rendering
         BloomEffect.new(threshold: threshold, intensity: intensity, blur_passes: blur_passes, blur_scale: blur_scale)
       end
 
-      def debug_normals
-        shader = Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/debug_normals_frag.glsl'
-        )
-        DebugNormalsEffect.new(Engine::Material.new(shader))
-      end
-
       def ssr(max_steps: 64, step_size: 0.1, thickness: 0.5)
         shader = Engine::Shader.new(
           './shaders/fullscreen_vertex.glsl',
@@ -122,19 +114,6 @@ module Rendering
         material.set_float("thickness", thickness)
         SSREffect.new(material)
       end
-    end
-  end
-
-  class DebugNormalsEffect < PostProcessingEffect
-    def apply(input_rt, output_rt, screen_quad)
-      output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
-      GL.Disable(GL::DEPTH_TEST)
-
-      material.set_texture("normalTexture", PostProcessingEffect.normal_texture)
-      screen_quad.draw(material, input_rt.texture)
-
-      output_rt.unbind
     end
   end
 
