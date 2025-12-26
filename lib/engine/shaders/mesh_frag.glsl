@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 layout(location = 0) out vec4 FragColour;
 layout(location = 1) out vec4 normalRoughness;
