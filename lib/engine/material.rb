@@ -3,12 +3,9 @@
 module Engine
   class Material
     attr_reader :shader
-    attr_accessor :roughness, :metallic
 
     def initialize(shader)
       @shader = shader
-      @roughness = 1.0  # default: fully rough (no reflections)
-      @metallic = 0.0   # default: non-metallic
     end
 
     def set_mat4(name, value)
