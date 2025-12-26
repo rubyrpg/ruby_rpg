@@ -33,7 +33,6 @@ vec2 worldToScreen(vec3 worldPos, out bool valid) {
 }
 
 void main() {
-    // DEBUG: Ray march hit detection
     float depth = texture(depthTexture, TexCoords).r;
     if (depth >= 1.0) {
         FragColor = vec4(0.0, 0.0, 0.0, 1.0);  // Sky = black
