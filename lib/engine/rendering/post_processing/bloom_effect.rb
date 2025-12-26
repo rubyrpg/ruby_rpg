@@ -2,10 +2,9 @@
 
 module Rendering
   class BloomEffect
-    attr_accessor :enabled
+    include Effect
 
     def initialize(threshold: 0.7, intensity: 1.0, blur_passes: 2, blur_scale: 1.0)
-      @enabled = true
       @threshold = threshold
       @intensity = intensity
       @blur_passes = blur_passes

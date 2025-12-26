@@ -9,9 +9,9 @@ Engine.start do
     Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.5, thickness: 2.0)
   )
 
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
-  # )
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
+  )
 
   Engine::GameObject.new(
     "Camera",
