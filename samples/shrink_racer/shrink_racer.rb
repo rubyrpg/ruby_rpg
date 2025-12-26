@@ -6,6 +6,9 @@ Engine.start do
 
   # Add post-processing effects
   Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 1, thickness: 2.0)
+  )
+  Rendering::PostProcessingEffect.add(
     Rendering::PostProcessingEffect.bloom(threshold: 2.0, intensity: 0.2, blur_passes: 3, blur_scale: 3.0)
   )
   Rendering::PostProcessingEffect.add(

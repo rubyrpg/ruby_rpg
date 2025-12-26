@@ -55,11 +55,8 @@ void main() {
 
     // Track previous state
     float prevDepthDiff = -1.0;
-    vec2 prevScreenPos = TexCoords;
     bool hitFound = false;
     vec2 hitScreenPos;
-
-    float maxScreenStep = 0.05;  // Max allowed screen-space jump per step
 
     for (int i = 0; i < int(maxSteps); i++) {
         rayPos += reflectDir * stepSize;
@@ -73,20 +70,11 @@ void main() {
             break;
         }
 
-        // Check for screen-space jump (reject teleporting rays)
-        float screenDist = length(screenPos - prevScreenPos);
-        if (screenDist > maxScreenStep) {
-            prevScreenPos = screenPos;
-            prevDepthDiff = -1.0;  // Reset crossing detection
-            continue;
-        }
-
         float rayDepth = getDepthAt(rayPos);
         float sceneDepth = texture(depthTexture, screenPos).r;
 
         if (sceneDepth >= 1.0) {
             prevDepthDiff = -1.0;
-            prevScreenPos = screenPos;
             continue;
         }
 
@@ -107,7 +95,6 @@ void main() {
         }
 
         prevDepthDiff = depthDiff;
-        prevScreenPos = screenPos;
     }
 
     vec4 baseColor = texture(screenTexture, TexCoords);

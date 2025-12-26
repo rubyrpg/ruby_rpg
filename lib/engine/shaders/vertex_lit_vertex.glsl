@@ -1,4 +1,4 @@
-#version 330 core
+#version 400 core
 
 // <vec2 position, vec2 texCoords, vec3 normal, vec3 tangent>
 layout (location = 0) in vec3 vertex;
