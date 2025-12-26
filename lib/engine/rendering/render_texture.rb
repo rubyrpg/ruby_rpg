@@ -17,8 +17,7 @@ module Rendering
       unbind
     end
 
-    # Backwards compatible accessor for first color attachment
-    def texture
+    def color_texture
       @color_textures[0]
     end
 

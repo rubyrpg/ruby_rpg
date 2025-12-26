@@ -23,7 +23,7 @@ module Rendering
       draw_ui
       current_texture.unbind
 
-      blit_to_screen(current_texture.texture)
+      blit_to_screen(current_texture.color_texture)
     end
 
     def self.draw_shadow_maps
