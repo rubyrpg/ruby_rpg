@@ -31,7 +31,7 @@ Engine.start do
     pos: Vector[0, 50, 0],
     rotation: Vector[-30, 190, 0],
     components: [
-      Engine::Components::DirectionLight.new(colour: Vector[0.5, 1, 1], cast_shadows: true)
+      Engine::Components::DirectionLight.new(colour: Vector[0.15, 0.3, 0.3], cast_shadows: true)
     ]
   )
 
@@ -50,7 +50,7 @@ Engine.start do
     pos: Vector[-30, 40, 20],
     rotation: Vector[-180, -20, 0],
     components: [
-      Engine::Components::DirectionLight.new(colour: Vector[1,1,0], cast_shadows: false)
+      Engine::Components::DirectionLight.new(colour: Vector[0.3, 0.3, 0], cast_shadows: false)
     ]
   )
 
@@ -61,7 +61,7 @@ Engine.start do
   brick_normal = Engine::Texture.for("assets/brick_normal.png").texture
   tile_size = 50
 
-  Plane.create(Vector[-0.2*tile_size, 0, -0.5*tile_size], Vector[90, 0, 0], tile_size, chessboard, brick_normal, roughness: 0.0)
+  Plane.create(Vector[-0.2*tile_size, 0, -0.5*tile_size], Vector[90, 0, 0], tile_size, nil, nil, roughness: 0.0)
 
 
   # Back wall (disabled for testing)
