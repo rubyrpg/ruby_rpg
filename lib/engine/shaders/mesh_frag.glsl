@@ -10,19 +10,24 @@ in vec3 FragPos;
 
 uniform sampler2D image;
 uniform sampler2D normalMap;
-uniform float roughness;
 uniform vec3 cameraPos;
-uniform float diffuseStrength;
-uniform float specularStrength;
-uniform float specularPower;
-uniform vec3 ambientLight;
+
+// Material properties with sensible defaults
+uniform vec3 baseColour = vec3(1.0, 1.0, 1.0);
+uniform vec3 ambientLight = vec3(0.02, 0.02, 0.02);
+uniform float diffuseStrength = 0.5;
+uniform float specularStrength = 0.7;
+uniform float specularPower = 32.0;
+uniform float roughness = 0.5;
 
 #include "lighting/lighting.glsl"
 
 void main()
 {
-    // Sample texture
-    vec4 tex = texture(image, TexCoord);
+    // Sample texture and apply base colour tint
+    // (nil textures → white 1x1, baseColour defaults to white in Material)
+    vec4 texSample = texture(image, TexCoord);
+    vec3 colour = texSample.rgb * baseColour;
 
     // Calculate world-space normal (with normal mapping if available)
     vec3 sampledNormal = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;
@@ -41,7 +46,7 @@ void main()
     vec3 viewDir = normalize(cameraPos - FragPos);
     vec3 result = CalcAllLights(norm, FragPos, viewDir, ambientLight, diffuseStrength, specularStrength, specularPower);
 
-    FragColour = tex * vec4(result, 1.0);
+    FragColour = vec4(colour * result, texSample.a);
 
     // Output world-space normal (encoded to 0-1) and roughness in alpha
     normalRoughness = vec4(norm * 0.5 + 0.5, roughness);

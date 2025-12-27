@@ -54,8 +54,8 @@ module Rendering
         TintEffect.new(color: color, intensity: intensity)
       end
 
-      def depth_of_field(focus_distance: 0.5, focus_range: 0.1, blur_amount: 3.0)
-        DepthOfFieldEffect.new(focus_distance: focus_distance, focus_range: focus_range, blur_amount: blur_amount)
+      def depth_of_field(focus_distance: 10.0, focus_range: 50.0, blur_amount: 3.0, near: 0.1, far: 1000.0)
+        DepthOfFieldEffect.new(focus_distance: focus_distance, focus_range: focus_range, blur_amount: blur_amount, near: near, far: far)
       end
 
       def depth_debug

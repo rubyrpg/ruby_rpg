@@ -5,17 +5,23 @@ out vec4 color;
 
 uniform sampler2D screenTexture;
 uniform sampler2D depthTexture;
-uniform float focusDistance;  // depth value of focal plane (0-1 range)
-uniform float focusRange;     // how wide the in-focus range is
+uniform float focusDistance;  // world-space distance in meters
+uniform float focusRange;     // distance over which blur ramps up (meters)
 uniform float blurAmount;     // max blur strength
+uniform float nearPlane;
+uniform float farPlane;
+
+float linearizeDepth(float d) {
+    return nearPlane * farPlane / (farPlane - d * (farPlane - nearPlane));
+}
 
 void main()
 {
     float depth = texture(depthTexture, TexCoords).r;
+    float linearDepth = linearizeDepth(depth);
 
     // Calculate circle of confusion - only blur things FARTHER than focus
-    // (depth > focusDistance means farther from camera)
-    float coc = max(0.0, depth - focusDistance) / focusRange;
+    float coc = max(0.0, linearDepth - focusDistance) / focusRange;
     coc = clamp(coc, 0.0, 1.0) * blurAmount;
 
     // Simple box blur with variable radius based on CoC

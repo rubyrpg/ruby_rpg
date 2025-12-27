@@ -8,6 +8,21 @@ module Engine
       @shader = shader
     end
 
+    def self.default_white_texture
+      @default_white_texture ||= begin
+        tex = ' ' * 4
+        GL.GenTextures(1, tex)
+        texture_id = tex.unpack('L')[0]
+        GL.BindTexture(GL::TEXTURE_2D, texture_id)
+        # 1x1 white pixel (RGBA)
+        white_pixel = [255, 255, 255, 255].pack('C*')
+        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, 1, 1, 0, GL::RGBA, GL::UNSIGNED_BYTE, white_pixel)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
+        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
+        texture_id
+      end
+    end
+
     def set_mat4(name, value)
       mat4s[name] = value
     end
@@ -74,7 +89,7 @@ module Engine
         if value
           GL.BindTexture(GL::TEXTURE_2D, value)
         else
-          GL.BindTexture(GL::TEXTURE_2D, 0)
+          GL.BindTexture(GL::TEXTURE_2D, self.class.default_white_texture)
         end
         shader.set_int(name, slot)
       end

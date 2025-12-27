@@ -41,8 +41,9 @@ void main() {
 
     vec4 normalRough = texture(normalTexture, TexCoords);
     float roughness = normalRough.a;
+
     if (roughness > 0.9) {
-        FragColor = vec4(0.0, 0.0, 0.0, 1.0);  // Matte = black
+        FragColor = texture(screenTexture, TexCoords);  // Matte = no reflection
         return;
     }
 

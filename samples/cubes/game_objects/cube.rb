@@ -28,7 +28,32 @@ module Cubes
       )
     end
 
+    def self.create_coloured(pos, rotation, size, colour)
+      Engine::GameObject.new(
+        "Cube",
+        pos: pos,
+        rotation: rotation,
+        scale: Vector[size, size, size],
+        components: [
+          Engine::Components::MeshRenderer.new(Engine::Mesh.for("assets/cube"), colour_material(colour)),
+        ]
+      )
+    end
+
     private
+
+    def self.colour_material(colour)
+      material = Engine::Material.new(Engine::Shader.default)
+      material.set_vec3("baseColour", colour)
+      material.set_texture("image", nil)
+      material.set_texture("normalMap", nil)
+      material.set_float("diffuseStrength", 0.5)
+      material.set_float("specularStrength", 0.7)
+      material.set_float("specularPower", 32.0)
+      material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
+      material.set_float("roughness", 0.3)
+      material
+    end
 
     def self.material
       @material ||=
@@ -41,6 +66,7 @@ module Cubes
           material.set_float("specularPower", 32.0)
           material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
           material.set_float("roughness", 0.3)
+          material.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
           material
         end
     end
@@ -56,6 +82,7 @@ module Cubes
           material.set_float("specularPower", 32.0)
           material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
           material.set_float("roughness", 0.3)
+          material.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
           material
         end
     end
