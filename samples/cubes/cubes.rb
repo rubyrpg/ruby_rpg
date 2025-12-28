@@ -5,9 +5,9 @@ Engine.start do
   include Cubes
 
   # Screen-space reflections
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.5, thickness: 2.0)
-  # )
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.5, thickness: 2.0)
+  )
 
   # Rendering::PostProcessingEffect.add(
   #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
@@ -60,7 +60,7 @@ Engine.start do
     pos: Vector[0, 50, 0],
     rotation: Vector[-30, 190, 0],
     components: [
-      Engine::Components::DirectionLight.new(colour: Vector[5, 5, 5], cast_shadows: true)
+      Engine::Components::DirectionLight.new(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
     ]
   )
 

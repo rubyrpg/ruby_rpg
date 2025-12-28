@@ -14,6 +14,7 @@ uniform vec3 cameraPos;
 uniform float maxSteps;
 uniform float stepSize;
 uniform float thickness;
+uniform float rayOffset = 2.0;  // Initial ray offset to avoid self-intersection
 
 vec3 worldPosFromDepth(vec2 uv, float depth) {
     vec4 ndc = vec4(uv * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
@@ -52,7 +53,7 @@ void main() {
     vec3 viewDir = normalize(worldPos - cameraPos);
     vec3 reflectDir = reflect(viewDir, normal);
 
-    vec3 rayPos = worldPos + reflectDir * 2.0;
+    vec3 rayPos = worldPos + reflectDir * rayOffset;
 
     // Track previous state
     float prevDepthDiff = -1.0;

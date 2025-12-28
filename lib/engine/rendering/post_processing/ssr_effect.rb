@@ -4,7 +4,7 @@ module Rendering
   class SSREffect
     include Effect
 
-    def initialize(max_steps: 64, step_size: 0.1, thickness: 0.5)
+    def initialize(max_steps: 64, step_size: 0.1, thickness: 0.5, ray_offset: 2.0)
       @material = Engine::Material.new(
         Engine::Shader.new(
           './shaders/fullscreen_vertex.glsl',
@@ -14,6 +14,7 @@ module Rendering
       @material.set_float("maxSteps", max_steps.to_f)
       @material.set_float("stepSize", step_size)
       @material.set_float("thickness", thickness)
+      @material.set_float("rayOffset", ray_offset)
     end
 
     def apply(input_rt, output_rt, screen_quad)

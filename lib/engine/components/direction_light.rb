@@ -27,17 +27,28 @@ module Engine::Components
 
     def light_space_matrix
       light_dir = direction
-      # Position the light "camera" far back along the light direction
-      light_pos = -light_dir * @shadow_distance
 
-      # Create view matrix looking from light position toward origin
-      view_matrix = look_at(light_pos, Vector[0, 0, 0], Vector[0, 1, 0])
+      # Center shadow frustum on the main camera's position
+      center = Engine::Camera.instance&.position || Vector[0, 0, 0]
+
+      # Position the light "camera" far back along the light direction from center
+      light_pos = center - light_dir * @shadow_distance
+
+      # Choose up vector that isn't parallel to light direction
+      up = if light_dir[1].abs > 0.9
+        Vector[0, 0, 1]
+      else
+        Vector[0, 1, 0]
+      end
+
+      # Create view matrix looking from light position toward center
+      view_matrix = look_at(light_pos, center, up)
 
       # Orthographic projection covering the shadow area
       half_size = @shadow_distance
       proj_matrix = ortho(-half_size, half_size, -half_size, half_size, 0.1, @shadow_distance * 2)
 
-      proj_matrix * view_matrix
+      (proj_matrix * view_matrix).transpose
     end
 
     def self.direction_lights

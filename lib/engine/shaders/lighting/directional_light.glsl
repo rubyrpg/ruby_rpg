@@ -27,6 +27,12 @@ float CalcDirectionalShadow(DirectionalLight light, int lightIndex, vec3 fragPos
         return 0.0;
     }
 
+    // Check if coords are in valid range
+    if (projCoords.x < 0.0 || projCoords.x > 1.0 ||
+        projCoords.y < 0.0 || projCoords.y > 1.0) {
+        return 0.0;  // Outside frustum XY
+    }
+
     float closestDepth = texture(directionalShadowMaps, vec3(projCoords.xy, float(lightIndex))).r;
     float currentDepth = projCoords.z;
     float bias = 0.005;

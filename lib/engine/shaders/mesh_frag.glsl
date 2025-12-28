@@ -44,6 +44,7 @@ void main()
 
     // Calculate lighting
     vec3 viewDir = normalize(cameraPos - FragPos);
+
     vec3 result = CalcAllLights(norm, FragPos, viewDir, ambientLight, diffuseStrength, specularStrength, specularPower);
 
     FragColour = vec4(colour * result, texSample.a);
