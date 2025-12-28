@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 GAME_DIR = File.expand_path(File.dirname($PROGRAM_NAME))
+ENGINE_DIR = File.expand_path(File.dirname(__FILE__))
 
 module Engine
   def self.start(&first_frame_block)

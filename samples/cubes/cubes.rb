@@ -1,6 +1,32 @@
 require_relative "../../lib/ruby_rpg"
 require_relative "components/spotlight_controller"
 
+def coloured_material(colour)
+  material = Engine::Material.new(Engine::Shader.default)
+  material.set_vec3("baseColour", colour)
+  material.set_texture("image", nil)
+  material.set_texture("normalMap", nil)
+  material.set_float("diffuseStrength", 0.5)
+  material.set_float("specularStrength", 0.7)
+  material.set_float("specularPower", 32.0)
+  material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
+  material.set_float("roughness", 0.3)
+  material
+end
+
+def floor_material(texture, normal, roughness)
+  material = Engine::Material.new(Engine::Shader.default)
+  material.set_texture("image", texture)
+  material.set_texture("normalMap", normal)
+  material.set_float("diffuseStrength", 0.5)
+  material.set_float("specularStrength", 0.7)
+  material.set_float("specularPower", 32.0)
+  material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
+  material.set_float("roughness", roughness)
+  material.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
+  material
+end
+
 Engine.start do
   include Cubes
 
@@ -26,8 +52,8 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  sphere = Sphere.create(Vector[0, 20, 0], 0, 5)
-  Cube.create(Vector[25, 20, -30], Vector[0, 0, 0], 8)
+  sphere = Engine::StandardObjects::Sphere.create(pos: Vector[0, 20, 0], scale: Vector[5, 5, 5])
+  Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[8, 8, 8])
 
   # Wall of colourful cubes
   colours = [
@@ -50,7 +76,7 @@ Engine.start do
     wall_height.times do |y|
       colour = colours[(x + y) % colours.length]
       pos = start_pos + Vector[x * spacing, y * spacing, 0]
-      Cube.create_coloured(pos, Vector[0, 0, 0], cube_size, colour)
+      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size, cube_size, cube_size], material: coloured_material(colour))
     end
   end
 
@@ -91,7 +117,12 @@ Engine.start do
   brick_normal = Engine::Texture.for("assets/brick_normal.png").texture
   tile_size = 50
 
-  Plane.create(Vector[-0.2*tile_size, 0, -0.5*tile_size], Vector[90, 0, 0], tile_size, chessboard, brick_normal, roughness: 0.0)
+  Engine::StandardObjects::Plane.create(
+    pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
+    rotation: Vector[90, 0, 0],
+    scale: Vector[tile_size, tile_size, tile_size],
+    material: floor_material(chessboard, brick_normal, 0.0)
+  )
 
 
   # Back wall (disabled for testing)
