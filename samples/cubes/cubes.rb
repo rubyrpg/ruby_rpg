@@ -53,7 +53,7 @@ Engine.start do
     ])
 
   sphere = Engine::StandardObjects::Sphere.create(pos: Vector[0, 20, 0], scale: Vector[5, 5, 5])
-  Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[8, 8, 8])
+  Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
 
   # Wall of colourful cubes
   colours = [
@@ -76,7 +76,7 @@ Engine.start do
     wall_height.times do |y|
       colour = colours[(x + y) % colours.length]
       pos = start_pos + Vector[x * spacing, y * spacing, 0]
-      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size, cube_size, cube_size], material: coloured_material(colour))
+      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size * 2, cube_size * 2, cube_size * 2], material: coloured_material(colour))
     end
   end
 
