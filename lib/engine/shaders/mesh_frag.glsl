@@ -8,8 +8,8 @@ in vec3 Normal;
 in vec3 Tangent;
 in vec3 FragPos;
 
-uniform sampler2D image;
-uniform sampler2D normalMap;
+uniform sampler2D image; // @fallback white
+uniform sampler2D normalMap; // @fallback normal
 uniform vec3 cameraPos;
 
 // Material properties with sensible defaults

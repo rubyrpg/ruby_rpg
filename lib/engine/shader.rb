@@ -49,6 +49,7 @@ module Engine
     end
 
     def initialize(vertex_shader, fragment_shader)
+      @texture_fallbacks = {}
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)
       @program = GL.CreateProgram
@@ -79,11 +80,16 @@ module Engine
       handle = GL.CreateShader(type)
       path = File.join(File.dirname(__FILE__), shader)
       source = preprocess_shader(path)
+      parse_texture_fallbacks(source)
       s_srcs = [source].pack('p')
       s_lens = [source.bytesize].pack('I')
       GL.ShaderSource(handle, 1, s_srcs, s_lens)
       GL.CompileShader(handle)
       handle
+    end
+
+    def texture_fallback(name)
+      @texture_fallbacks[name] || :white
     end
 
     def preprocess_shader(path, included = [])
@@ -152,6 +158,12 @@ module Engine
     end
 
     private
+
+    def parse_texture_fallbacks(source)
+      source.scan(/uniform\s+sampler2D\s+(\w+)\s*;.*\/\/\s*@fallback\s+(\w+)/) do |name, fallback|
+        @texture_fallbacks[name] = fallback.to_sym
+      end
+    end
 
     def uniform_location(name)
       @uniform_locations[name] ||= GL.GetUniformLocation(@program, name)

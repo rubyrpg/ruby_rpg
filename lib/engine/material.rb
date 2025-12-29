@@ -9,18 +9,27 @@ module Engine
     end
 
     def self.default_white_texture
-      @default_white_texture ||= begin
-        tex = ' ' * 4
-        GL.GenTextures(1, tex)
-        texture_id = tex.unpack('L')[0]
-        GL.BindTexture(GL::TEXTURE_2D, texture_id)
-        # 1x1 white pixel (RGBA)
-        white_pixel = [255, 255, 255, 255].pack('C*')
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, 1, 1, 0, GL::RGBA, GL::UNSIGNED_BYTE, white_pixel)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
-        texture_id
-      end
+      @default_white_texture ||= create_1x1_texture(255, 255, 255, 255)
+    end
+
+    def self.default_normal_texture
+      @default_normal_texture ||= create_1x1_texture(128, 128, 255, 255)
+    end
+
+    def self.default_black_texture
+      @default_black_texture ||= create_1x1_texture(0, 0, 0, 255)
+    end
+
+    def self.create_1x1_texture(r, g, b, a)
+      tex = ' ' * 4
+      GL.GenTextures(1, tex)
+      texture_id = tex.unpack('L')[0]
+      GL.BindTexture(GL::TEXTURE_2D, texture_id)
+      pixel = [r, g, b, a].pack('C*')
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, 1, 1, 0, GL::RGBA, GL::UNSIGNED_BYTE, pixel)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
+      texture_id
     end
 
     def set_mat4(name, value)
@@ -89,7 +98,7 @@ module Engine
         if value
           GL.BindTexture(GL::TEXTURE_2D, value)
         else
-          GL.BindTexture(GL::TEXTURE_2D, self.class.default_white_texture)
+          GL.BindTexture(GL::TEXTURE_2D, fallback_texture_for(name))
         end
         shader.set_int(name, slot)
       end
@@ -135,6 +144,14 @@ module Engine
     end
 
     private
+
+    def fallback_texture_for(name)
+      case shader.texture_fallback(name)
+      when :normal then self.class.default_normal_texture
+      when :black then self.class.default_black_texture
+      else self.class.default_white_texture
+      end
+    end
 
     def mat4s
       @mat4s ||= {}
