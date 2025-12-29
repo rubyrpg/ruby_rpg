@@ -120,7 +120,7 @@ Engine.start do
   Engine::StandardObjects::Plane.create(
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
-    scale: Vector[tile_size, tile_size, tile_size],
+    scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
     material: floor_material(chessboard, brick_normal, 0.0)
   )
 
