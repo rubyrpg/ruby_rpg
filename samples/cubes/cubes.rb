@@ -52,7 +52,7 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  sphere = Engine::StandardObjects::Sphere.create(pos: Vector[0, 20, 0], scale: Vector[5, 5, 5])
+  sphere = Engine::StandardObjects::Sphere.create(pos: Vector[0, 20, 0], scale: Vector[10, 10, 10])
   Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
 
   # Wall of colourful cubes
