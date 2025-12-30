@@ -36,6 +36,10 @@ module Rendering
       @material.set_mat4("viewProj", camera.matrix)
       @material.set_vec3("cameraPos", camera.position)
 
+      # Bind skybox cubemap for rays that miss geometry
+      cubemap = RenderPipeline.skybox_cubemap
+      @material.set_cubemap("skyboxCubemap", cubemap&.texture)
+
       screen_quad.draw_with_material(@material)
 
       output_rt.unbind

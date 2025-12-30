@@ -6,6 +6,7 @@ out vec4 FragColor;
 uniform sampler2D screenTexture;
 uniform sampler2D depthTexture;
 uniform sampler2D normalTexture;
+uniform samplerCube skyboxCubemap;
 
 uniform mat4 inverseVP;
 uniform mat4 viewProj;
@@ -36,7 +37,7 @@ vec2 worldToScreen(vec3 worldPos, out bool valid) {
 void main() {
     float depth = texture(depthTexture, TexCoords).r;
     if (depth >= 1.0) {
-        FragColor = vec4(0.0, 0.0, 0.0, 1.0);  // Sky = black
+        FragColor = texture(screenTexture, TexCoords);  // Sky - pass through
         return;
     }
 
@@ -101,9 +102,10 @@ void main() {
 
     vec4 baseColor = texture(screenTexture, TexCoords);
 
+    float reflectivity = 1.0 - roughness;
+
     if (hitFound) {
         vec4 reflectionColor = texture(screenTexture, hitScreenPos);
-        float reflectivity = 1.0 - roughness;
 
         // Edge fading
         float edgeFadeX = 1.0 - pow(abs(hitScreenPos.x - 0.5) * 2.0, 2.0);
@@ -112,6 +114,8 @@ void main() {
 
         FragColor = mix(baseColor, reflectionColor, edgeFade * reflectivity);
     } else {
-        FragColor = baseColor;
+        // Ray missed geometry - sample skybox in reflection direction
+        vec4 skyColor = texture(skyboxCubemap, reflectDir);
+        FragColor = mix(baseColor, skyColor, reflectivity);
     }
 }
