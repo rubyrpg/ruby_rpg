@@ -37,7 +37,7 @@ module Rendering
         material.set_mat4("inverseVP", camera.inverse_vp_matrix)
         material.set_vec3("cameraPos", camera.position)
         material.set_cubemap("skyboxCubemap", @skybox_cubemap&.texture)
-        material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+        material.set_texture("depthTexture", input_rt.depth_texture)
 
         screen_quad.draw(material, input_rt.color_texture)
         output_rt.unbind

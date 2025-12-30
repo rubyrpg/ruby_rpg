@@ -18,8 +18,8 @@ module Rendering
       GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
       render_texture_a.unbind
 
-      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
-      current_texture = SkyboxRenderer.draw(current_texture, alternate_rt(current_texture), screen_quad)
+      SkyboxRenderer.draw(render_texture_a, render_texture_b, screen_quad)
+      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, start_index: 1)
 
       disable_depth_test
       current_texture.bind
