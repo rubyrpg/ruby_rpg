@@ -69,6 +69,10 @@ module Rendering
       def ssr(max_steps: 64, step_size: 0.1, thickness: 0.5, ray_offset: 2.0)
         SSREffect.new(max_steps: max_steps, step_size: step_size, thickness: thickness, ray_offset: ray_offset)
       end
+
+      def skybox
+        SkyboxEffect.new
+      end
     end
   end
 end

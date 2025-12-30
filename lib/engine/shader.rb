@@ -12,6 +12,10 @@ module Engine
       @skybox ||= Shader.new('./shaders/skybox_vert.glsl', './shaders/skybox_frag.glsl')
     end
 
+    def self.skybox_cubemap
+      @skybox_cubemap ||= Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/skybox_cubemap_frag.glsl')
+    end
+
     def self.sprite
       @sprite ||= Engine::Shader.new('./shaders/sprite_vertex.glsl', './shaders/sprite_frag.glsl')
     end

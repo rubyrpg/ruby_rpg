@@ -19,6 +19,12 @@ module Rendering
       GL.BindVertexArray(0)
     end
 
+    def draw_raw
+      GL.BindVertexArray(@vao)
+      GL.DrawArrays(GL::TRIANGLES, 0, 6)
+      GL.BindVertexArray(0)
+    end
+
     private
 
     def setup_vao

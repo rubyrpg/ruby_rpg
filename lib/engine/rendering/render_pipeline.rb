@@ -5,6 +5,7 @@ module Rendering
     def self.draw
       update_render_texture_size
       sync_transforms
+      render_skybox_cubemap
 
       enable_depth_test
       draw_shadow_maps
@@ -117,9 +118,29 @@ module Rendering
       instance_renderers[mesh_renderer.renderer_key].update_instance(mesh_renderer)
     end
 
+    def self.set_skybox_colors(horizon:, sky:)
+      @skybox_horizon_color = horizon
+      @skybox_sky_color = sky
+      @skybox_cubemap&.invalidate
+    end
+
+    def self.skybox_cubemap
+      @skybox_cubemap
+    end
+
     private
 
+    def self.render_skybox_cubemap
+      return unless @skybox_horizon_color && @skybox_sky_color
+
+      @skybox_cubemap ||= SkyboxCubemap.new
+      @skybox_cubemap.render_if_needed(@skybox_horizon_color, @skybox_sky_color)
+      reset_viewport
+    end
+
     def self.clear_buffer
+      GL.DepthMask(GL::TRUE)  # Ensure depth writes are enabled
+      GL.ClearDepth(1.0)
       GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
     end
 
