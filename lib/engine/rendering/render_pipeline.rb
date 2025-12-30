@@ -5,6 +5,8 @@ module Rendering
     def self.draw
       update_render_texture_size
       sync_transforms
+      SkyboxRenderer.render_cubemap
+      reset_viewport
 
       enable_depth_test
       draw_shadow_maps
@@ -16,7 +18,8 @@ module Rendering
       GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
       render_texture_a.unbind
 
-      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
+      SkyboxRenderer.draw(render_texture_a, render_texture_b, screen_quad)
+      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, start_index: 1)
 
       disable_depth_test
       current_texture.bind
@@ -117,7 +120,19 @@ module Rendering
       instance_renderers[mesh_renderer.renderer_key].update_instance(mesh_renderer)
     end
 
+    def self.set_skybox_colors(horizon:, sky:, horizon_y: 0.0, sky_y: 1.0)
+      SkyboxRenderer.set_colors(horizon: horizon, sky: sky, horizon_y: horizon_y, sky_y: sky_y)
+    end
+
+    def self.skybox_cubemap
+      SkyboxRenderer.cubemap
+    end
+
     private
+
+    def self.alternate_rt(current_rt)
+      current_rt == render_texture_a ? render_texture_b : render_texture_a
+    end
 
     def self.clear_buffer
       GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)

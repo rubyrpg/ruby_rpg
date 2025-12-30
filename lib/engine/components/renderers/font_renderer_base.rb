@@ -18,6 +18,7 @@ module Engine::Components
       setup_vertex_attribute_buffer
       setup_vertex_buffer
       setup_index_buffer
+      GL.BindVertexArray(0)
     end
 
     def update_string(string)

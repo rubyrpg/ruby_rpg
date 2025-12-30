@@ -10,7 +10,7 @@ def coloured_material(colour)
   material.set_float("specularStrength", 0.7)
   material.set_float("specularPower", 32.0)
   material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
-  material.set_float("roughness", 0.3)
+  material.set_float("roughness", 0.7)
   material
 end
 
@@ -121,7 +121,7 @@ Engine.start do
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(chessboard, brick_normal, 0.0)
+    material: floor_material(chessboard, brick_normal, 0.7)
   )
 
 

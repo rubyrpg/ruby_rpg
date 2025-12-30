@@ -4,6 +4,11 @@ require "pry"
 Engine.start do
   include ShrinkRacer
 
+  Rendering::RenderPipeline.set_skybox_colors(
+    horizon: Vector[0.6, 0.3, 0.25],
+    sky: Vector[0.08, 0.05, 0.2]
+  )
+
   # Add post-processing effects
   Rendering::PostProcessingEffect.add(
     Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.1, thickness: 0.5, ray_offset: 0.05)

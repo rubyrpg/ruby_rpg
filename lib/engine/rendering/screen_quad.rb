@@ -5,6 +5,7 @@ module Rendering
     def initialize
       setup_vao
       setup_vbo
+      GL.BindVertexArray(0)
     end
 
     def draw(material, texture)
@@ -14,6 +15,12 @@ module Rendering
 
     def draw_with_material(material)
       material.update_shader
+      GL.BindVertexArray(@vao)
+      GL.DrawArrays(GL::TRIANGLES, 0, 6)
+      GL.BindVertexArray(0)
+    end
+
+    def draw_raw
       GL.BindVertexArray(@vao)
       GL.DrawArrays(GL::TRIANGLES, 0, 6)
       GL.BindVertexArray(0)

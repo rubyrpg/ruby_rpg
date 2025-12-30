@@ -8,8 +8,8 @@ module Engine
       @vertex_lit ||= Engine::Shader.new('./shaders/vertex_lit_vertex.glsl', './shaders/vertex_lit_frag.glsl')
     end
 
-    def self.skybox
-      @skybox ||= Shader.new('./shaders/skybox_vert.glsl', './shaders/skybox_frag.glsl')
+    def self.skybox_cubemap
+      @skybox_cubemap ||= Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/skybox_cubemap_frag.glsl')
     end
 
     def self.sprite

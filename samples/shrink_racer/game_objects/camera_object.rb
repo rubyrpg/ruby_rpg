@@ -5,8 +5,7 @@ module ShrinkRacer
     FAR = 200.0
 
     def self.create(car)
-      back_plane = create_back_plane
-      camera = Engine::GameObject.new(
+      Engine::GameObject.new(
         "Camera",
         pos: Vector[0, 0, 0],
         rotation: Vector[20, 180, 0],
@@ -14,13 +13,10 @@ module ShrinkRacer
           CarFollower.new(car),
           Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: FAR)
         ])
-      back_plane.parent = camera
-      camera
     end
 
     def self.debug_camera
-      back_plane = create_back_plane
-      camera = Engine::GameObject.new(
+      Engine::GameObject.new(
         "Camera",
         pos: Vector[0, 0, 0],
         rotation: Vector[20, 180, 0],
@@ -28,28 +24,6 @@ module ShrinkRacer
           CameraRotator.new,
           Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: FAR)
         ])
-      back_plane.parent = camera
-      camera
-    end
-
-    private
-
-    def self.create_back_plane
-      material = Engine::Material.new(Engine::Shader.skybox)
-      material.set_vec3("horizonColour", Vector[0.6, 0.3, 0.25])   # warm orange-pink
-      material.set_vec3("skyColour", Vector[0.08, 0.05, 0.2])       # deep purple-blue
-      Engine::GameObject.new(
-        "Skybox",
-        pos: Vector[0, 0, -FAR + 20],
-        scale: Vector[FAR, FAR, 1],
-        rotation: Vector[0, 180, 0],
-        components: [
-          Engine::Components::MeshRenderer.new(
-            Engine::Mesh.for("assets/quad"),
-            material
-          )
-        ]
-      )
     end
   end
 end
