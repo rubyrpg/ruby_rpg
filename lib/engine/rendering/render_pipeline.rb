@@ -5,7 +5,8 @@ module Rendering
     def self.draw
       update_render_texture_size
       sync_transforms
-      render_skybox_cubemap
+      SkyboxRenderer.render_cubemap
+      reset_viewport
 
       enable_depth_test
       draw_shadow_maps
@@ -18,7 +19,7 @@ module Rendering
       render_texture_a.unbind
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
-      current_texture = draw_skybox(current_texture)
+      current_texture = SkyboxRenderer.draw(current_texture, alternate_rt(current_texture), screen_quad)
 
       disable_depth_test
       current_texture.bind
@@ -120,61 +121,17 @@ module Rendering
     end
 
     def self.set_skybox_colors(horizon:, sky:, horizon_y: 0.0, sky_y: 1.0)
-      @skybox_horizon_color = horizon
-      @skybox_sky_color = sky
-      @skybox_horizon_y = horizon_y
-      @skybox_sky_y = sky_y
-      @skybox_cubemap&.invalidate
+      SkyboxRenderer.set_colors(horizon: horizon, sky: sky, horizon_y: horizon_y, sky_y: sky_y)
     end
 
     def self.skybox_cubemap
-      @skybox_cubemap
+      SkyboxRenderer.cubemap
     end
 
     private
 
-    def self.render_skybox_cubemap
-      @skybox_cubemap ||= SkyboxCubemap.new
-      @skybox_cubemap.render_if_needed(
-        @skybox_horizon_color,
-        @skybox_sky_color,
-        @skybox_horizon_y,
-        @skybox_sky_y
-      )
-      reset_viewport
-    end
-
-    def self.draw_skybox(input_rt)
-      output_rt = input_rt == render_texture_a ? render_texture_b : render_texture_a
-
-      output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
-      GL.Disable(GL::DEPTH_TEST)
-
-      camera = Engine::Camera.instance
-      unless camera
-        output_rt.unbind
-        return input_rt
-      end
-
-      skybox_material.set_mat4("inverseVP", camera.inverse_vp_matrix)
-      skybox_material.set_vec3("cameraPos", camera.position)
-      skybox_material.set_cubemap("skyboxCubemap", @skybox_cubemap&.texture)
-      skybox_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
-
-      screen_quad.draw(skybox_material, input_rt.color_texture)
-      output_rt.unbind
-
-      output_rt
-    end
-
-    def self.skybox_material
-      @skybox_material ||= Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/skybox_frag.glsl'
-        )
-      )
+    def self.alternate_rt(current_rt)
+      current_rt == render_texture_a ? render_texture_b : render_texture_a
     end
 
     def self.clear_buffer
