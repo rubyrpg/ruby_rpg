@@ -111,7 +111,7 @@ module Engine
         if value
           GL.BindTexture(GL::TEXTURE_CUBE_MAP, value)
         else
-          GL.BindTexture(GL::TEXTURE_CUBE_MAP, 0)
+          GL.BindTexture(GL::TEXTURE_CUBE_MAP, fallback_cubemap_for(name))
         end
         shader.set_int(name, slot)
       end
@@ -150,6 +150,15 @@ module Engine
       when :normal then self.class.default_normal_texture
       when :black then self.class.default_black_texture
       else self.class.default_white_texture
+      end
+    end
+
+    def fallback_cubemap_for(name)
+      case shader.cubemap_fallback(name)
+      when :skybox
+        Rendering::RenderPipeline.skybox_cubemap&.texture || 0
+      else
+        0
       end
     end
 

@@ -5,8 +5,13 @@
 #include "point_light.glsl"
 #include "spot_light.glsl"
 
-vec3 CalcAllLights(vec3 normal, vec3 fragPos, vec3 viewDir, vec3 ambientLight, float diffuseStrength, float specularStrength, float specularPower)
+uniform samplerCube skybox; // @fallback skybox
+uniform float ambientStrength = 0.3;
+
+vec3 CalcAllLights(vec3 normal, vec3 fragPos, vec3 viewDir, float diffuseStrength, float specularStrength, float specularPower)
 {
+    // Sample skybox using surface normal for ambient lighting
+    vec3 ambientLight = texture(skybox, normal).rgb * ambientStrength;
     vec3 result = ambientLight;
 
     for (int i = 0; i < NR_POINT_LIGHTS; i++) {

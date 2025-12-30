@@ -6,7 +6,7 @@ out vec4 FragColor;
 uniform vec3 horizonColour = vec3(0.7, 0.8, 0.9);  // light hazy blue
 uniform vec3 skyColour = vec3(0.3, 0.5, 0.8);      // deeper blue
 uniform float horizonY = -0.1;  // horizon slightly below center
-uniform float skyY = 0.5;       // gradient completes halfway up
+uniform float skyY = 0.2;       // gradient completes halfway up
 uniform int faceIndex;
 
 vec3 getDirection(vec2 uv, int face) {

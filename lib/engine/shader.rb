@@ -50,6 +50,7 @@ module Engine
 
     def initialize(vertex_shader, fragment_shader)
       @texture_fallbacks = {}
+      @cubemap_fallbacks = {}
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
       @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)
       @program = GL.CreateProgram
@@ -90,6 +91,10 @@ module Engine
 
     def texture_fallback(name)
       @texture_fallbacks[name] || :white
+    end
+
+    def cubemap_fallback(name)
+      @cubemap_fallbacks[name]
     end
 
     def preprocess_shader(path, included = [])
@@ -162,6 +167,9 @@ module Engine
     def parse_texture_fallbacks(source)
       source.scan(/uniform\s+sampler2D\s+(\w+)\s*;.*\/\/\s*@fallback\s+(\w+)/) do |name, fallback|
         @texture_fallbacks[name] = fallback.to_sym
+      end
+      source.scan(/uniform\s+samplerCube\s+(\w+)\s*;.*\/\/\s*@fallback\s+(\w+)/) do |name, fallback|
+        @cubemap_fallbacks[name] = fallback.to_sym
       end
     end
 

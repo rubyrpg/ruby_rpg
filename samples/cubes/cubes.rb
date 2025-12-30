@@ -84,9 +84,9 @@ Engine.start do
   Engine::GameObject.new(
     "DirectionalLight",
     pos: Vector[0, 50, 0],
-    rotation: Vector[-30, 190, 0],
+    rotation: Vector[-70, 190, 0],
     components: [
-      Engine::Components::DirectionLight.new(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
+      Engine::Components::DirectionLight.new(colour: Vector[1,1,1] * 0.8, cast_shadows: true, shadow_distance: 150.0)
     ]
   )
 
@@ -121,7 +121,7 @@ Engine.start do
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(chessboard, brick_normal, 0.7)
+    material: floor_material(chessboard, brick_normal, 0.5)
   )
 
 

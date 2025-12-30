@@ -87,6 +87,7 @@ module Rendering
     def set_material_per_frame_data
       material.set_mat4("camera", Engine::Camera.instance.matrix)
       material.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
+      material.set_cubemap("skybox", nil)
 
       update_light_data
       material.update_shader

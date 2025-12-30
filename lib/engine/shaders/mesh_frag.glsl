@@ -14,7 +14,6 @@ uniform vec3 cameraPos;
 
 // Material properties with sensible defaults
 uniform vec3 baseColour = vec3(1.0, 1.0, 1.0);
-uniform vec3 ambientLight = vec3(0.02, 0.02, 0.02);
 uniform float diffuseStrength = 0.5;
 uniform float specularStrength = 0.7;
 uniform float specularPower = 32.0;
@@ -45,7 +44,7 @@ void main()
     // Calculate lighting
     vec3 viewDir = normalize(cameraPos - FragPos);
 
-    vec3 result = CalcAllLights(norm, FragPos, viewDir, ambientLight, diffuseStrength, specularStrength, specularPower);
+    vec3 result = CalcAllLights(norm, FragPos, viewDir, diffuseStrength, specularStrength, specularPower);
 
     FragColour = vec4(colour * result, texSample.a);
 

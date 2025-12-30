@@ -15,7 +15,6 @@ uniform float roughness;
 uniform float diffuseStrength;
 uniform float specularStrength;
 uniform float specularPower;
-uniform vec3 ambientLight;
 
 #include "lighting/lighting.glsl"
 
@@ -24,7 +23,7 @@ void main()
     vec3 norm = normalize(Normal);
     vec3 viewDir = normalize(cameraPos - FragPos);
 
-    vec3 result = CalcAllLights(norm, FragPos, viewDir, ambientLight, diffuseStrength, specularStrength, specularPower);
+    vec3 result = CalcAllLights(norm, FragPos, viewDir, diffuseStrength, specularStrength, specularPower);
 
     vec4 c = vec4(Diffuse, 1.0);
     FragColour = c * vec4(result, 1.0);
