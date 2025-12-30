@@ -12,7 +12,6 @@ Engine.start do
 
   # Add post-processing effects
   # Rendering::PostProcessingEffect.add(Rendering::PostProcessingEffect.depth_debug)
-  Rendering::PostProcessingEffect.add(Rendering::PostProcessingEffect.skybox)
   Rendering::PostProcessingEffect.add(
     Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.1, thickness: 0.5, ray_offset: 0.05)
   )

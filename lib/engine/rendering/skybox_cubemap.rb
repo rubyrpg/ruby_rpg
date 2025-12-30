@@ -8,15 +8,19 @@ module Rendering
       @rendered = false
       @horizon_color = nil
       @sky_color = nil
+      @horizon_y = nil
+      @sky_y = nil
       create_cubemap_texture
       create_framebuffer
     end
 
-    def render_if_needed(horizon_color, sky_color)
-      return if @rendered && @horizon_color == horizon_color && @sky_color == sky_color
+    def render_if_needed(horizon_color, sky_color, horizon_y, sky_y)
+      return if @rendered && @horizon_color == horizon_color && @sky_color == sky_color && @horizon_y == horizon_y && @sky_y == sky_y
 
       @horizon_color = horizon_color
       @sky_color = sky_color
+      @horizon_y = horizon_y
+      @sky_y = sky_y
       render_all_faces
       @rendered = true
     end
@@ -72,8 +76,10 @@ module Rendering
       GL.Viewport(0, 0, CUBEMAP_SIZE, CUBEMAP_SIZE)
 
       shader.use
-      shader.set_vec3("horizonColour", @horizon_color)
-      shader.set_vec3("skyColour", @sky_color)
+      shader.set_vec3("horizonColour", @horizon_color) if @horizon_color
+      shader.set_vec3("skyColour", @sky_color) if @sky_color
+      shader.set_float("horizonY", @horizon_y) if @horizon_y
+      shader.set_float("skyY", @sky_y) if @sky_y
 
       6.times do |face_index|
         GL.FramebufferTexture2D(

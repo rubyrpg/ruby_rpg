@@ -18,6 +18,7 @@ module Rendering
       render_texture_a.unbind
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad)
+      current_texture = draw_skybox(current_texture)
 
       disable_depth_test
       current_texture.bind
@@ -118,9 +119,11 @@ module Rendering
       instance_renderers[mesh_renderer.renderer_key].update_instance(mesh_renderer)
     end
 
-    def self.set_skybox_colors(horizon:, sky:)
+    def self.set_skybox_colors(horizon:, sky:, horizon_y: 0.0, sky_y: 1.0)
       @skybox_horizon_color = horizon
       @skybox_sky_color = sky
+      @skybox_horizon_y = horizon_y
+      @skybox_sky_y = sky_y
       @skybox_cubemap&.invalidate
     end
 
@@ -131,11 +134,47 @@ module Rendering
     private
 
     def self.render_skybox_cubemap
-      return unless @skybox_horizon_color && @skybox_sky_color
-
       @skybox_cubemap ||= SkyboxCubemap.new
-      @skybox_cubemap.render_if_needed(@skybox_horizon_color, @skybox_sky_color)
+      @skybox_cubemap.render_if_needed(
+        @skybox_horizon_color,
+        @skybox_sky_color,
+        @skybox_horizon_y,
+        @skybox_sky_y
+      )
       reset_viewport
+    end
+
+    def self.draw_skybox(input_rt)
+      output_rt = input_rt == render_texture_a ? render_texture_b : render_texture_a
+
+      output_rt.bind
+      GL.Clear(GL::COLOR_BUFFER_BIT)
+      GL.Disable(GL::DEPTH_TEST)
+
+      camera = Engine::Camera.instance
+      unless camera
+        output_rt.unbind
+        return input_rt
+      end
+
+      skybox_material.set_mat4("inverseVP", camera.inverse_vp_matrix)
+      skybox_material.set_vec3("cameraPos", camera.position)
+      skybox_material.set_cubemap("skyboxCubemap", @skybox_cubemap&.texture)
+      skybox_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+
+      screen_quad.draw(skybox_material, input_rt.color_texture)
+      output_rt.unbind
+
+      output_rt
+    end
+
+    def self.skybox_material
+      @skybox_material ||= Engine::Material.new(
+        Engine::Shader.new(
+          './shaders/fullscreen_vertex.glsl',
+          './shaders/post_process/skybox_frag.glsl'
+        )
+      )
     end
 
     def self.clear_buffer
