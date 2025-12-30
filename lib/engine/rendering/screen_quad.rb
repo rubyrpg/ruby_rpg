@@ -5,6 +5,7 @@ module Rendering
     def initialize
       setup_vao
       setup_vbo
+      GL.BindVertexArray(0)
     end
 
     def draw(material, texture)

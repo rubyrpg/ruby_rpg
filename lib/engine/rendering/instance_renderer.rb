@@ -14,6 +14,7 @@ module Rendering
       setup_vertex_buffer
       setup_index_buffer
       generate_instance_vbo_buf
+      GL.BindVertexArray(0)
     end
 
     def add_instance(mesh_renderer)

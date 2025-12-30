@@ -18,10 +18,7 @@ module Engine::Components
       setup_vertex_attribute_buffer
       setup_vertex_buffer
       setup_index_buffer
-      # Unbind VAO to prevent subsequent GL operations from corrupting its state
       GL.BindVertexArray(0)
-      GL.BindBuffer(GL::ARRAY_BUFFER, 0)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     def update_string(string)
