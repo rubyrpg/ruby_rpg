@@ -14,7 +14,8 @@ void main()
     float depth = texture(depthTexture, TexCoords).r;
 
     // If depth < 1.0, this is geometry - keep existing color
-    if (depth < 0.999) {
+    // Use tight threshold since depth buffer clears to exactly 1.0
+    if (depth < 0.99999) {
         FragColor = texture(screenTexture, TexCoords);
         return;
     }

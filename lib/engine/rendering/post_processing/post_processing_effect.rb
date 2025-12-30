@@ -17,11 +17,11 @@ module Rendering
       end
 
       def apply_all(render_texture_a, render_texture_b, screen_quad)
-        enabled_effects = effects.select(&:enabled)
-        return render_texture_a if enabled_effects.empty?
-
         @depth_texture = render_texture_a.depth_texture
         @normal_texture = render_texture_a.normal_texture
+
+        enabled_effects = effects.select(&:enabled)
+        return render_texture_a if enabled_effects.empty?
         textures = [render_texture_a, render_texture_b]
         current_index = 0
 
