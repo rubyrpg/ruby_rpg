@@ -135,8 +135,6 @@ module Rendering
     end
 
     def self.clear_buffer
-      GL.DepthMask(GL::TRUE)  # Ensure depth writes are enabled
-      GL.ClearDepth(1.0)
       GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
     end
 
