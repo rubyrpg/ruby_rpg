@@ -34,6 +34,7 @@ module Engine
 
       components.each { |component| component.set_game_object(self) }
       components.each(&:start)
+      GameObject.register_renderers(self)
     end
 
     def to_s
@@ -181,6 +182,7 @@ module Engine
       ui_renderers.each(&:destroy!)
       renderers.each(&:destroy!)
 
+      GameObject.unregister_renderers(self)
       GameObject.destroyed_objects << self unless @destroyed
       @destroyed = true
     end
@@ -236,15 +238,21 @@ module Engine
     end
 
     def self.mesh_renderers
-      GameObject.objects.flat_map do |object|
-        object.renderers
-      end
+      @cached_mesh_renderers ||= []
     end
 
     def self.ui_renderers
-      GameObject.objects.flat_map do |object|
-        object.ui_renderers
-      end
+      @cached_ui_renderers ||= []
+    end
+
+    def self.register_renderers(game_object)
+      game_object.renderers.each { |r| mesh_renderers << r }
+      game_object.ui_renderers.each { |r| ui_renderers << r }
+    end
+
+    def self.unregister_renderers(game_object)
+      game_object.renderers.each { |r| mesh_renderers.delete(r) }
+      game_object.ui_renderers.each { |r| ui_renderers.delete(r) }
     end
 
     def self.object_spawned(object)
