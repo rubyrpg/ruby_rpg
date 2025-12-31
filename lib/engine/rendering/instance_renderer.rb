@@ -197,18 +197,10 @@ module Rendering
       instance_vbo_buf = ' ' * 4
       GL.GenBuffers(1, instance_vbo_buf)
       @instance_vbo = instance_vbo_buf.unpack('L')[0]
-      update_vbo_buf
-    end
-
-    def update_vbo_buf
-      vertex_data = @mesh_matrix_data
 
       GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
-      GL.BufferData(
-        GL::ARRAY_BUFFER, vertex_data.length * Fiddle::SIZEOF_FLOAT,
-        vertex_data.pack('F*'), GL::STATIC_DRAW
-      )
 
+      # Set up vertex attributes once (stored in VAO)
       vec4_size = Fiddle::SIZEOF_FLOAT * 4
 
       GL.EnableVertexAttribArray(7)
@@ -225,6 +217,16 @@ module Rendering
       GL.VertexAttribDivisor(8, 1)
       GL.VertexAttribDivisor(9, 1)
       GL.VertexAttribDivisor(10, 1)
+    end
+
+    def update_vbo_buf
+      vertex_data = @mesh_matrix_data
+
+      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      GL.BufferData(
+        GL::ARRAY_BUFFER, vertex_data.length * Fiddle::SIZEOF_FLOAT,
+        vertex_data.pack('F*'), GL::DYNAMIC_DRAW
+      )
     end
   end
 end
