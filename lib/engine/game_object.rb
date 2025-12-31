@@ -8,17 +8,20 @@ module Engine
       @methods.add(name)
     end
 
-    attr_accessor :name, :pos, :scale, :components, :renderers, :ui_renderers, :created_at, :parent
+    attr_accessor :name, :components, :renderers, :ui_renderers, :created_at
+    attr_reader :pos, :scale, :parent, :local_version
 
     def initialize(name = "Game Object", pos: Vector[0, 0, 0], rotation: 0, scale: Vector[1, 1, 1], components: [], parent: nil)
       GameObject.object_spawned(self)
+      @local_version = 0
+      @cached_world_version = nil
       @pos = Vector[pos[0], pos[1], pos[2] || 0]
       if rotation.is_a?(Numeric)
-        self.rotation = Quaternion.from_euler(Vector[0, 0, rotation])
+        @rotation_quaternion = Quaternion.from_euler(Vector[0, 0, rotation])
       elsif rotation.is_a?(Quaternion)
-        self.rotation = rotation
+        @rotation_quaternion = rotation
       else
-        self.rotation = Quaternion.from_euler(rotation)
+        @rotation_quaternion = Quaternion.from_euler(rotation)
       end
       @scale = scale
       @name = name
@@ -49,7 +52,18 @@ module Engine
     def parent=(parent)
       @parent.children.delete(self) if @parent
       @parent = parent
+      @local_version += 1
       parent.children << self if parent
+    end
+
+    def pos=(value)
+      @pos = value
+      @local_version += 1
+    end
+
+    def scale=(value)
+      @scale = value
+      @local_version += 1
     end
 
     def rotation
@@ -60,6 +74,7 @@ module Engine
       raise "Rotation must be a Quaternion" unless value.is_a?(Quaternion)
 
       @rotation_quaternion = value
+      @local_version += 1
     end
 
     def euler_angles
@@ -72,6 +87,7 @@ module Engine
 
     def x=(value)
       @pos = Vector[value, y, z]
+      @local_version += 1
     end
 
     def y
@@ -80,6 +96,7 @@ module Engine
 
     def y=(value)
       @pos = Vector[x, value, z]
+      @local_version += 1
     end
 
     def z
@@ -88,6 +105,7 @@ module Engine
 
     def z=(value)
       @pos = Vector[x, y, value]
+      @local_version += 1
     end
 
     def local_to_world_coordinate(local)
@@ -112,33 +130,43 @@ module Engine
       self.rotation = rotation_quaternion * rotation
     end
 
+    def world_transform_version
+      @local_version + (@parent&.world_transform_version || 0)
+    end
+
     def model_matrix
-      cache_key = [@pos.dup, rotation.dup, @scale.dup, @parent&.model_matrix&.to_a]
-      @model_matrix = nil if @model_matrix_cache_key != cache_key
-      @model_matrix_cache_key = cache_key
-      @model_matrix ||=
-        begin
-          rot = euler_angles * Math::PI / 180
+      current_version = world_transform_version
+      return @cached_world_matrix if @cached_world_version == current_version
 
-          cos_x = Math.cos(rot[0])
-          cos_y = Math.cos(rot[1])
-          cos_z = Math.cos(rot[2])
+      @cached_world_version = current_version
+      @cached_world_matrix = compute_world_matrix
+    end
 
-          sin_x = Math.sin(rot[0])
-          sin_y = Math.sin(rot[1])
-          sin_z = Math.sin(rot[2])
+    private def compute_local_matrix
+      rot = euler_angles * Math::PI / 180
 
-          Matrix[
-            [scale[0] * (cos_y * cos_z), scale[0] * (-cos_y * sin_z), scale[0] * sin_y, 0],
-            [scale[1] * (cos_x * sin_z + sin_x * sin_y * cos_z), scale[1] * (cos_x * cos_z - sin_x * sin_y * sin_z), scale[1] * -sin_x * cos_y, 0],
-            [scale[2] * (sin_x * sin_z - cos_x * sin_y * cos_z), scale[2] * (sin_x * cos_z + cos_x * sin_y * sin_z), scale[2] * cos_x * cos_y, 0],
-            [x, y, z, 1]
-          ]
-        end
+      cos_x = Math.cos(rot[0])
+      cos_y = Math.cos(rot[1])
+      cos_z = Math.cos(rot[2])
+
+      sin_x = Math.sin(rot[0])
+      sin_y = Math.sin(rot[1])
+      sin_z = Math.sin(rot[2])
+
+      Matrix[
+        [scale[0] * (cos_y * cos_z), scale[0] * (-cos_y * sin_z), scale[0] * sin_y, 0],
+        [scale[1] * (cos_x * sin_z + sin_x * sin_y * cos_z), scale[1] * (cos_x * cos_z - sin_x * sin_y * sin_z), scale[1] * -sin_x * cos_y, 0],
+        [scale[2] * (sin_x * sin_z - cos_x * sin_y * cos_z), scale[2] * (sin_x * cos_z + cos_x * sin_y * sin_z), scale[2] * cos_x * cos_y, 0],
+        [x, y, z, 1]
+      ]
+    end
+
+    private def compute_world_matrix
+      local = compute_local_matrix
       if parent
-        @model_matrix * parent.model_matrix
+        local * parent.model_matrix
       else
-        @model_matrix
+        local
       end
     end
 
