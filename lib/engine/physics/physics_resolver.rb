@@ -8,6 +8,30 @@ module Engine::Physics
       end
     end
 
+    def self.rigidbodies
+      @cached_rigidbodies ||= []
+    end
+
+    def self.colliders
+      @cached_colliders ||= []
+    end
+
+    def self.register_rigidbody(rigidbody)
+      rigidbodies << rigidbody
+    end
+
+    def self.unregister_rigidbody(rigidbody)
+      rigidbodies.delete(rigidbody)
+    end
+
+    def self.register_collider(collider)
+      colliders << collider
+    end
+
+    def self.unregister_collider(collider)
+      colliders.delete(collider)
+    end
+
     private
 
     def self.apply_collisions(rigidbody)
@@ -20,18 +44,6 @@ module Engine::Physics
       end.flatten.each do |collision|
         rigidbody.apply_impulse(collision.impulse, collision.point)
       end
-    end
-
-    def self.rigidbodies
-      Engine::GameObject.objects.map do |go|
-        go.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) }
-      end.compact
-    end
-
-    def self.colliders
-      Engine::GameObject.objects.map do |go|
-        go.components.select { |c| c.is_a?(Components::SphereCollider) }
-      end.flatten
     end
   end
 end

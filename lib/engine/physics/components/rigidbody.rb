@@ -35,6 +35,14 @@ module Engine::Physics::Components
       @coefficient_of_friction = coefficient_of_friction
     end
 
+    def start
+      Engine::Physics::PhysicsResolver.register_rigidbody(self)
+    end
+
+    def destroy
+      Engine::Physics::PhysicsResolver.unregister_rigidbody(self)
+    end
+
     def update(delta_time)
       @velocity += acceleration * delta_time
       @velocity += @impulses.reduce(Vector[0, 0, 0]) { |acc, impulse| acc + impulse } / @mass

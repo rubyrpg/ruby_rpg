@@ -8,6 +8,14 @@ module Engine::Physics::Components
       @radius = radius
     end
 
+    def start
+      Engine::Physics::PhysicsResolver.register_collider(self)
+    end
+
+    def destroy
+      Engine::Physics::PhysicsResolver.unregister_collider(self)
+    end
+
     def collision_for(other_collider)
       distance = (game_object.pos - other_collider.game_object.pos).magnitude
       min_distance = radius + other_collider.radius
