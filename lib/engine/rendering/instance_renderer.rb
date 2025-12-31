@@ -4,11 +4,14 @@ module Rendering
   class InstanceRenderer
     attr_reader :mesh, :material
 
+    FLOATS_PER_MATRIX = 16
+    BYTES_PER_MATRIX = FLOATS_PER_MATRIX * Fiddle::SIZEOF_FLOAT
+
     def initialize(mesh, material)
       @mesh = mesh
       @material = material
       @mesh_renderers = []
-      @mesh_matrix_data = []
+      @packed_data = String.new(encoding: Encoding::BINARY)
 
       setup_vertex_attribute_buffer
       setup_vertex_buffer
@@ -19,18 +22,23 @@ module Rendering
 
     def add_instance(mesh_renderer)
       @mesh_renderers << mesh_renderer
-      @mesh_matrix_data += mesh_renderer.game_object.model_matrix.to_a.flatten
+      floats = mesh_renderer.game_object.model_matrix.to_a.flatten
+      @packed_data << floats.pack('F*')
     end
 
     def remove_instance(mesh_renderer)
       index = @mesh_renderers.index(mesh_renderer)
       @mesh_renderers.delete_at(index)
-      @mesh_matrix_data[index * 16, 16] = []
+      # Remove this instance's bytes from packed data
+      byte_offset = index * BYTES_PER_MATRIX
+      @packed_data[byte_offset, BYTES_PER_MATRIX] = ''
     end
 
     def update_instance(mesh_renderer)
       index = @mesh_renderers.index(mesh_renderer)
-      @mesh_matrix_data[index * 16, 16] = mesh_renderer.game_object.model_matrix.to_a.flatten
+      floats = mesh_renderer.game_object.model_matrix.to_a.flatten
+      byte_offset = index * BYTES_PER_MATRIX
+      @packed_data[byte_offset, BYTES_PER_MATRIX] = floats.pack('F*')
     end
 
     def draw_all
@@ -220,12 +228,10 @@ module Rendering
     end
 
     def update_vbo_buf
-      vertex_data = @mesh_matrix_data
-
       GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
       GL.BufferData(
-        GL::ARRAY_BUFFER, vertex_data.length * Fiddle::SIZEOF_FLOAT,
-        vertex_data.pack('F*'), GL::DYNAMIC_DRAW
+        GL::ARRAY_BUFFER, @packed_data.bytesize,
+        @packed_data, GL::DYNAMIC_DRAW
       )
     end
   end

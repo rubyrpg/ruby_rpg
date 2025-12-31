@@ -8,6 +8,7 @@ module Engine::Components
       @mesh = mesh
       @material = material
       @static = static
+      @last_synced_version = nil
     end
 
     def renderer_key
@@ -23,7 +24,13 @@ module Engine::Components
     end
 
     def sync_transform
-      Rendering::RenderPipeline.update_instance(self) unless static
+      return if static
+
+      version = game_object.world_transform_version
+      return if @last_synced_version == version
+
+      @last_synced_version = version
+      Rendering::RenderPipeline.update_instance(self)
     end
 
     def destroy
