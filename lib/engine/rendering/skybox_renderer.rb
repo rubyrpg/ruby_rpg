@@ -3,9 +3,11 @@
 module Rendering
   class SkyboxRenderer
     class << self
-      def set_colors(horizon:, sky:, horizon_y: 0.0, sky_y: 1.0)
+      def set_colors(ground:, horizon:, sky:, ground_y: -0.3, horizon_y: 0.0, sky_y: 1.0)
+        @ground_color = ground
         @horizon_color = horizon
         @sky_color = sky
+        @ground_y = ground_y
         @horizon_y = horizon_y
         @sky_y = sky_y
         @skybox_cubemap&.invalidate
@@ -14,8 +16,10 @@ module Rendering
       def render_cubemap
         @skybox_cubemap ||= SkyboxCubemap.new
         @skybox_cubemap.render_if_needed(
+          @ground_color,
           @horizon_color,
           @sky_color,
+          @ground_y,
           @horizon_y,
           @sky_y
         )

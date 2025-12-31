@@ -120,8 +120,8 @@ module Rendering
       instance_renderers[mesh_renderer.renderer_key].update_instance(mesh_renderer)
     end
 
-    def self.set_skybox_colors(horizon:, sky:, horizon_y: 0.0, sky_y: 1.0)
-      SkyboxRenderer.set_colors(horizon: horizon, sky: sky, horizon_y: horizon_y, sky_y: sky_y)
+    def self.set_skybox_colors(ground:, horizon:, sky:, ground_y: -0.3, horizon_y: 0.0, sky_y: 1.0)
+      SkyboxRenderer.set_colors(ground: ground, horizon: horizon, sky: sky, ground_y: ground_y, horizon_y: horizon_y, sky_y: sky_y)
     end
 
     def self.skybox_cubemap
