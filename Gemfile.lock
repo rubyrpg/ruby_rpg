@@ -28,6 +28,7 @@ GEM
     observer (0.1.2)
     opengl-bindings2 (2.0.2)
     os (1.1.4)
+    ostruct (0.6.3)
     pkg-config (1.5.6)
     pry (0.14.2)
       coderay (~> 1.1)
@@ -55,9 +56,10 @@ PLATFORMS
 
 DEPENDENCIES
   csv
+  ostruct
   pry (~> 0.14)
   rspec (~> 3.13)
   ruby_rpg!
 
 BUNDLED WITH
-   4.0.3
+  4.0.3

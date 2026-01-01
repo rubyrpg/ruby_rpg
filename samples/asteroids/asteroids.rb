@@ -3,6 +3,12 @@ require "pry"
 
 Engine.start do
   include Asteroids
+
+  Rendering::RenderPipeline.set_skybox_colors(
+    ground: Vector[0, 0, 0],
+    horizon: Vector[0, 0, 0],
+    sky: Vector[0, 0, 0]
+  )
   Ship.create(Vector[Engine::Window.width / 2, Engine::Window.height / 2, 0], 20)
   OnscreenUI.create
 
