@@ -8,25 +8,41 @@ module Rendering
       SkyboxRenderer.render_cubemap
       reset_viewport
 
-      enable_depth_test
-      draw_shadow_maps
+      GpuTimer.measure(:shadows) do
+        enable_depth_test
+        draw_shadow_maps
+      end
 
-      render_texture_a.bind
-      clear_buffer
-      GL.Disable(GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
-      draw_3d
-      GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
-      render_texture_a.unbind
+      GpuTimer.measure(:main_3d) do
+        render_texture_a.bind
+        clear_buffer
+        GL.Disable(GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
+        draw_3d
+        GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
+        render_texture_a.unbind
+      end
 
-      SkyboxRenderer.draw(render_texture_a, render_texture_b, screen_quad)
-      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, start_index: 1)
+      # Copy normal texture to separate buffer to avoid read/write hazard in SSR
+      copy_normal_texture
 
-      disable_depth_test
-      current_texture.bind
-      draw_ui
-      current_texture.unbind
+      GpuTimer.measure(:skybox) do
+        SkyboxRenderer.draw(render_texture_a, render_texture_b, screen_quad)
+      end
 
-      blit_to_screen(current_texture.color_texture)
+      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, normal_buffer, start_index: 1)
+
+      GpuTimer.measure(:ui) do
+        disable_depth_test
+        current_texture.bind
+        draw_ui
+        current_texture.unbind
+      end
+
+      GpuTimer.measure(:blit) do
+        blit_to_screen(current_texture.color_texture)
+      end
+
+      GpuTimer.print_results
     end
 
     def self.draw_shadow_maps
@@ -165,6 +181,68 @@ module Rendering
       height = Engine::Window.framebuffer_height
       render_texture_a.resize(width, height)
       render_texture_b.resize(width, height)
+      resize_normal_buffer(width, height)
+    end
+
+    def self.normal_buffer
+      @normal_buffer ||= create_normal_buffer
+    end
+
+    def self.create_normal_buffer
+      width = Engine::Window.framebuffer_width
+      height = Engine::Window.framebuffer_height
+
+      tex_buf = ' ' * 4
+      GL.GenTextures(1, tex_buf)
+      texture = tex_buf.unpack1('L')
+
+      GL.BindTexture(GL::TEXTURE_2D, texture)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, width, height, 0, GL::RGBA, GL::FLOAT, nil)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
+      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+
+      @normal_buffer_width = width
+      @normal_buffer_height = height
+      texture
+    end
+
+    def self.resize_normal_buffer(width, height)
+      return if @normal_buffer_width == width && @normal_buffer_height == height
+      return unless @normal_buffer
+
+      GL.BindTexture(GL::TEXTURE_2D, @normal_buffer)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, width, height, 0, GL::RGBA, GL::FLOAT, nil)
+      @normal_buffer_width = width
+      @normal_buffer_height = height
+    end
+
+    def self.copy_normal_texture
+      width = Engine::Window.framebuffer_width
+      height = Engine::Window.framebuffer_height
+
+      # Bind source (render_texture_a's normal attachment) as read framebuffer
+      GL.BindFramebuffer(GL::READ_FRAMEBUFFER, render_texture_a.framebuffer)
+      GL.ReadBuffer(GL::COLOR_ATTACHMENT1)  # Normal is second attachment
+
+      # Bind destination texture to a temp framebuffer for writing
+      GL.BindFramebuffer(GL::DRAW_FRAMEBUFFER, copy_fbo)
+      GL.FramebufferTexture2D(GL::DRAW_FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, normal_buffer, 0)
+
+      # Blit
+      GL.BlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL::COLOR_BUFFER_BIT, GL::NEAREST)
+
+      # Unbind
+      GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
+    end
+
+    def self.copy_fbo
+      return @copy_fbo if @copy_fbo
+
+      fbo_buf = ' ' * 4
+      GL.GenFramebuffers(1, fbo_buf)
+      @copy_fbo = fbo_buf.unpack1('L')
     end
 
     def self.render_texture_a

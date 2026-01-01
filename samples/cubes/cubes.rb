@@ -35,6 +35,11 @@ Engine.start do
     Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0)
   )
 
+  # Tint for testing
+  # Rendering::PostProcessingEffect.add(
+  #   Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.7)
+  # )
+
   # Rendering::PostProcessingEffect.add(
   #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
   # )

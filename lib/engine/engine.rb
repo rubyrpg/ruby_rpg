@@ -26,6 +26,7 @@ module Engine
 
     Input.init
     GL.load_lib
+    Rendering::GpuTimer.enable if ENV['GPU_PROFILE']
 
     set_opengl_blend_mode
     @engine_started = true

@@ -16,9 +16,9 @@ module Rendering
         @effects = []
       end
 
-      def apply_all(render_texture_a, render_texture_b, screen_quad, start_index: 0)
+      def apply_all(render_texture_a, render_texture_b, screen_quad, normal_buffer = nil, start_index: 0)
         @depth_texture = render_texture_a.depth_texture
-        @normal_texture = render_texture_a.normal_texture
+        @normal_texture = normal_buffer || render_texture_a.normal_texture
 
         enabled_effects = effects.select(&:enabled)
         textures = [render_texture_a, render_texture_b]
@@ -29,7 +29,10 @@ module Rendering
           input_rt = textures[current_index]
           output_rt = textures[1 - current_index]
 
-          effect.apply(input_rt, output_rt, screen_quad)
+          stage_name = "pp:#{effect.class.name.split('::').last}"
+          GpuTimer.measure(stage_name) do
+            effect.apply(input_rt, output_rt, screen_quad)
+          end
           current_index = 1 - current_index
         end
 
