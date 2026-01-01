@@ -51,6 +51,20 @@ module Engine::Components
       perspective(fov_radians, @aspect, @near, @far)
     end
 
+    def view_matrix
+      right = game_object.right
+      up = game_object.up
+      forward = game_object.forward
+      pos = game_object.pos
+
+      Matrix[
+        [right[0], right[1], right[2], -right.dot(pos)],
+        [up[0], up[1], up[2], -up.dot(pos)],
+        [forward[0], forward[1], forward[2], -forward.dot(pos)],
+        [0, 0, 0, 1]
+      ].transpose
+    end
+
     def update(delta_time)
       if game_object.rotation != @rotation || game_object.pos != @pos || game_object.scale != @scale
         @matrix = nil

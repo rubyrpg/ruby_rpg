@@ -22,10 +22,6 @@ module Rendering
       GL.Clear(GL::COLOR_BUFFER_BIT)
       GL.Disable(GL::DEPTH_TEST)
 
-      # Clear textures hash to ensure consistent ordering
-      @material.instance_variable_set(:@textures, nil)
-
-      # Set textures - screen first (color texture at slot 0), then depth, then normal
       @material.set_texture("screenTexture", input_rt.color_texture)
       @material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
       @material.set_texture("normalTexture", PostProcessingEffect.normal_texture)

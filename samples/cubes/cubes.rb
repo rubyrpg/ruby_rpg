@@ -30,6 +30,11 @@ end
 Engine.start do
   include Cubes
 
+  # SSAO
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.ssao(kernel_size: 32, radius: 5.0, bias: 0.025, power: 4.0)
+  )
+
   # Screen-space reflections
   Rendering::PostProcessingEffect.add(
     Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0)
@@ -126,7 +131,7 @@ Engine.start do
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(nil, nil, 0.1)
+    material: floor_material(chessboard, brick_normal, 0.1)
   )
 
 
