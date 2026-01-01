@@ -21,6 +21,7 @@ module Rendering
 
       # Pass 1: Generate SSAO
       @ssao_rt.bind
+      GL.ClearColor(1.0, 1.0, 1.0, 1.0)
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
       ssao_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)

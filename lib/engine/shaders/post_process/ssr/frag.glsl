@@ -31,18 +31,19 @@ vec3 worldPosFromDepth(vec2 uv, float depth) {
 
 void main() {
     float depth = texture(depthTexture, TexCoords).r;
-    vec4 baseColor = texture(screenTexture, TexCoords);
 
+    // No reflection for skybox
     if (depth >= 1.0) {
-        FragColor = baseColor;
+        FragColor = vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
 
     vec4 normalRough = texture(normalTexture, TexCoords);
     float roughness = normalRough.a;
 
-    if (roughness >= 1) {
-        FragColor = baseColor;
+    // No reflection for fully rough surfaces
+    if (roughness >= 1.0) {
+        FragColor = vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
 
@@ -106,11 +107,12 @@ void main() {
 
     float reflectivity = 1.0 - roughness;
 
+    // Output: RGB = reflection color, A = reflectivity
     if (hitFound) {
-        vec4 reflectionColor = texture(screenTexture, hitUV);
-        FragColor = mix(baseColor, reflectionColor, reflectivity);
+        vec3 reflectionColor = texture(screenTexture, hitUV).rgb;
+        FragColor = vec4(reflectionColor, reflectivity);
     } else {
-        vec4 skyColor = texture(skyboxCubemap, reflectDir);
-        FragColor = mix(baseColor, skyColor, reflectivity);
+        vec3 skyColor = texture(skyboxCubemap, reflectDir).rgb;
+        FragColor = vec4(skyColor, reflectivity);
     }
 }
