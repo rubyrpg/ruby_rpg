@@ -18,7 +18,7 @@ Engine.start do
     Rendering::PostProcessingEffect.bloom(threshold: 2.0, intensity: 0.2, blur_passes: 3, blur_scale: 3.0)
   )
   Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.depth_of_field(focus_distance: 100, focus_range: 100)
+    Rendering::PostProcessingEffect.depth_of_field(focus_distance: 10, focus_range: 10)
   )
 
 

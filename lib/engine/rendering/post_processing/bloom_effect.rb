@@ -47,6 +47,7 @@ module Rendering
       @combine_material.set_texture("bloomTexture", @ping.color_texture)
       screen_quad.draw_with_material(@combine_material)
       output_rt.unbind
+      output_rt
     end
 
     private

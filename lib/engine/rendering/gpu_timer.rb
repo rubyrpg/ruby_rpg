@@ -17,14 +17,14 @@ module Rendering
 
       def measure(stage)
         unless enabled?
-          yield
-          return
+          return yield
         end
 
         query_id = query_for(stage)
         GL.BeginQuery(GL::TIME_ELAPSED, query_id)
-        yield
+        result = yield
         GL.EndQuery(GL::TIME_ELAPSED)
+        result
       end
 
       def print_results

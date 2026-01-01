@@ -36,17 +36,17 @@ Engine.start do
   )
 
   # Tint for testing
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.7)
-  # )
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.2)
+  )
 
   # Rendering::PostProcessingEffect.add(
   #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
   # )
   #
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0)
-  # )
+  Rendering::PostProcessingEffect.add(
+    Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0)
+  )
 
   Engine::GameObject.new(
     "Camera",

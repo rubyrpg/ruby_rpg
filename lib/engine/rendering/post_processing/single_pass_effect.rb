@@ -15,6 +15,7 @@ module Rendering
       screen_quad.draw(material, input_rt.color_texture)
 
       output_rt.unbind
+      output_rt
     end
   end
 end

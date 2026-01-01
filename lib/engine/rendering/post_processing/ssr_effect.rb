@@ -45,6 +45,7 @@ module Rendering
       screen_quad.draw_with_material(@material)
 
       output_rt.unbind
+      output_rt
     end
   end
 end

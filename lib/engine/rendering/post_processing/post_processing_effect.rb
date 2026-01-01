@@ -30,10 +30,10 @@ module Rendering
           output_rt = textures[1 - current_index]
 
           stage_name = "pp:#{effect.class.name.split('::').last}"
-          GpuTimer.measure(stage_name) do
+          result_rt = GpuTimer.measure(stage_name) do
             effect.apply(input_rt, output_rt, screen_quad)
           end
-          current_index = 1 - current_index
+          current_index = 1 - current_index if result_rt == output_rt
         end
 
         textures[current_index]
