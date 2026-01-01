@@ -36,14 +36,25 @@ module Engine::Components
         end
     end
 
+    def inverse_vp_matrix
+      @inverse_vp_matrix ||= matrix.inverse
+    end
+
+    def position
+      game_object.pos
+    end
+
     def projection
       half_w = @width / 2.0
       half_h = @height / 2.0
-      ortho(-half_w, half_w, -half_h, half_h, -@far, @far)
+      ortho(-half_w, half_w, -half_h, half_h, @near, @far)
     end
 
     def update(delta_time)
-      @matrix = nil if game_object.rotation != @rotation || game_object.pos != @pos
+      if game_object.rotation != @rotation || game_object.pos != @pos
+        @matrix = nil
+        @inverse_vp_matrix = nil
+      end
       @rotation = game_object.rotation.dup
       @pos = game_object.pos.dup
     end
