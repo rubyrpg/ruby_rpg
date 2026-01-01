@@ -3,6 +3,7 @@
 module Engine::Components
   class PerspectiveCamera < Engine::Component
     include Engine::MatrixHelpers
+    attr_reader :near, :far
 
     def initialize(fov:, aspect:, near:, far:)
       @fov = fov

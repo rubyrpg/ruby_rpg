@@ -66,8 +66,8 @@ module Rendering
         BloomEffect.new(threshold: threshold, intensity: intensity, blur_passes: blur_passes, blur_scale: blur_scale)
       end
 
-      def ssr(max_steps: 64, step_size: 0.1, thickness: 0.5, ray_offset: 2.0)
-        SSREffect.new(max_steps: max_steps, step_size: step_size, thickness: thickness, ray_offset: ray_offset)
+      def ssr(max_steps: 64, max_ray_distance: 50.0, thickness: 0.5, ray_offset: 2.0)
+        SSREffect.new(max_steps: max_steps, max_ray_distance: max_ray_distance, thickness: thickness, ray_offset: ray_offset)
       end
     end
   end

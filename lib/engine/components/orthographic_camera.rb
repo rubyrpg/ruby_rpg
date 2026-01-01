@@ -3,6 +3,7 @@
 module Engine::Components
   class OrthographicCamera < Engine::Component
     include Engine::MatrixHelpers
+    attr_reader :near, :far
 
     def initialize(width:, height:, far:)
       @width = width

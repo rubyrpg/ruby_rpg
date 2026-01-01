@@ -32,7 +32,7 @@ Engine.start do
 
   # Screen-space reflections
   Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.ssr(max_steps: 128, step_size: 0.5, thickness: 2.0)
+    Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0)
   )
 
   # Rendering::PostProcessingEffect.add(
@@ -121,7 +121,7 @@ Engine.start do
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(chessboard, brick_normal, 0.5)
+    material: floor_material(nil, nil, 0.1)
   )
 
 

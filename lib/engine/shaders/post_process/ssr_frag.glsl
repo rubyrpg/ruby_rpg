@@ -12,10 +12,16 @@ uniform mat4 inverseVP;
 uniform mat4 viewProj;
 uniform vec3 cameraPos;
 
-uniform float maxSteps;
-uniform float stepSize;
+uniform int maxSteps;
+uniform float maxRayDistance;
 uniform float thickness;
-uniform float rayOffset = 2.0;  // Initial ray offset to avoid self-intersection
+uniform float rayOffset;
+uniform float nearPlane;
+uniform float farPlane;
+
+float linearizeDepth(float d) {
+    return nearPlane * farPlane / (farPlane - d * (farPlane - nearPlane));
+}
 
 vec3 worldPosFromDepth(vec2 uv, float depth) {
     vec4 ndc = vec4(uv * 2.0 - 1.0, depth * 2.0 - 1.0, 1.0);
@@ -23,29 +29,20 @@ vec3 worldPosFromDepth(vec2 uv, float depth) {
     return world.xyz / world.w;
 }
 
-float getDepthAt(vec3 worldPos) {
-    vec4 clip = viewProj * vec4(worldPos, 1.0);
-    return (clip.z / clip.w) * 0.5 + 0.5;
-}
-
-vec2 worldToScreen(vec3 worldPos, out bool valid) {
-    vec4 clip = viewProj * vec4(worldPos, 1.0);
-    valid = clip.w > 0.0;  // Invalid if behind camera
-    return clip.xy / clip.w * 0.5 + 0.5;
-}
-
 void main() {
     float depth = texture(depthTexture, TexCoords).r;
+    vec4 baseColor = texture(screenTexture, TexCoords);
+
     if (depth >= 1.0) {
-        FragColor = texture(screenTexture, TexCoords);  // Sky - pass through
+        FragColor = baseColor;
         return;
     }
 
     vec4 normalRough = texture(normalTexture, TexCoords);
     float roughness = normalRough.a;
 
-    if (roughness > 0.9) {
-        FragColor = texture(screenTexture, TexCoords);  // Matte = no reflection
+    if (roughness >= 1) {
+        FragColor = baseColor;
         return;
     }
 
@@ -54,67 +51,65 @@ void main() {
     vec3 viewDir = normalize(worldPos - cameraPos);
     vec3 reflectDir = reflect(viewDir, normal);
 
-    vec3 rayPos = worldPos + reflectDir * rayOffset;
+    // Project ray start/end to screen space once
+    vec3 rayStart = worldPos + reflectDir * rayOffset;
+    vec3 rayEnd = worldPos + reflectDir * maxRayDistance;
 
-    // Track previous state
-    float prevDepthDiff = -1.0;
+    vec4 clipStart = viewProj * vec4(rayStart, 1.0);
+    vec4 clipEnd = viewProj * vec4(rayEnd, 1.0);
+
+    if (clipEnd.w < 0.0) {
+        float t = clipStart.w / (clipStart.w - clipEnd.w);
+        clipEnd = mix(clipStart, clipEnd, t);
+    }
+
+    vec3 screenStart = clipStart.xyz / clipStart.w;
+    vec3 screenEnd = clipEnd.xyz / clipEnd.w;
+
+    screenStart.xy = screenStart.xy * 0.5 + 0.5;
+    screenEnd.xy = screenEnd.xy * 0.5 + 0.5;
+    screenStart.z = screenStart.z * 0.5 + 0.5;
+    screenEnd.z = screenEnd.z * 0.5 + 0.5;
+
+    // Ray march in screen space with perspective-correct depth
+    float linearDepthStart = linearizeDepth(screenStart.z);
+    float linearDepthEnd = linearizeDepth(screenEnd.z);
+
     bool hitFound = false;
-    vec2 hitScreenPos;
+    vec2 hitUV;
 
-    for (int i = 0; i < int(maxSteps); i++) {
-        rayPos += reflectDir * stepSize;
+    for (int i = 0; i < maxSteps; i++) {
+        float t = float(i) / float(maxSteps - 1);
 
-        bool validProj;
-        vec2 screenPos = worldToScreen(rayPos, validProj);
-        if (!validProj) break;
+        vec2 screenPos = mix(screenStart.xy, screenEnd.xy, t);
 
         if (screenPos.x < 0.0 || screenPos.x > 1.0 ||
             screenPos.y < 0.0 || screenPos.y > 1.0) {
             break;
         }
 
-        float rayDepth = getDepthAt(rayPos);
-        float sceneDepth = texture(depthTexture, screenPos).r;
+        float rayLinearDepth = (linearDepthStart * linearDepthEnd) /
+                                mix(linearDepthEnd, linearDepthStart, t);
 
-        if (sceneDepth >= 1.0) {
-            prevDepthDiff = -1.0;
-            continue;
+        float sceneDepthRaw = texture(depthTexture, screenPos).r;
+        if (sceneDepthRaw >= 1.0) continue;
+
+        float sceneLinearDepth = linearizeDepth(sceneDepthRaw);
+        float depthDiff = rayLinearDepth - sceneLinearDepth;
+
+        if (depthDiff > 0.0 && depthDiff < thickness) {
+            hitFound = true;
+            hitUV = screenPos;
+            break;
         }
-
-        float depthDiff = rayDepth - sceneDepth;
-
-        // Only hit when crossing from in-front to behind
-        if (prevDepthDiff < 0.0 && depthDiff > 0.0 && depthDiff < thickness) {
-            // Verify: is the ray actually close to the geometry in WORLD space?
-            vec3 hitWorldPos = worldPosFromDepth(screenPos, sceneDepth);
-            float worldDist = length(rayPos - hitWorldPos);
-
-            // Only accept if world positions are close (reject false screen-space hits)
-            if (worldDist < stepSize * 3.0) {
-                hitFound = true;
-                hitScreenPos = screenPos;
-                break;
-            }
-        }
-
-        prevDepthDiff = depthDiff;
     }
-
-    vec4 baseColor = texture(screenTexture, TexCoords);
 
     float reflectivity = 1.0 - roughness;
 
     if (hitFound) {
-        vec4 reflectionColor = texture(screenTexture, hitScreenPos);
-
-        // Edge fading
-        float edgeFadeX = 1.0 - pow(abs(hitScreenPos.x - 0.5) * 2.0, 2.0);
-        float edgeFadeY = 1.0 - pow(abs(hitScreenPos.y - 0.5) * 2.0, 2.0);
-        float edgeFade = clamp(edgeFadeX * edgeFadeY, 0.0, 1.0);
-
-        FragColor = mix(baseColor, reflectionColor, edgeFade * reflectivity);
+        vec4 reflectionColor = texture(screenTexture, hitUV);
+        FragColor = mix(baseColor, reflectionColor, reflectivity);
     } else {
-        // Ray missed geometry - sample skybox in reflection direction
         vec4 skyColor = texture(skyboxCubemap, reflectDir);
         FragColor = mix(baseColor, skyColor, reflectivity);
     }
