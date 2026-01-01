@@ -4,7 +4,7 @@ module Rendering
   class SSAOEffect
     include Effect
 
-    def initialize(kernel_size: 32, radius: 0.5, bias: 0.025, power: 2.0, blur_size: 2, depth_threshold: 1000.0)
+    def initialize(kernel_size: 16, radius: 0.5, bias: 0.025, power: 2.0, blur_size: 2, depth_threshold: 1000.0)
       @kernel_size = [kernel_size, 64].min
       @radius = radius
       @bias = bias

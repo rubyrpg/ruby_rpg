@@ -73,7 +73,7 @@ module Rendering
         SSREffect.new(max_steps: max_steps, max_ray_distance: max_ray_distance, thickness: thickness, ray_offset: ray_offset)
       end
 
-      def ssao(kernel_size: 32, radius: 0.5, bias: 0.025, power: 2.0, blur_size: 2, depth_threshold: 1000.0)
+      def ssao(kernel_size: 16, radius: 0.5, bias: 0.025, power: 2.0, blur_size: 2, depth_threshold: 1000.0)
         SSAOEffect.new(kernel_size: kernel_size, radius: radius, bias: bias, power: power, blur_size: blur_size, depth_threshold: depth_threshold)
       end
     end

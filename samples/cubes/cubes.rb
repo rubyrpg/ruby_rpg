@@ -32,7 +32,7 @@ Engine.start do
 
   # SSAO
   Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.ssao(kernel_size: 32, radius: 5.0, bias: 0.025, power: 4.0)
+    Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0)
   )
 
   # Screen-space reflections
