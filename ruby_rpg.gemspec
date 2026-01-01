@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'os'
   s.add_runtime_dependency 'matrix', '~> 0.3'
   s.add_runtime_dependency 'chunky_png', '~> 1.4'
+  s.add_runtime_dependency 'fiddle'
+  s.add_runtime_dependency 'logger'
 
   s.bindir = 'bin'
   s.executables = ['import']
