@@ -33,7 +33,7 @@ module Rendering
       ssao_material.set_float("nearPlane", camera.near)
       ssao_material.set_float("farPlane", camera.far)
 
-      noise_scale = [input_rt.width / 4.0, input_rt.height / 4.0]
+      noise_scale = [@ssao_rt.width / 4.0, @ssao_rt.height / 4.0]
       ssao_material.set_vec2("noiseScale", noise_scale)
 
       screen_quad.draw_with_material(ssao_material)
@@ -171,9 +171,11 @@ module Rendering
     end
 
     def ensure_textures(width, height)
-      if @ssao_rt.nil? || @ssao_rt.width != width || @ssao_rt.height != height
-        @ssao_rt = RenderTexture.new(width, height)
-        @blur_rt = RenderTexture.new(width, height)
+      half_width = width / 2
+      half_height = height / 2
+      if @ssao_rt.nil? || @ssao_rt.width != half_width || @ssao_rt.height != half_height
+        @ssao_rt = RenderTexture.new(half_width, half_height)
+        @blur_rt = RenderTexture.new(half_width, half_height)
       end
     end
   end
