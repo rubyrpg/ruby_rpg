@@ -8,6 +8,11 @@ module Rendering
         effect
       end
 
+      def add_all(effects_array)
+        effects_array.each { |effect| add(effect) }
+        effects_array
+      end
+
       def remove(effect)
         effects.delete(effect)
       end

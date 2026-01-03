@@ -1,6 +1,13 @@
 require_relative "../../lib/ruby_rpg"
 require_relative "components/spotlight_controller"
 
+def hdr_colour_material(colour)
+  material = Engine::Material.new(Engine::Shader.colour)
+  material.set_vec3("colour", colour)
+  material.set_float("roughness", 1.0)
+  material
+end
+
 def coloured_material(colour)
   material = Engine::Material.new(Engine::Shader.default)
   material.set_vec3("baseColour", colour)
@@ -30,28 +37,21 @@ end
 Engine.start do
   include Cubes
 
-  # SSAO
-  Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0)
+  # Navy night sky
+  Rendering::RenderPipeline.set_skybox_colors(
+    ground: Vector[0.02, 0.02, 0.05],
+    horizon: Vector[0.05, 0.05, 0.4],
+    sky: Vector[0.02, 0.03, 0.3]
   )
 
-  # Screen-space reflections
-  Rendering::PostProcessingEffect.add(
-    Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0)
-  )
-
-  # Tint for testing
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.2)
-  # )
-
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0)
-  # )
-  #
-  # Rendering::PostProcessingEffect.add(
-  #   Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0)
-  # )
+  # Post processing effects
+  Rendering::PostProcessingEffect.add_all([
+    Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0),
+    Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0),
+    # Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.2),
+    Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0),
+    # Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0),
+  ])
 
   Engine::GameObject.new(
     "Camera",
@@ -62,7 +62,11 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  sphere = Engine::StandardObjects::Sphere.create(pos: Vector[0, 20, 0], scale: Vector[10, 10, 10])
+  sphere = Engine::StandardObjects::Sphere.create(
+    pos: Vector[0, 20, 0],
+    scale: Vector[10, 10, 10],
+    material: hdr_colour_material(Vector[2.0, 1.5, 0.5])
+  )
   Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
 
   # Wall of colourful cubes
@@ -131,7 +135,7 @@ Engine.start do
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(chessboard, brick_normal, 0.1)
+    material: floor_material(chessboard, brick_normal, 0.5)
   )
 
 
