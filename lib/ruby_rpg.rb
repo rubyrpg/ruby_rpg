@@ -7,6 +7,7 @@ require 'os'
 require 'native_audio'
 
 require_relative 'engine/autoloader'
+require_relative 'engine/serializable'
 require_relative 'engine/matrix_helpers'
 require_relative "engine/debugging"
 require_relative 'engine/rendering/render_texture'
