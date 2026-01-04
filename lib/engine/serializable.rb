@@ -17,6 +17,10 @@ module Engine
       @allowed_classes[base.name] = base if base.name
     end
 
+    # Default awake implementation - override in subclasses
+    def awake
+    end
+
     def self.allowed_class?(class_name)
       @allowed_classes.key?(class_name)
     end
@@ -32,6 +36,9 @@ module Engine
 
       # Pass 2: Resolve all references
       objects.each { |obj| resolve_references(obj, registry) }
+
+      # Pass 3: Call awake on all objects after references resolved
+      objects.each(&:awake)
 
       objects
     end
@@ -127,6 +134,16 @@ module Engine
         own_attrs = @own_serializable_attributes || []
         parent_attrs + own_attrs
       end
+
+      def create(**attrs)
+        instance = allocate
+        instance.instance_variable_set(:@uuid, SecureRandom.uuid)
+        attrs.each do |attr, value|
+          instance.instance_variable_set("@#{attr}", value)
+        end
+        instance.awake
+        instance
+      end
     end
 
     def self.register_class(klass)
@@ -135,7 +152,9 @@ module Engine
 
     def self.from_file(path)
       data = YAML.load_file(path, permitted_classes: [Symbol])
-      from_serialized(data)
+      instance = from_serialized(data)
+      instance.awake
+      instance
     end
 
     def self.from_files(paths)

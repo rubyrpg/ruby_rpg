@@ -2,6 +2,10 @@ require "matrix"
 
 module Engine
   class GameObject
+    include Serializable
+
+    serialize :name, :pos, :rotation, :scale, :components, :renderers, :ui_renderers, :parent
+
     def self.method_added(name)
       @methods ||= Set.new
       return if name == :initialize || name == :destroyed?
@@ -9,33 +13,50 @@ module Engine
     end
 
     attr_accessor :name, :components, :renderers, :ui_renderers, :created_at
-    attr_reader :pos, :scale, :parent, :local_version
+    attr_reader :pos, :scale, :parent, :local_version, :rotation
 
-    def initialize(name = "Game Object", pos: Vector[0, 0, 0], rotation: 0, scale: Vector[1, 1, 1], components: [], parent: nil)
+    def awake
+      # Set defaults
+      @name ||= "Game Object"
+      @pos ||= Vector[0, 0, 0]
+      @rotation ||= Vector[0, 0, 0]
+      @scale ||= Vector[1, 1, 1]
+      @components ||= []
+      @renderers ||= []
+      @ui_renderers ||= []
+      @local_version ||= 0
+      @cached_world_version ||= nil
+      @created_at ||= Time.now
+
+      # Normalize rotation (handle Numeric/Quaternion/Vector)
+      @rotation = normalize_rotation(@rotation)
+      @rotation_quaternion = Quaternion.from_euler(@rotation)
+
+      # Normalize pos to ensure 3 components
+      @pos = Vector[@pos[0], @pos[1], @pos[2] || 0]
+
       GameObject.object_spawned(self)
-      @local_version = 0
-      @cached_world_version = nil
-      @pos = Vector[pos[0], pos[1], pos[2] || 0]
-      if rotation.is_a?(Numeric)
-        @rotation_quaternion = Quaternion.from_euler(Vector[0, 0, rotation])
-      elsif rotation.is_a?(Quaternion)
-        @rotation_quaternion = rotation
-      else
-        @rotation_quaternion = Quaternion.from_euler(rotation)
-      end
-      @scale = scale
-      @name = name
-      @components = components.select { |component| !component.renderer? && !component.ui_renderer? }
-      @renderers = components.select { |component| component.renderer? }
-      @ui_renderers = components.select { |component| component.ui_renderer? }
-      @created_at = Time.now
-      @parent = parent
-      parent.add_child(self) if parent
+      @parent&.add_child(self)
 
-      components.each { |component| component.set_game_object(self) }
-      components.each(&:start)
+      all_components = @components + @renderers + @ui_renderers
+      all_components.each { |component| component.set_game_object(self) }
+      all_components.each(&:start)
       GameObject.register_renderers(self)
     end
+
+    private
+
+    def normalize_rotation(rotation)
+      if rotation.is_a?(Numeric)
+        Vector[0, 0, rotation]
+      elsif rotation.is_a?(Quaternion)
+        rotation.to_euler
+      else
+        rotation
+      end
+    end
+
+    public
 
     def to_s
       @name

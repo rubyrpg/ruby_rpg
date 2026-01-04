@@ -615,6 +615,35 @@ describe Engine::Serializable do
     end
   end
 
+  describe ".create" do
+    it "creates an object with named attributes and calls awake" do
+      awake_called = false
+      test_class = Class.new do
+        include Engine::Serializable
+        serialize :name, :value
+
+        attr_reader :name, :value, :awake_was_called
+
+        define_method(:awake) do
+          @awake_was_called = true
+        end
+      end
+      Engine::Serializable.register_class(test_class)
+
+      instance = test_class.create(name: "test", value: 42)
+
+      expect(instance.name).to eq("test")
+      expect(instance.value).to eq(42)
+      expect(instance.awake_was_called).to be true
+    end
+
+    it "generates a uuid" do
+      instance = TestPrimitives.create(name: "test", age: 25)
+
+      expect(instance.uuid).to match(/\A[0-9a-f-]{36}\z/)
+    end
+  end
+
   describe "uuid" do
     it "generates a uuid on first access" do
       instance = test_class.new
