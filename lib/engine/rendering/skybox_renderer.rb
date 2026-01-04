@@ -56,8 +56,8 @@ module Rendering
       private
 
       def material
-        @material ||= Engine::Material.new(
-          Engine::Shader.new(
+        @material ||= Engine::Material.create(
+          shader: Engine::Shader.new(
             './shaders/fullscreen_vertex.glsl',
             './shaders/post_process/skybox_frag.glsl'
           )

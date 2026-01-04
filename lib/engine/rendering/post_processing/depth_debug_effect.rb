@@ -5,8 +5,8 @@ module Rendering
     include SinglePassEffect
 
     def initialize
-      @material = Engine::Material.new(
-        Engine::Shader.new(
+      @material = Engine::Material.create(
+        shader: Engine::Shader.new(
           './shaders/fullscreen_vertex.glsl',
           './shaders/post_process/depth_debug_frag.glsl'
         )

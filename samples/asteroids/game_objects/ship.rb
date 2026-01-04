@@ -31,14 +31,14 @@ module Asteroids
     end
 
     def self.ship_material
-      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material = Engine::Material.create(shader: Engine::Shader.instanced_sprite)
       material.set_texture("image", Engine::Texture.for("assets/Player.png"))
       material.set_vec4("spriteColor", [1, 1, 1, 1])
       material
     end
 
     def self.shield_material
-      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material = Engine::Material.create(shader: Engine::Shader.instanced_sprite)
       material.set_texture("image", Engine::Texture.for("assets/Shield.png"))
       material.set_vec4("spriteColor", [1, 1, 1, 1])
       material

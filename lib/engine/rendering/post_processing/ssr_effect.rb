@@ -56,8 +56,8 @@ module Rendering
 
     def ssr_material
       @ssr_material ||= begin
-        material = Engine::Material.new(
-          Engine::Shader.new(
+        material = Engine::Material.create(
+          shader: Engine::Shader.new(
             './shaders/fullscreen_vertex.glsl',
             './shaders/post_process/ssr/frag.glsl'
           )
@@ -71,8 +71,8 @@ module Rendering
     end
 
     def combine_material
-      @combine_material ||= Engine::Material.new(
-        Engine::Shader.new(
+      @combine_material ||= Engine::Material.create(
+        shader: Engine::Shader.new(
           './shaders/fullscreen_vertex.glsl',
           './shaders/post_process/ssr/combine_frag.glsl'
         )

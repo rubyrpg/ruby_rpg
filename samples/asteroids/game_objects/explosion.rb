@@ -31,7 +31,7 @@ module Asteroids
     end
 
     def self.explosion_material(colour)
-      material = Engine::Material.new(Engine::Shader.instanced_sprite)
+      material = Engine::Material.create(shader: Engine::Shader.instanced_sprite)
       material.set_texture("image", Engine::Texture.for("assets/boom.png"))
       material.set_vec4("spriteColor", colour)
       material

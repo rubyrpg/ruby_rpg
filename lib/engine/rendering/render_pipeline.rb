@@ -173,7 +173,7 @@ module Rendering
     end
 
     def self.blit_material
-      @blit_material ||= Engine::Material.new(Engine::Shader.fullscreen)
+      @blit_material ||= Engine::Material.create(shader: Engine::Shader.fullscreen)
     end
 
     def self.update_render_texture_size

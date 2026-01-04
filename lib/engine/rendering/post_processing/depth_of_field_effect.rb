@@ -34,8 +34,8 @@ module Rendering
 
     def material
       @material ||= begin
-        mat = Engine::Material.new(
-          Engine::Shader.new(
+        mat = Engine::Material.create(
+          shader: Engine::Shader.new(
             './shaders/fullscreen_vertex.glsl',
             './shaders/post_process/dof_blur_frag.glsl'
           )

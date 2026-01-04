@@ -106,7 +106,7 @@ module ShrinkRacer
     def self.material
       @material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.vertex_lit)
+          material = Engine::Material.create(shader: Engine::Shader.vertex_lit)
           material.set_texture("image", nil)
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.5)
@@ -121,7 +121,7 @@ module ShrinkRacer
     def self.tree_material
       @tree_material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.vertex_lit)
+          material = Engine::Material.create(shader: Engine::Shader.vertex_lit)
           material.set_texture("image", nil)
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.8)
