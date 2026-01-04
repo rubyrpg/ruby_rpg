@@ -1,37 +1,8 @@
 require_relative "../../lib/ruby_rpg"
 require_relative "components/spotlight_controller"
 
-def hdr_colour_material(colour)
-  material = Engine::Material.new(Engine::Shader.colour)
-  material.set_vec3("colour", colour)
-  material.set_float("roughness", 1.0)
-  material
-end
-
-def coloured_material(colour)
-  material = Engine::Material.new(Engine::Shader.default)
-  material.set_vec3("baseColour", colour)
-  material.set_texture("image", nil)
-  material.set_texture("normalMap", nil)
-  material.set_float("diffuseStrength", 0.5)
-  material.set_float("specularStrength", 0.7)
-  material.set_float("specularPower", 32.0)
-  material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
-  material.set_float("roughness", 0.7)
-  material
-end
-
-def floor_material(texture, normal, roughness)
-  material = Engine::Material.new(Engine::Shader.default)
-  material.set_texture("image", texture)
-  material.set_texture("normalMap", normal)
-  material.set_float("diffuseStrength", 0.5)
-  material.set_float("specularStrength", 0.7)
-  material.set_float("specularPower", 32.0)
-  material.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
-  material.set_float("roughness", roughness)
-  material.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
-  material
+def load_material(name)
+  Engine::Serializable.from_file(File.join(GAME_DIR, "assets/#{name}.mat"))
 end
 
 Engine.start do
@@ -62,24 +33,23 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  hdr_material = Engine::Serializable.from_file(File.join(GAME_DIR, "assets/hdr_sphere.mat"))
   sphere = Engine::StandardObjects::Sphere.create(
     pos: Vector[0, 20, 0],
     scale: Vector[10, 10, 10],
-    material: hdr_material
+    material: load_material("hdr_sphere")
   )
   Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
 
   # Wall of colourful cubes
-  colours = [
-    Vector[1.0, 0.2, 0.2],  # Red
-    Vector[0.2, 1.0, 0.2],  # Green
-    Vector[0.2, 0.2, 1.0],  # Blue
-    Vector[1.0, 1.0, 0.2],  # Yellow
-    Vector[1.0, 0.2, 1.0],  # Magenta
-    Vector[0.2, 1.0, 1.0],  # Cyan
-    Vector[1.0, 0.6, 0.2],  # Orange
-    Vector[0.6, 0.2, 1.0],  # Purple
+  cube_materials = [
+    load_material("cube_red"),
+    load_material("cube_green"),
+    load_material("cube_blue"),
+    load_material("cube_yellow"),
+    load_material("cube_magenta"),
+    load_material("cube_cyan"),
+    load_material("cube_orange"),
+    load_material("cube_purple"),
   ]
   cube_size = 4
   spacing = cube_size * 2 + 1  # cubes are 2 units, scaled, plus gap
@@ -89,9 +59,9 @@ Engine.start do
 
   wall_width.times do |x|
     wall_height.times do |y|
-      colour = colours[(x + y) % colours.length]
+      material = cube_materials[(x + y) % cube_materials.length]
       pos = start_pos + Vector[x * spacing, y * spacing, 0]
-      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size * 2, cube_size * 2, cube_size * 2], material: coloured_material(colour))
+      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size * 2, cube_size * 2, cube_size * 2], material: material)
     end
   end
 
@@ -128,15 +98,13 @@ Engine.start do
   # Sphere.create(spotlight_pos, 0, 2)  # temporarily disabled for shadow debug
 
   # Floor planes (3x3 grid) - shiny for SSR
-  chessboard = Engine::Texture.for("assets/chessboard.png")
-  brick_normal = Engine::Texture.for("assets/brick_normal.png")
   tile_size = 50
 
   Engine::StandardObjects::Plane.create(
     pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
     rotation: Vector[90, 0, 0],
     scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: floor_material(chessboard, brick_normal, 0.5)
+    material: load_material("floor")
   )
 
 

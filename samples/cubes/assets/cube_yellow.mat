@@ -1,0 +1,58 @@
+---
+:_class: Engine::Material
+:uuid: cube-yellow-material-001
+:shader:
+  :_class: Engine::Shader
+  :vertex_path: "./shaders/mesh_vertex.glsl"
+  :fragment_path: "./shaders/mesh_frag.glsl"
+:floats:
+  :_class: Hash
+  :value:
+    diffuseStrength:
+      :_class: Float
+      :value: 0.5
+    specularStrength:
+      :_class: Float
+      :value: 0.7
+    specularPower:
+      :_class: Float
+      :value: 32.0
+    roughness:
+      :_class: Float
+      :value: 0.7
+:ints:
+  :_class: Hash
+  :value: {}
+:vec2s:
+  :_class: Hash
+  :value: {}
+:vec3s:
+  :_class: Hash
+  :value:
+    baseColour:
+      :_class: Vector
+      :value:
+        - 1.0
+        - 1.0
+        - 0.2
+    ambientLight:
+      :_class: Vector
+      :value:
+        - 0.02
+        - 0.02
+        - 0.02
+:vec4s:
+  :_class: Hash
+  :value: {}
+:mat4s:
+  :_class: Hash
+  :value: {}
+:textures:
+  :_class: Hash
+  :value:
+    image:
+      :_class: NilClass
+      :value:
+    normalMap:
+      :_class: NilClass
+      :value:
