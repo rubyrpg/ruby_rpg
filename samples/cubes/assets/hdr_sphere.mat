@@ -1,0 +1,37 @@
+---
+:_class: Engine::Material
+:uuid: hdr-sphere-material-001
+:shader:
+  :_class: Engine::Shader
+  :vertex_path: "./shaders/colour_vertex.glsl"
+  :fragment_path: "./shaders/colour_frag.glsl"
+:floats:
+  :_class: Hash
+  :value:
+    roughness:
+      :_class: Float
+      :value: 1.0
+:ints:
+  :_class: Hash
+  :value: {}
+:vec2s:
+  :_class: Hash
+  :value: {}
+:vec3s:
+  :_class: Hash
+  :value:
+    colour:
+      :_class: Vector
+      :value:
+        - 2.0
+        - 1.5
+        - 0.5
+:vec4s:
+  :_class: Hash
+  :value: {}
+:mat4s:
+  :_class: Hash
+  :value: {}
+:textures:
+  :_class: Hash
+  :value: {}

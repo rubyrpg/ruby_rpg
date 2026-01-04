@@ -14,11 +14,11 @@ describe Asteroids::Explosion do
       within_game_context(frame_duration: 0.05, load_path: "./samples/asteroids") do
         at(0) do
           Asteroids::Explosion.create(Vector[100, 100])
-          Engine::GameObject.new(
-            "Camera",
+          Engine::GameObject.create(
+            name: "Camera",
             pos: Vector[800/2, 600/2, 0],
             components: [
-              Engine::Components::OrthographicCamera.new(
+              Engine::Components::OrthographicCamera.create(
                 width: 800, height: 600, far: 1000
               )
             ]

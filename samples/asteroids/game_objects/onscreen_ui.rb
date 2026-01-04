@@ -6,7 +6,7 @@ module Asteroids
     UI_Z_ORDER = 0
 
     def self.create
-      parent = Engine::GameObject.new("FPS Counter Container")
+      parent = Engine::GameObject.create(name: "FPS Counter Container")
       parent.add_child Text.create(Vector[TEXT_SIZE, Engine::Window.height - TEXT_SIZE, UI_Z_ORDER], 0, TEXT_SIZE, "FPS: ", components: [ Asteroids::FpsComponent.new ])
     end
   end

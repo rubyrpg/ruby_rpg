@@ -3,8 +3,8 @@
 module Cubes
   module Light
     def self.create(pos, range, colour)
-      Engine::GameObject.new(
-        "Light",
+      Engine::GameObject.create(
+        name: "Light",
         pos: pos,
         components: [
           Engine::Components::PointLight.new(range: range, colour: colour),

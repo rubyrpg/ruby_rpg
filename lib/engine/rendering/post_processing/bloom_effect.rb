@@ -43,8 +43,8 @@ module Rendering
       # Pass 3: Combine original + bloom
       output_rt.bind
       GL.Clear(GL::COLOR_BUFFER_BIT)
-      @combine_material.set_texture("screenTexture", input_rt.color_texture)
-      @combine_material.set_texture("bloomTexture", @ping.color_texture)
+      @combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
+      @combine_material.set_runtime_texture("bloomTexture", @ping.color_texture)
       screen_quad.draw_with_material(@combine_material)
       output_rt.unbind
       output_rt
@@ -53,26 +53,26 @@ module Rendering
     private
 
     def setup_materials
-      @threshold_material = Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_threshold_frag.glsl'
+      @threshold_material = Engine::Material.create(
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_threshold_frag.glsl'
         )
       )
       @threshold_material.set_float("threshold", @threshold)
 
-      @blur_material = Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_blur_frag.glsl'
+      @blur_material = Engine::Material.create(
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_blur_frag.glsl'
         )
       )
       @blur_material.set_float("blurScale", @blur_scale)
 
-      @combine_material = Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_combine_frag.glsl'
+      @combine_material = Engine::Material.create(
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_combine_frag.glsl'
         )
       )
       @combine_material.set_float("intensity", @intensity)

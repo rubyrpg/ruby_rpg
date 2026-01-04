@@ -4,8 +4,8 @@ module Engine
   module StandardObjects
     module Cube
       def self.create(pos: Vector[0, 0, 0], rotation: 0, scale: Vector[1, 1, 1], components: [], material: nil)
-        Engine::GameObject.new(
-          "Cube",
+        Engine::GameObject.create(
+          name: "Cube",
           pos: pos,
           rotation: rotation,
           scale: scale,

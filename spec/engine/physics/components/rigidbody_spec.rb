@@ -12,8 +12,8 @@ describe Engine::Physics::Components::Rigidbody do
     end
     let(:angular_velocity) { Vector[0, 0, 0] }
     let!(:rigidbody_object) do
-      Engine::GameObject.new(
-        "rigidbody_object",
+      Engine::GameObject.create(
+        name: "rigidbody_object",
         components: [rigidbody]
       )
     end
@@ -270,8 +270,8 @@ describe Engine::Physics::Components::Rigidbody do
 
   describe "#angular_momentum" do
     let!(:rigidbody_object) do
-      Engine::GameObject.new(
-        "rigidbody_object",
+      Engine::GameObject.create(
+        name: "rigidbody_object",
         pos:,
         components: [rigidbody]
       )
@@ -337,8 +337,8 @@ describe Engine::Physics::Components::Rigidbody do
       )
     end
     let!(:rigidbody_object) do
-      Engine::GameObject.new(
-        "rigidbody_object",
+      Engine::GameObject.create(
+        name: "rigidbody_object",
         pos:,
         components: [rigidbody]
       )

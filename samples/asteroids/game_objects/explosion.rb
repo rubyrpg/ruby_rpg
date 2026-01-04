@@ -13,8 +13,8 @@ module Asteroids
 
     def self.create(pos, colour: [1, 1, 1, 1])
       material = explosion_material(colour)
-      Engine::GameObject.new(
-        "Explosion",
+      Engine::GameObject.create(
+        name: "Explosion",
         pos: pos,
         scale: Vector[200, 200, 1],
         components: [
@@ -31,8 +31,8 @@ module Asteroids
     end
 
     def self.explosion_material(colour)
-      material = Engine::Material.new(Engine::Shader.instanced_sprite)
-      material.set_texture("image", Engine::Texture.for("assets/boom.png").texture)
+      material = Engine::Material.create(shader: Engine::Shader.instanced_sprite)
+      material.set_texture("image", Engine::Texture.for("assets/boom.png"))
       material.set_vec4("spriteColor", colour)
       material
     end

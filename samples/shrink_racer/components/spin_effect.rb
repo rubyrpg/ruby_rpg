@@ -4,8 +4,8 @@ module ShrinkRacer
   class SpinEffect < Engine::Component
     SPIN_DURATION = 0.5
 
-    def initialize
-      @spin_time = 1
+    def awake
+      @spin_time ||= 1
     end
 
     def spin

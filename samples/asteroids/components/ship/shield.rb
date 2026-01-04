@@ -2,9 +2,9 @@
 
 module Asteroids
   class ShieldComponent < Engine::Component
-    def initialize
-      @shield_health = 100
-      @shield_colour = { r: 1, g: 1, b: 1 }
+    def awake
+      @shield_health ||= 100
+      @shield_colour ||= { r: 1, g: 1, b: 1 }
     end
 
     def update(delta_time)

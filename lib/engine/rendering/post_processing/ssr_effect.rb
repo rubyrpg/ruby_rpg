@@ -23,9 +23,9 @@ module Rendering
       GL.ClearColor(0.0, 0.0, 0.0, 0.0)
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
-      ssr_material.set_texture("screenTexture", input_rt.color_texture)
-      ssr_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
-      ssr_material.set_texture("normalTexture", PostProcessingEffect.normal_texture)
+      ssr_material.set_runtime_texture("screenTexture", input_rt.color_texture)
+      ssr_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
+      ssr_material.set_runtime_texture("normalTexture", PostProcessingEffect.normal_texture)
 
       ssr_material.set_mat4("inverseVP", camera.inverse_vp_matrix)
       ssr_material.set_mat4("viewProj", camera.matrix)
@@ -43,8 +43,8 @@ module Rendering
       output_rt.bind
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
-      combine_material.set_texture("screenTexture", input_rt.color_texture)
-      combine_material.set_texture("ssrTexture", @ssr_rt.color_texture)
+      combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
+      combine_material.set_runtime_texture("ssrTexture", @ssr_rt.color_texture)
 
       screen_quad.draw_with_material(combine_material)
       output_rt.unbind
@@ -56,10 +56,10 @@ module Rendering
 
     def ssr_material
       @ssr_material ||= begin
-        material = Engine::Material.new(
-          Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssr/frag.glsl'
+        material = Engine::Material.create(
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssr/frag.glsl'
           )
         )
         material.set_int("maxSteps", @max_steps)
@@ -71,10 +71,10 @@ module Rendering
     end
 
     def combine_material
-      @combine_material ||= Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/ssr/combine_frag.glsl'
+      @combine_material ||= Engine::Material.create(
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/ssr/combine_frag.glsl'
         )
       )
     end

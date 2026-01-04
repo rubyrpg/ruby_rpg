@@ -54,7 +54,7 @@ module TestDriver
       Engine.open_window
     end
     Engine.main_game_loop do
-      Engine::GameObject.new("Test Driver", components: [TestDriverComponent.new(&block)])
+      Engine::GameObject.create(name: "Test Driver", components: [TestDriverComponent.new(&block)])
     end
   end
 end

@@ -2,25 +2,30 @@ require 'chunky_png'
 
 module Engine
   class Texture
-    attr_reader :texture
-    private_class_method :new
+    include Serializable
 
-    def initialize(file_path, flip)
-      @file_path = file_path
-      @flip = flip
+    attr_reader :texture
+
+    def self.from_serializable_data(data)
+      self.for(data[:path], flip: data[:flip] || false)
+    end
+
+    def serializable_data
+      { path: @relative_path, flip: @flip }
+    end
+
+    def awake
       @texture = ' ' * 4
       load_texture
     end
 
     def self.for(path, flip: false)
       full_path = File.expand_path(File.join(GAME_DIR, path))
-      texture_cache[[full_path, flip]]
+      texture_cache[[path, flip]] ||= create(relative_path: path, file_path: full_path, flip: flip)
     end
 
     def self.texture_cache
-      @texture_cache ||= Hash.new do |hash, key|
-        hash[key] = new(key[0], key[1])
-      end
+      @texture_cache ||= {}
     end
 
     def load_texture

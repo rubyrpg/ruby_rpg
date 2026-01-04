@@ -5,8 +5,8 @@ module ShrinkRacer
     FAR = 200.0
 
     def self.create(car)
-      Engine::GameObject.new(
-        "Camera",
+      Engine::GameObject.create(
+        name: "Camera",
         pos: Vector[0, 0, 0],
         rotation: Vector[20, 180, 0],
         components: [
@@ -16,8 +16,8 @@ module ShrinkRacer
     end
 
     def self.debug_camera
-      Engine::GameObject.new(
-        "Camera",
+      Engine::GameObject.create(
+        name: "Camera",
         pos: Vector[0, 0, 0],
         rotation: Vector[20, 180, 0],
         components: [
