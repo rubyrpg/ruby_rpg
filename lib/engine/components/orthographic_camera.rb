@@ -5,12 +5,10 @@ module Engine::Components
     include Engine::MatrixHelpers
     attr_reader :near, :far
 
-    def initialize(width:, height:, far:)
-      @width = width
-      @height = height
-      @far = far
-      @near = 0
+    serialize :width, :height, :far
 
+    def awake
+      @near ||= 0
       Engine::Camera.instance = self
     end
 

@@ -18,7 +18,7 @@ describe Asteroids::Ship do
             name: "Camera",
             pos: Vector[800/2, 600/2, 0],
             components: [
-              Engine::Components::OrthographicCamera.new(
+              Engine::Components::OrthographicCamera.create(
                 width: 800, height: 600, far: 1000
               )
             ]
