@@ -38,7 +38,11 @@ Engine.start do
     scale: Vector[10, 10, 10],
     material: load_material("hdr_sphere")
   )
-  Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
+  Engine::StandardObjects::Cube.create(
+    pos: Vector[25, 20, -30],
+    scale: Vector[16, 16, 16],
+    components: [Spinner.create(speed: 45)]
+  )
 
   # Wall of colourful cubes
   cube_materials = [
