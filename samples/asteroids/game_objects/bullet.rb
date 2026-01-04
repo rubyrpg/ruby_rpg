@@ -21,7 +21,7 @@ module Asteroids
 
     def self.bullet_material
       material = Engine::Material.new(Engine::Shader.instanced_sprite)
-      material.set_texture("image", Engine::Texture.for("assets/Square.png").texture)
+      material.set_texture("image", Engine::Texture.for("assets/Square.png"))
       material.set_vec4("spriteColor", [1, 1, 1, 1])
       material
     end

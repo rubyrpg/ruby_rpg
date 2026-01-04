@@ -9,7 +9,7 @@ module Rendering
     end
 
     def draw(material, texture)
-      material.set_texture("screenTexture", texture)
+      material.set_runtime_texture("screenTexture", texture)
       draw_with_material(material)
     end
 

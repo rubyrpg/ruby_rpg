@@ -63,6 +63,10 @@ module Engine
         data[:value]
       elsif class_name == "Symbol"
         data[:value].to_sym
+      elsif class_name == "Vector"
+        Vector[*data[:value]]
+      elsif class_name == "Matrix"
+        Matrix[*data[:value]]
       elsif class_name == "Hash"
         data[:value].transform_values { |v| deserialize_value(v) }
       elsif class_name == "Array"
@@ -172,6 +176,10 @@ module Engine
         { _class: "Array", value: value.map { |v| serialize_value(v) } }
       elsif value.is_a?(Symbol)
         { _class: "Symbol", value: value.to_s }
+      elsif value.is_a?(Vector)
+        { _class: "Vector", value: value.to_a }
+      elsif value.is_a?(Matrix)
+        { _class: "Matrix", value: value.to_a }
       else
         { _class: value.class.name, value: value }
       end

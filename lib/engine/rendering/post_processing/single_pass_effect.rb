@@ -11,7 +11,7 @@ module Rendering
       GL.Clear(GL::COLOR_BUFFER_BIT)
       GL.Disable(GL::DEPTH_TEST)
 
-      material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+      material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       screen_quad.draw(material, input_rt.color_texture)
 
       output_rt.unbind

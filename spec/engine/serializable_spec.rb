@@ -422,6 +422,56 @@ describe Engine::Serializable do
 
       expect(instance.name).to eq(:test_sym)
     end
+
+    it "serializes vectors" do
+      klass = Class.new do
+        include Engine::Serializable
+        serialize :position
+      end
+
+      instance = klass.new
+      instance.instance_variable_set(:@position, Vector[1.0, 2.0, 3.0])
+      result = instance.to_serialized
+
+      expect(result[:position]).to eq({ _class: "Vector", value: [1.0, 2.0, 3.0] })
+    end
+
+    it "deserializes vectors" do
+      data = {
+        _class: "TestWithArray",
+        uuid: "vec-123",
+        items: { _class: "Vector", value: [4.0, 5.0, 6.0] }
+      }
+
+      instance = Engine::Serializable.from_serialized(data)
+
+      expect(instance.items).to eq(Vector[4.0, 5.0, 6.0])
+    end
+
+    it "serializes matrices" do
+      klass = Class.new do
+        include Engine::Serializable
+        serialize :transform
+      end
+
+      instance = klass.new
+      instance.instance_variable_set(:@transform, Matrix[[1, 0], [0, 1]])
+      result = instance.to_serialized
+
+      expect(result[:transform]).to eq({ _class: "Matrix", value: [[1, 0], [0, 1]] })
+    end
+
+    it "deserializes matrices" do
+      data = {
+        _class: "TestWithArray",
+        uuid: "mat-123",
+        items: { _class: "Matrix", value: [[1, 2], [3, 4]] }
+      }
+
+      instance = Engine::Serializable.from_serialized(data)
+
+      expect(instance.items).to eq(Matrix[[1, 2], [3, 4]])
+    end
   end
 
   describe "custom factory serialization" do

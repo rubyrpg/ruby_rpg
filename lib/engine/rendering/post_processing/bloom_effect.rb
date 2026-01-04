@@ -43,8 +43,8 @@ module Rendering
       # Pass 3: Combine original + bloom
       output_rt.bind
       GL.Clear(GL::COLOR_BUFFER_BIT)
-      @combine_material.set_texture("screenTexture", input_rt.color_texture)
-      @combine_material.set_texture("bloomTexture", @ping.color_texture)
+      @combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
+      @combine_material.set_runtime_texture("bloomTexture", @ping.color_texture)
       screen_quad.draw_with_material(@combine_material)
       output_rt.unbind
       output_rt

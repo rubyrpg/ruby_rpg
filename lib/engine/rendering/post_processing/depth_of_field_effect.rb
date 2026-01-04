@@ -24,8 +24,8 @@ module Rendering
     def blur_pass(source_rt, dest_rt, direction, screen_quad)
       dest_rt.bind
       material.set_vec2("direction", direction)
-      material.set_texture("screenTexture", source_rt.color_texture)
-      material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+      material.set_runtime_texture("screenTexture", source_rt.color_texture)
+      material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       screen_quad.draw_with_material(material)
       dest_rt.unbind
     end

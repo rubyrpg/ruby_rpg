@@ -62,10 +62,11 @@ Engine.start do
       Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
+  hdr_material = Engine::Serializable.from_file(File.join(GAME_DIR, "assets/hdr_sphere.mat"))
   sphere = Engine::StandardObjects::Sphere.create(
     pos: Vector[0, 20, 0],
     scale: Vector[10, 10, 10],
-    material: hdr_colour_material(Vector[2.0, 1.5, 0.5])
+    material: hdr_material
   )
   Engine::StandardObjects::Cube.create(pos: Vector[25, 20, -30], scale: Vector[16, 16, 16])
 
@@ -127,8 +128,8 @@ Engine.start do
   # Sphere.create(spotlight_pos, 0, 2)  # temporarily disabled for shadow debug
 
   # Floor planes (3x3 grid) - shiny for SSR
-  chessboard = Engine::Texture.for("assets/chessboard.png").texture
-  brick_normal = Engine::Texture.for("assets/brick_normal.png").texture
+  chessboard = Engine::Texture.for("assets/chessboard.png")
+  brick_normal = Engine::Texture.for("assets/brick_normal.png")
   tile_size = 50
 
   Engine::StandardObjects::Plane.create(
