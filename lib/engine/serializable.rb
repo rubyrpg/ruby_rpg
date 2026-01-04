@@ -67,6 +67,8 @@ module Engine
         Vector[*data[:value]]
       elsif class_name == "Matrix"
         Matrix[*data[:value]]
+      elsif class_name == "Engine::Quaternion"
+        Engine::Quaternion.new(*data[:value])
       elsif class_name == "Hash"
         data[:value].transform_values { |v| deserialize_value(v) }
       elsif class_name == "Array"
@@ -180,6 +182,8 @@ module Engine
         { _class: "Vector", value: value.to_a }
       elsif value.is_a?(Matrix)
         { _class: "Matrix", value: value.to_a }
+      elsif value.is_a?(Engine::Quaternion)
+        { _class: "Engine::Quaternion", value: [value.w, value.x, value.y, value.z] }
       else
         { _class: value.class.name, value: value }
       end

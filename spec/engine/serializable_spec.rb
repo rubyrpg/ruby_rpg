@@ -472,6 +472,35 @@ describe Engine::Serializable do
 
       expect(instance.items).to eq(Matrix[[1, 2], [3, 4]])
     end
+
+    it "serializes quaternions" do
+      klass = Class.new do
+        include Engine::Serializable
+        serialize :rotation
+      end
+
+      instance = klass.new
+      instance.instance_variable_set(:@rotation, Engine::Quaternion.new(1.0, 0.0, 0.0, 0.0))
+      result = instance.to_serialized
+
+      expect(result[:rotation]).to eq({ _class: "Engine::Quaternion", value: [1.0, 0.0, 0.0, 0.0] })
+    end
+
+    it "deserializes quaternions" do
+      data = {
+        _class: "TestWithArray",
+        uuid: "quat-123",
+        items: { _class: "Engine::Quaternion", value: [0.707, 0.707, 0.0, 0.0] }
+      }
+
+      instance = Engine::Serializable.from_serialized(data)
+
+      expect(instance.items).to be_a(Engine::Quaternion)
+      expect(instance.items.w).to eq(0.707)
+      expect(instance.items.x).to eq(0.707)
+      expect(instance.items.y).to eq(0.0)
+      expect(instance.items.z).to eq(0.0)
+    end
   end
 
   describe "custom factory serialization" do
