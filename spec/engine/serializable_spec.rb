@@ -424,6 +424,59 @@ describe Engine::Serializable do
     end
   end
 
+  describe "custom factory serialization" do
+    it "uses serializable_data when defined" do
+      klass = Class.new do
+        include Engine::Serializable
+        attr_reader :path
+
+        def initialize(path)
+          @path = path
+        end
+
+        def serializable_data
+          { path: @path }
+        end
+      end
+      stub_const("TestFactoryClass", klass)
+
+      instance = klass.new("/textures/wood.png")
+      parent = Class.new do
+        include Engine::Serializable
+        serialize :asset
+      end
+
+      wrapper = parent.new
+      wrapper.instance_variable_set(:@asset, instance)
+      result = wrapper.to_serialized
+
+      expect(result[:asset]).to eq({ _class: "TestFactoryClass", path: "/textures/wood.png" })
+    end
+
+    it "uses from_serializable_data when defined" do
+      klass = Class.new do
+        include Engine::Serializable
+        attr_reader :path
+
+        def initialize(path)
+          @path = path
+        end
+
+        def self.from_serializable_data(data)
+          new(data[:path])
+        end
+      end
+      stub_const("TestFactoryClass2", klass)
+      Engine::Serializable.register_class(klass)
+
+      data = { _class: "TestFactoryClass2", path: "/textures/metal.png" }
+      instance = Engine::Serializable.deserialize_value(data)
+
+      expect(instance).to be_a(klass)
+      expect(instance.path).to eq("/textures/metal.png")
+    end
+  end
+
   describe "file I/O" do
     let(:temp_file) { "/tmp/test_serializable_#{SecureRandom.hex(4)}.yaml" }
 

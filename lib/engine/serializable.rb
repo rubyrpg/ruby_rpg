@@ -68,7 +68,12 @@ module Engine
       elsif class_name == "Array"
         data[:value].map { |v| deserialize_value(v) }
       elsif allowed_class?(class_name)
-        from_serialized(data)
+        klass = get_class(class_name)
+        if klass.respond_to?(:from_serializable_data)
+          klass.from_serializable_data(data)
+        else
+          from_serialized(data)
+        end
       else
         raise UnauthorizedClassError, "Class '#{class_name}' is not allowed"
       end
@@ -157,7 +162,9 @@ module Engine
     private
 
     def serialize_value(value)
-      if value.is_a?(Serializable) && value.respond_to?(:uuid)
+      if value.is_a?(Serializable) && value.respond_to?(:serializable_data)
+        { _class: value.class.name, **value.serializable_data }
+      elsif value.is_a?(Serializable) && value.respond_to?(:uuid)
         { _class: value.class.name, _ref: value.uuid }
       elsif value.is_a?(Hash)
         { _class: "Hash", value: value.transform_values { |v| serialize_value(v) } }

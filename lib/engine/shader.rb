@@ -1,5 +1,22 @@
 module Engine
   class Shader
+    include Serializable
+
+    @cache = {}
+
+    def self.from_file(vertex_path, fragment_path)
+      key = [vertex_path, fragment_path]
+      @cache[key] ||= new(vertex_path, fragment_path)
+    end
+
+    def self.from_serializable_data(data)
+      from_file(data[:vertex_path], data[:fragment_path])
+    end
+
+    def serializable_data
+      { vertex_path: @vertex_path, fragment_path: @fragment_path }
+    end
+
     def self.default
       @default ||= Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl')
     end
@@ -49,6 +66,8 @@ module Engine
     end
 
     def initialize(vertex_shader, fragment_shader)
+      @vertex_path = vertex_shader
+      @fragment_path = fragment_shader
       @texture_fallbacks = {}
       @cubemap_fallbacks = {}
       @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
