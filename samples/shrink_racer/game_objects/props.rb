@@ -42,7 +42,7 @@ module ShrinkRacer
         rotation: Vector[0, rand(0..360), 0],
         scale: Vector[0.5, 0.5, 0.3],
         components: [
-          Spinner.new,
+          Spinner.create,
           Engine::Components::MeshRenderer.new(Engine::Mesh.for(
             "assets/props/coin"), coin_material),
         ],

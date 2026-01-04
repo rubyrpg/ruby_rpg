@@ -2,8 +2,8 @@
 
 module ShrinkRacer
   class Spinner < Engine::Component
-    def initialize
-      @current_time = 0.0
+    def awake
+      @current_time ||= 0.0
     end
 
     def update(delta_time)

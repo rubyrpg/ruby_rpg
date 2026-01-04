@@ -3,7 +3,7 @@
 module ShrinkRacer
   module Car
     def self.create_suv(pos, rotation)
-      spinner = SpinEffect.new
+      spinner = SpinEffect.create
       parent = Engine::GameObject.create(
         name: "Car",
         pos: pos,

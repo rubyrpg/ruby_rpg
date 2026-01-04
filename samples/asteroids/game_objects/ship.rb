@@ -9,7 +9,7 @@ module Asteroids
         rotation: rotation,
         scale: Vector[50, 50, 1],
         components:
-          [ShipEngine.new,
+          [ShipEngine.create,
            ClampToScreen.new,
            Gun.new,
            Engine::Components::SpriteRenderer.new(ship_material)]
@@ -22,7 +22,7 @@ module Asteroids
         scale: Vector[2, 2, 1],  # 2x parent size (100/50)
         components:
           [
-            ShieldComponent.new,
+            ShieldComponent.create,
             Engine::Components::SpriteRenderer.new(shield_material)
           ]
       )
