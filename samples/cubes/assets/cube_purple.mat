@@ -49,10 +49,4 @@
   :value: {}
 :textures:
   :_class: Hash
-  :value:
-    image:
-      :_class: NilClass
-      :value:
-    normalMap:
-      :_class: NilClass
-      :value:
+  :value: {}

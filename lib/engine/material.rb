@@ -103,7 +103,9 @@ module Engine
       ints.each do |name, value|
         shader.set_int(name, value)
       end
-      all_textures = textures.merge(runtime_textures)
+      # Start with shader's expected textures (defaulting to nil for fallbacks)
+      expected = shader.expected_textures.each_with_object({}) { |name, h| h[name] = nil }
+      all_textures = expected.merge(textures).merge(runtime_textures)
       all_textures.each.with_index do |(name, value), slot|
         GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
         if value.is_a?(Texture)

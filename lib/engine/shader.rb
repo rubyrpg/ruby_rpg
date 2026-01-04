@@ -112,6 +112,10 @@ module Engine
       @texture_fallbacks[name] || :white
     end
 
+    def expected_textures
+      @texture_fallbacks.keys
+    end
+
     def cubemap_fallback(name)
       @cubemap_fallbacks[name]
     end
