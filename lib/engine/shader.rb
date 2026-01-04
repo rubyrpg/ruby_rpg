@@ -6,7 +6,7 @@ module Engine
 
     def self.from_file(vertex_path, fragment_path)
       key = [vertex_path, fragment_path]
-      @cache[key] ||= new(vertex_path, fragment_path)
+      @cache[key] ||= create(vertex_path: vertex_path, fragment_path: fragment_path)
     end
 
     def self.from_serializable_data(data)
@@ -18,60 +18,58 @@ module Engine
     end
 
     def self.default
-      @default ||= Shader.new('./shaders/mesh_vertex.glsl', './shaders/mesh_frag.glsl')
+      @default ||= Shader.create(vertex_path: './shaders/mesh_vertex.glsl', fragment_path: './shaders/mesh_frag.glsl')
     end
 
     def self.vertex_lit
-      @vertex_lit ||= Engine::Shader.new('./shaders/vertex_lit_vertex.glsl', './shaders/vertex_lit_frag.glsl')
+      @vertex_lit ||= Engine::Shader.create(vertex_path: './shaders/vertex_lit_vertex.glsl', fragment_path: './shaders/vertex_lit_frag.glsl')
     end
 
     def self.skybox_cubemap
-      @skybox_cubemap ||= Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/skybox_cubemap_frag.glsl')
+      @skybox_cubemap ||= Shader.create(vertex_path: './shaders/fullscreen_vertex.glsl', fragment_path: './shaders/skybox_cubemap_frag.glsl')
     end
 
     def self.sprite
-      @sprite ||= Engine::Shader.new('./shaders/sprite_vertex.glsl', './shaders/sprite_frag.glsl')
+      @sprite ||= Engine::Shader.create(vertex_path: './shaders/sprite_vertex.glsl', fragment_path: './shaders/sprite_frag.glsl')
     end
 
     def self.instanced_sprite
-      @instanced_sprite ||= Engine::Shader.new('./shaders/instanced_sprite_vertex.glsl', './shaders/instanced_sprite_frag.glsl')
+      @instanced_sprite ||= Engine::Shader.create(vertex_path: './shaders/instanced_sprite_vertex.glsl', fragment_path: './shaders/instanced_sprite_frag.glsl')
     end
 
     def self.text
-      @text ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
+      @text ||= Engine::Shader.create(vertex_path: './shaders/text_vertex.glsl', fragment_path: './shaders/text_frag.glsl')
     end
 
     def self.ui_text
-      @ui_text ||= Engine::Shader.new('./shaders/text_vertex.glsl', './shaders/text_frag.glsl')
+      @ui_text ||= Engine::Shader.create(vertex_path: './shaders/text_vertex.glsl', fragment_path: './shaders/text_frag.glsl')
     end
 
     def self.ui_sprite
-      @ui_sprite ||= Engine::Shader.new('./shaders/ui_sprite_vertex.glsl', './shaders/ui_sprite_frag.glsl')
+      @ui_sprite ||= Engine::Shader.create(vertex_path: './shaders/ui_sprite_vertex.glsl', fragment_path: './shaders/ui_sprite_frag.glsl')
     end
 
     def self.fullscreen
-      @fullscreen ||= Engine::Shader.new('./shaders/fullscreen_vertex.glsl', './shaders/fullscreen_frag.glsl')
+      @fullscreen ||= Engine::Shader.create(vertex_path: './shaders/fullscreen_vertex.glsl', fragment_path: './shaders/fullscreen_frag.glsl')
     end
 
     def self.colour
-      @colour ||= Engine::Shader.new('./shaders/colour_vertex.glsl', './shaders/colour_frag.glsl')
+      @colour ||= Engine::Shader.create(vertex_path: './shaders/colour_vertex.glsl', fragment_path: './shaders/colour_frag.glsl')
     end
 
     def self.shadow
-      @shadow ||= Engine::Shader.new('./shaders/shadow_vertex.glsl', './shaders/shadow_frag.glsl')
+      @shadow ||= Engine::Shader.create(vertex_path: './shaders/shadow_vertex.glsl', fragment_path: './shaders/shadow_frag.glsl')
     end
 
     def self.point_shadow
-      @point_shadow ||= Engine::Shader.new('./shaders/point_shadow_vertex.glsl', './shaders/point_shadow_frag.glsl')
+      @point_shadow ||= Engine::Shader.create(vertex_path: './shaders/point_shadow_vertex.glsl', fragment_path: './shaders/point_shadow_frag.glsl')
     end
 
-    def initialize(vertex_shader, fragment_shader)
-      @vertex_path = vertex_shader
-      @fragment_path = fragment_shader
+    def awake
       @texture_fallbacks = {}
       @cubemap_fallbacks = {}
-      @vertex_shader = compile_shader(vertex_shader, GL::VERTEX_SHADER)
-      @fragment_shader = compile_shader(fragment_shader, GL::FRAGMENT_SHADER)
+      @vertex_shader = compile_shader(@vertex_path, GL::VERTEX_SHADER)
+      @fragment_shader = compile_shader(@fragment_path, GL::FRAGMENT_SHADER)
       @program = GL.CreateProgram
       GL.AttachShader(@program, @vertex_shader)
       GL.AttachShader(@program, @fragment_shader)

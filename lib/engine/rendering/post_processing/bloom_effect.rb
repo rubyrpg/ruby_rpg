@@ -54,25 +54,25 @@ module Rendering
 
     def setup_materials
       @threshold_material = Engine::Material.create(
-        shader: Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_threshold_frag.glsl'
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_threshold_frag.glsl'
         )
       )
       @threshold_material.set_float("threshold", @threshold)
 
       @blur_material = Engine::Material.create(
-        shader: Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_blur_frag.glsl'
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_blur_frag.glsl'
         )
       )
       @blur_material.set_float("blurScale", @blur_scale)
 
       @combine_material = Engine::Material.create(
-        shader: Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/bloom_combine_frag.glsl'
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/bloom_combine_frag.glsl'
         )
       )
       @combine_material.set_float("intensity", @intensity)

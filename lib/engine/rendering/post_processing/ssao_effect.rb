@@ -130,9 +130,9 @@ module Rendering
     def ssao_material
       @ssao_material ||= begin
         material = Engine::Material.create(
-          shader: Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssao/frag.glsl'
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssao/frag.glsl'
           )
         )
 
@@ -151,9 +151,9 @@ module Rendering
     def blur_material
       @blur_material ||= begin
         material = Engine::Material.create(
-          shader: Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssao/blur_frag.glsl'
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssao/blur_frag.glsl'
           )
         )
         material.set_int("blurSize", @blur_size)
@@ -164,9 +164,9 @@ module Rendering
 
     def combine_material
       @combine_material ||= Engine::Material.create(
-        shader: Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/ssao/combine_frag.glsl'
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/ssao/combine_frag.glsl'
         )
       )
     end

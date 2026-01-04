@@ -57,9 +57,9 @@ module Rendering
     def ssr_material
       @ssr_material ||= begin
         material = Engine::Material.create(
-          shader: Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssr/frag.glsl'
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssr/frag.glsl'
           )
         )
         material.set_int("maxSteps", @max_steps)
@@ -72,9 +72,9 @@ module Rendering
 
     def combine_material
       @combine_material ||= Engine::Material.create(
-        shader: Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/ssr/combine_frag.glsl'
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/ssr/combine_frag.glsl'
         )
       )
     end
