@@ -3,15 +3,15 @@
 module ShrinkRacer
   module RoadTile
     def self.create(tile_number, pos, rotation)
-      parent = Engine::GameObject.new(
-        "Road Tile",
+      parent = Engine::GameObject.create(
+        name: "Road Tile",
         pos: pos,
         rotation: rotation,
         scale: Vector[1, 1, 1],
       )
 
-      Engine::GameObject.new(
-        "Road Tile",
+      Engine::GameObject.create(
+        name: "Road Tile",
         pos: Vector[-1.5, 0, 1.5],
         rotation: Vector[0, 0, 0],
         scale: Vector[1, 1, 1],
@@ -75,8 +75,8 @@ module ShrinkRacer
         "020" => Vector[-0.85, 0, 0.75]
       }
       scale = rand(0.5..1.0)
-      parent = Engine::GameObject.new(
-        "Tree",
+      parent = Engine::GameObject.create(
+        name: "Tree",
         pos: pos,
         rotation: rotation,
         scale: Vector[scale, scale, scale],
@@ -84,8 +84,8 @@ module ShrinkRacer
           TreeCollider.new(0.2 * scale),
         ]
       )
-      Engine::GameObject.new(
-        "Tree",
+      Engine::GameObject.create(
+        name: "Tree",
         pos: offsets[file_number],
         rotation: rotation,
         scale: Vector[1, 1, 1],

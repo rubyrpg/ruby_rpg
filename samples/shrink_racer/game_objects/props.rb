@@ -3,8 +3,8 @@
 module ShrinkRacer
   module Props
     def self.create_cone(pos, rotation)
-      parent = Engine::GameObject.new(
-        "Cone",
+      parent = Engine::GameObject.create(
+        name: "Cone",
         pos: pos,
         rotation: rotation,
         scale: Vector[1, 1, 1],
@@ -12,8 +12,8 @@ module ShrinkRacer
           TreeCollider.new(0.05),
         ]
       )
-      Engine::GameObject.new(
-        "Cone",
+      Engine::GameObject.create(
+        name: "Cone",
         pos: Vector[0, 0.023, 0],
         rotation: Vector[0, rand(0..360), 0],
         scale: Vector[0.3, 0.3, 0.3],
@@ -27,8 +27,8 @@ module ShrinkRacer
     end
 
     def self.create_coin(pos, rotation)
-      parent = Engine::GameObject.new(
-        "Coin",
+      parent = Engine::GameObject.create(
+        name: "Coin",
         pos: pos,
         rotation: rotation,
         scale: Vector[1, 1, 1],
@@ -36,8 +36,8 @@ module ShrinkRacer
           CoinCollider.new(0.075)
         ]
       )
-      Engine::GameObject.new(
-        "Coin",
+      Engine::GameObject.create(
+        name: "Coin",
         pos: Vector[0, 0.023, 0],
         rotation: Vector[0, rand(0..360), 0],
         scale: Vector[0.5, 0.5, 0.3],

@@ -13,8 +13,8 @@ module Asteroids
 
     def self.create(pos, colour: [1, 1, 1, 1])
       material = explosion_material(colour)
-      Engine::GameObject.new(
-        "Explosion",
+      Engine::GameObject.create(
+        name: "Explosion",
         pos: pos,
         scale: Vector[200, 200, 1],
         components: [

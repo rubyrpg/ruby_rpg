@@ -5,8 +5,8 @@ describe Engine::Physics::Components::SphereCollider do
     context 'when colliding with another sphere' do
       let(:collider) { described_class.new(radius) }
       let!(:collider_object) do
-        Engine::GameObject.new(
-          "collider_object",
+        Engine::GameObject.create(
+          name: "collider_object",
           pos: position,
           components: [
             collider,
@@ -24,8 +24,8 @@ describe Engine::Physics::Components::SphereCollider do
 
       let(:other_collider) { described_class.new(other_radius) }
       let!(:other_collider_object) do
-        Engine::GameObject.new(
-          "other_collider_object",
+        Engine::GameObject.create(
+          name: "other_collider_object",
           pos: other_position,
           components: [
             other_collider,

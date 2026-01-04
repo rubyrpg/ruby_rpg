@@ -1,60 +1,60 @@
 # frozen_string_literal: true
 
 describe Engine::GameObject do
-  describe ".new" do
+  describe ".create" do
     it 'creates the object' do
-      expect(Engine::GameObject.new).to be_a(Engine::GameObject)
+      expect(Engine::GameObject.create).to be_a(Engine::GameObject)
     end
 
     it "sets the position of the object" do
-      object = Engine::GameObject.new(pos: Vector[10, 20])
+      object = Engine::GameObject.create(pos: Vector[10, 20])
 
       expect(object.x).to eq(10)
       expect(object.y).to eq(20)
     end
 
     it "sets the rotation of the object" do
-      object = Engine::GameObject.new(rotation: 90)
+      object = Engine::GameObject.create(rotation: 90)
 
       expect(object.rotation.to_euler).to be_vector(Vector[0, 0, 90])
     end
 
     it "sets the name of the object" do
-      object = Engine::GameObject.new("Test Object")
+      object = Engine::GameObject.create(name: "Test Object")
 
       expect(object.name).to eq("Test Object")
     end
 
     it "sets the components of the object" do
-      component = Engine::Component.new
-      object = Engine::GameObject.new(components: [component])
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
 
       expect(object.components).to eq([component])
     end
 
     it "calls start on all components" do
-      component = Engine::Component.new
+      component = Engine::Component.create
       expect(component).to receive(:start)
-      Engine::GameObject.new(components: [component])
+      Engine::GameObject.create(components: [component])
     end
 
     it "sets the game object on all components" do
-      component = Engine::Component.new
-      object = Engine::GameObject.new(components: [component])
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
 
       expect(component.game_object).to eq(object)
     end
 
     it "adds the object to the list of objects" do
-      object = Engine::GameObject.new
+      object = Engine::GameObject.create
 
       expect(Engine::GameObject.objects).to include(object)
     end
   end
 
   describe ".update_all" do
-    let(:component) { Engine::Component.new }
-    let!(:object) { Engine::GameObject.new(components: [component]) }
+    let(:component) { Engine::Component.create }
+    let!(:object) { Engine::GameObject.create(components: [component]) }
 
     it 'calls update on all components' do
       expect(component).to receive(:update)
@@ -65,7 +65,7 @@ describe Engine::GameObject do
 
   describe "#x" do
     it "returns the x position of the object" do
-      object = Engine::GameObject.new(pos: Vector[10, 20])
+      object = Engine::GameObject.create(pos: Vector[10, 20])
 
       expect(object.x).to eq(10)
     end
@@ -73,7 +73,7 @@ describe Engine::GameObject do
 
   describe "#x=" do
     it "sets the x position of the object" do
-      object = Engine::GameObject.new
+      object = Engine::GameObject.create
 
       object.x = 10
 
@@ -83,7 +83,7 @@ describe Engine::GameObject do
 
   describe "#y" do
     it "returns the y position of the object" do
-      object = Engine::GameObject.new(pos: Vector[10, 20])
+      object = Engine::GameObject.create(pos: Vector[10, 20])
 
       expect(object.y).to eq(20)
     end
@@ -91,7 +91,7 @@ describe Engine::GameObject do
 
   describe "#z=" do
     it "sets the z position of the object" do
-      object = Engine::GameObject.new
+      object = Engine::GameObject.create
 
       object.z = 20
 
@@ -101,7 +101,7 @@ describe Engine::GameObject do
 
   describe "#local_to_world_coordinate" do
     it "converts local coordinates to world coordinates when the object is at 0,0" do
-      object = Engine::GameObject.new(pos: Vector[0.0, 0.0])
+      object = Engine::GameObject.create(pos: Vector[0.0, 0.0])
 
       result = object.local_to_world_coordinate(Vector[10.0, 0.0, 0.0])
 
@@ -109,7 +109,7 @@ describe Engine::GameObject do
     end
 
     it "converts local coordinates to world coordinates" do
-      object = Engine::GameObject.new(pos: Vector[10.0, 20.0], rotation: 0.0)
+      object = Engine::GameObject.create(pos: Vector[10.0, 20.0], rotation: 0.0)
 
       result = object.local_to_world_coordinate(Vector[10.0, 0.0, 0.0])
 
@@ -117,7 +117,7 @@ describe Engine::GameObject do
     end
 
     it "converts local coordinates to world coordinates when rotated" do
-      object = Engine::GameObject.new(pos: Vector[10, 20], rotation: 90)
+      object = Engine::GameObject.create(pos: Vector[10, 20], rotation: 90)
 
       result = object.local_to_world_coordinate(Vector[10, 0, 0])
 
@@ -125,8 +125,8 @@ describe Engine::GameObject do
     end
 
     context "when the object has a parent" do
-      let(:parent) { Engine::GameObject.new }
-      let(:object) { Engine::GameObject.new(parent: parent) }
+      let(:parent) { Engine::GameObject.create }
+      let(:object) { Engine::GameObject.create(parent: parent) }
 
       it "converts local coordinates to world coordinates" do
         parent.pos = Vector[10, 20, 0]
@@ -161,7 +161,7 @@ describe Engine::GameObject do
 
   describe "#model_matrix" do
     it "returns the model matrix of the object" do
-      object = Engine::GameObject.new(pos: Vector[10, 20], rotation: 90)
+      object = Engine::GameObject.create(pos: Vector[10, 20], rotation: 90)
 
       result = object.model_matrix
 
@@ -179,8 +179,8 @@ describe Engine::GameObject do
 
     context "when the object has a parent" do
       it "returns the model matrix of the object" do
-        parent = Engine::GameObject.new(pos: Vector[10, 20, 0], rotation: Vector[0, 0, 90])
-        object = Engine::GameObject.new(pos: Vector[10, 20, 0], parent: parent)
+        parent = Engine::GameObject.create(pos: Vector[10, 20, 0], rotation: Vector[0, 0, 90])
+        object = Engine::GameObject.create(pos: Vector[10, 20, 0], parent: parent)
 
         result = object.model_matrix
 
@@ -200,7 +200,7 @@ describe Engine::GameObject do
 
   describe "#destroy!" do
     it "removes the object from the list of objects" do
-      object = Engine::GameObject.new
+      object = Engine::GameObject.create
 
       object.destroy!
       Engine::GameObject.erase_destroyed_objects
@@ -208,8 +208,8 @@ describe Engine::GameObject do
     end
 
     it "calls destroy on all components" do
-      component = Engine::Component.new
-      object = Engine::GameObject.new(components: [component])
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
 
       expect(component).to receive(:destroy!)
 
@@ -219,8 +219,8 @@ describe Engine::GameObject do
 
   describe ".destroy_all" do
     it "destroys all objects" do
-      object = Engine::GameObject.new("a")
-      object2 = Engine::GameObject.new("b")
+      object = Engine::GameObject.create(name: "a")
+      object2 = Engine::GameObject.create(name: "b")
 
       Engine::GameObject.destroy_all
       Engine::GameObject.erase_destroyed_objects
@@ -230,7 +230,7 @@ describe Engine::GameObject do
 
   describe "#right, #up and #forward" do
     it "returns the direction vectors of the object" do
-      object = Engine::GameObject.new(pos: Vector[10, 20, 0], rotation: Vector[0, 0, 0])
+      object = Engine::GameObject.create(pos: Vector[10, 20, 0], rotation: Vector[0, 0, 0])
 
       expect((object.right - Vector[1, 0, 0]).magnitude).to be_within(0.0001).of(0)
       expect((object.up - Vector[0, 1, 0]).magnitude).to be_within(0.0001).of(0)
@@ -238,7 +238,7 @@ describe Engine::GameObject do
     end
 
     it "returns the direction vectors of the object when rotated" do
-      object = Engine::GameObject.new(pos: Vector[10, 20, 0], rotation: Vector[0, 90, 0])
+      object = Engine::GameObject.create(pos: Vector[10, 20, 0], rotation: Vector[0, 90, 0])
 
       expect((object.right - Vector[0, 0, 1]).magnitude).to be_within(0.0001).of(0)
       expect((object.up - Vector[0, 1, 0]).magnitude).to be_within(0.0001).of(0)
@@ -254,22 +254,22 @@ describe Engine::GameObject do
 
   describe "parent" do
     it "sets the parent of the object when creating the child" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       expect(object.parent).to eq(parent)
     end
 
     it "sets the children of the parent when creating the child" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       expect(parent.children).to include(object)
     end
 
     it "sets the parent of the object" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create
 
       object.parent = parent
 
@@ -277,8 +277,8 @@ describe Engine::GameObject do
     end
 
     it "sets the children of the parent" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create
 
       object.parent = parent
 
@@ -286,8 +286,8 @@ describe Engine::GameObject do
     end
 
     it "removes the object from the parent's children when destroyed" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       object.destroy!
       Engine::GameObject.erase_destroyed_objects
@@ -296,8 +296,8 @@ describe Engine::GameObject do
     end
 
     it "destroys the children when the parent is destroyed" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       parent.destroy!
       Engine::GameObject.erase_destroyed_objects
@@ -306,8 +306,8 @@ describe Engine::GameObject do
     end
 
     it "sets the parent of the children to nil when the parent is removed" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       object.parent = nil
 
@@ -315,8 +315,8 @@ describe Engine::GameObject do
     end
 
     it "removes the object from the parent's children when the parent is removed" do
-      parent = Engine::GameObject.new
-      object = Engine::GameObject.new(parent: parent)
+      parent = Engine::GameObject.create
+      object = Engine::GameObject.create(parent: parent)
 
       object.parent = nil
 
@@ -326,7 +326,7 @@ describe Engine::GameObject do
 
   describe "#rotate_around" do
     it "rotates the object around the z axis" do
-      object = Engine::GameObject.new(rotation: Vector[1, 2, 3])
+      object = Engine::GameObject.create(rotation: Vector[1, 2, 3])
 
       object.rotate_around(Vector[0, 0, 1], 90)
 
@@ -334,7 +334,7 @@ describe Engine::GameObject do
     end
 
     it "rotates the object around multiple axes" do
-      object = Engine::GameObject.new(rotation: Vector[1, 2, 3])
+      object = Engine::GameObject.create(rotation: Vector[1, 2, 3])
 
       object.rotate_around(Vector[0, 1, 1], 90)
 

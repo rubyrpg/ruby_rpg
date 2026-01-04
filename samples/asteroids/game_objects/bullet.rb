@@ -5,8 +5,8 @@ module Asteroids
     BULLET_SIZE = 5
 
     def self.create(pos, rotation)
-      Engine::GameObject.new(
-        "Bullet",
+      Engine::GameObject.create(
+        name: "Bullet",
         pos: pos,
         rotation: rotation,
         scale: Vector[BULLET_SIZE, BULLET_SIZE, 1],

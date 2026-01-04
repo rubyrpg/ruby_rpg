@@ -6,8 +6,8 @@ describe "two spheres colliding" do
   context "with two dynamic spheres" do
     context "when one sphere runs into a stationary sphere" do
       let(:object_1) do
-        Engine::GameObject.new(
-          "object_1",
+        Engine::GameObject.create(
+          name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -22,8 +22,8 @@ describe "two spheres colliding" do
       let(:mass_1) { 1 }
       let(:rigidbody_1) { object_1.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) } }
       let(:object_2) do
-        Engine::GameObject.new(
-          "object_2",
+        Engine::GameObject.create(
+          name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -79,8 +79,8 @@ describe "two spheres colliding" do
 
     context "when two spheres collide head-on" do
       let(:object_1) do
-        Engine::GameObject.new(
-          "object_1",
+        Engine::GameObject.create(
+          name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -93,8 +93,8 @@ describe "two spheres colliding" do
       end
       let(:rigidbody_1) { object_1.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) } }
       let(:object_2) do
-        Engine::GameObject.new(
-          "object_2",
+        Engine::GameObject.create(
+          name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -126,8 +126,8 @@ describe "two spheres colliding" do
 
     context "when two spheres collide at an angle" do
       let(:object_1) do
-        Engine::GameObject.new(
-          "object_1",
+        Engine::GameObject.create(
+          name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -140,8 +140,8 @@ describe "two spheres colliding" do
       end
       let(:rigidbody_1) { object_1.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) } }
       let(:object_2) do
-        Engine::GameObject.new(
-          "object_2",
+        Engine::GameObject.create(
+          name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -173,8 +173,8 @@ describe "two spheres colliding" do
 
     context "when two spheres collide with a head on glancing blow" do
       let(:object_1) do
-        Engine::GameObject.new(
-          "object_1",
+        Engine::GameObject.create(
+          name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -187,8 +187,8 @@ describe "two spheres colliding" do
       end
       let(:rigidbody_1) { object_1.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) } }
       let(:object_2) do
-        Engine::GameObject.new(
-          "object_2",
+        Engine::GameObject.create(
+          name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -222,8 +222,8 @@ describe "two spheres colliding" do
   context "with a dynamic sphere and a static sphere" do
     context "when a dynamic sphere hits a stationary sphere" do
       let!(:object_1) do
-        Engine::GameObject.new(
-          "object_1",
+        Engine::GameObject.create(
+          name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01),
@@ -236,8 +236,8 @@ describe "two spheres colliding" do
       end
       let(:rigidbody_1) { object_1.components.find { |c| c.is_a?(Engine::Physics::Components::Rigidbody) } }
       let!(:object_2) do
-        Engine::GameObject.new(
-          "object_2",
+        Engine::GameObject.create(
+          name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
             Engine::Physics::Components::SphereCollider.new(1.01)

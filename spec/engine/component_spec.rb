@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 describe Engine::Component do
-  describe ".new" do
+  describe ".create" do
     it 'creates the component' do
-      expect(Engine::Component.new).to be_an(Engine::Component)
+      expect(Engine::Component.create).to be_an(Engine::Component)
     end
   end
 
   describe ".set_game_object" do
     it 'sets the game object' do
-      component = Engine::Component.new
-      object = Engine::GameObject.new
+      component = Engine::Component.create
+      object = Engine::GameObject.create
       component.set_game_object(object)
 
       expect(component.game_object).to eq(object)
@@ -18,8 +18,8 @@ describe Engine::Component do
   end
 
   describe "#desstroy!" do
-    let(:component) { Engine::Component.new }
-    let!(:game_object) { Engine::GameObject.new(components: [component]) }
+    let(:component) { Engine::Component.create }
+    let!(:game_object) { Engine::GameObject.create(components: [component]) }
 
     it 'destroys the component' do
       expect(component).to receive(:destroy)

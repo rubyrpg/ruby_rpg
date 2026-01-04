@@ -3,8 +3,8 @@
 module Asteroids
   module Ship
     def self.create(pos, rotation)
-      ship = Engine::GameObject.new(
-        "Ship",
+      ship = Engine::GameObject.create(
+        name: "Ship",
         pos: pos,
         rotation: rotation,
         scale: Vector[50, 50, 1],
@@ -15,8 +15,8 @@ module Asteroids
            Engine::Components::SpriteRenderer.new(ship_material)]
       )
 
-      ship.add_child Engine::GameObject.new(
-        "Shield",
+      ship.add_child Engine::GameObject.create(
+        name: "Shield",
         pos: Vector[0, 0, 0],
         rotation: Vector[0, 0, 0],
         scale: Vector[2, 2, 1],  # 2x parent size (100/50)

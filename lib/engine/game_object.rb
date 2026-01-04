@@ -21,9 +21,6 @@ module Engine
       @pos ||= Vector[0, 0, 0]
       @rotation ||= Vector[0, 0, 0]
       @scale ||= Vector[1, 1, 1]
-      @components ||= []
-      @renderers ||= []
-      @ui_renderers ||= []
       @local_version ||= 0
       @cached_world_version ||= nil
       @created_at ||= Time.now
@@ -35,10 +32,15 @@ module Engine
       # Normalize pos to ensure 3 components
       @pos = Vector[@pos[0], @pos[1], @pos[2] || 0]
 
+      # Split components by type (handles both .create with mixed array and deserialization with separate arrays)
+      all_components = (@components || []) + (@renderers || []) + (@ui_renderers || [])
+      @components = all_components.select { |c| !c.renderer? && !c.ui_renderer? }
+      @renderers = all_components.select { |c| c.renderer? }
+      @ui_renderers = all_components.select { |c| c.ui_renderer? }
+
       GameObject.object_spawned(self)
       @parent&.add_child(self)
 
-      all_components = @components + @renderers + @ui_renderers
       all_components.each { |component| component.set_game_object(self) }
       all_components.each(&:start)
       GameObject.register_renderers(self)

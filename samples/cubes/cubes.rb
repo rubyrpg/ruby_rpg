@@ -24,8 +24,8 @@ Engine.start do
     # Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0),
   ])
 
-  Engine::GameObject.new(
-    "Camera",
+  Engine::GameObject.create(
+    name: "Camera",
     pos: Vector[0, 50, 0],
     rotation: Vector[20, 0, 0],
     components: [
@@ -66,8 +66,8 @@ Engine.start do
   end
 
   # # Single white directional light for testing SSR
-  Engine::GameObject.new(
-    "DirectionalLight",
+  Engine::GameObject.create(
+    name: "DirectionalLight",
     pos: Vector[0, 50, 0],
     rotation: Vector[-70, 190, 0],
     components: [

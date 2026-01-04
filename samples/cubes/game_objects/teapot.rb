@@ -3,8 +3,8 @@
 module Cubes
   module Teapot
     def self.create(pos, rotation, size)
-      Engine::GameObject.new(
-        "Cube",
+      Engine::GameObject.create(
+        name: "Cube",
         pos: pos,
         rotation: rotation,
         scale: Vector[size, size, size],

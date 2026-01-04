@@ -3,8 +3,8 @@
 module Asteroids
   module Asteroid
     def self.create(pos, rotation, radius)
-      Engine::GameObject.new(
-        "Asteroid",
+      Engine::GameObject.create(
+        name: "Asteroid",
         pos: pos,
         rotation: rotation,
         scale: Vector[radius, radius, 1],

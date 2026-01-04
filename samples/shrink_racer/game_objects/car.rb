@@ -4,8 +4,8 @@ module ShrinkRacer
   module Car
     def self.create_suv(pos, rotation)
       spinner = SpinEffect.new
-      parent = Engine::GameObject.new(
-        "Car",
+      parent = Engine::GameObject.create(
+        name: "Car",
         pos: pos,
         rotation: rotation,
         scale: Vector[0.1, 0.1, 0.1],
@@ -14,8 +14,8 @@ module ShrinkRacer
           CarController.new(spinner),
         ]
       )
-      Engine::GameObject.new(
-        "SUV",
+      Engine::GameObject.create(
+        name: "SUV",
         pos: Vector[0, 0, 0],
         rotation: Vector[0, 0, 0],
         scale: Vector[1, 1, 1],
@@ -28,8 +28,8 @@ module ShrinkRacer
       )
 
       # Headlights
-      Engine::GameObject.new(
-        "Headlight Left",
+      Engine::GameObject.create(
+        name: "Headlight Left",
         pos: Vector[-0.75, 1, 0],
         rotation: Vector[0, 0, 0],
         parent: parent,
@@ -43,8 +43,8 @@ module ShrinkRacer
           )
         ]
       )
-      Engine::GameObject.new(
-        "Headlight Right",
+      Engine::GameObject.create(
+        name: "Headlight Right",
         pos: Vector[0.75, 1, 0],
         rotation: Vector[0, 0, 0],
         parent: parent,
