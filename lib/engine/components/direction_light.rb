@@ -4,14 +4,16 @@ module Engine::Components
   class DirectionLight < Engine::Component
     include Engine::MatrixHelpers
 
+    serialize :colour, :cast_shadows, :shadow_distance
+
     attr_reader :colour, :cast_shadows, :shadow_distance
     attr_accessor :shadow_layer_index
 
-    def initialize(colour: [1.0, 1.0, 1.0], cast_shadows: true, shadow_distance: 50.0)
-      @colour = colour
-      @cast_shadows = cast_shadows
-      @shadow_distance = shadow_distance
-      @shadow_layer_index = nil  # Set by RenderPipeline when rendering shadows
+    def awake
+      @colour ||= [1.0, 1.0, 1.0]
+      @cast_shadows = true if @cast_shadows.nil?
+      @shadow_distance ||= 50.0
+      @shadow_layer_index = nil
       @cached_light_space_matrix = nil
       @cache_key = nil
     end

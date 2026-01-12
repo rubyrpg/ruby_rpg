@@ -32,7 +32,7 @@ Engine.start do
     name: "Direction Light",
     rotation: Vector[-60, 180, 30],
     components: [
-      Engine::Components::DirectionLight.new(
+      Engine::Components::DirectionLight.create(
         colour: Vector[1.0, 0.6, 0.4],  # warm orange-pink twilight
         cast_shadows: true,
         shadow_distance: 20.0

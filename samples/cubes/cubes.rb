@@ -80,7 +80,7 @@ Engine.start do
     pos: Vector[0, 50, 0],
     rotation: Vector[-70, 190, 0],
     components: [
-      Engine::Components::DirectionLight.new(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
+      Engine::Components::DirectionLight.create(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
     ]
   )
 
@@ -100,7 +100,7 @@ Engine.start do
   #   pos: Vector[-30, 40, 20],
   #   rotation: Vector[-180, -20, 0],
   #   components: [
-  #     Engine::Components::DirectionLight.new(colour: Vector[1, 1, 1], cast_shadows: true)
+  #     Engine::Components::DirectionLight.create(colour: Vector[1, 1, 1], cast_shadows: true)
   #   ]
   # )
 
