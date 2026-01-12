@@ -31,7 +31,7 @@ Engine.start do
     rotation: Vector[20, 0, 0],
     components: [
       Cubes::CameraRotator.new,
-      Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
+      Engine::Components::PerspectiveCamera.create(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
   sphere = Engine::StandardObjects::Sphere.create(

@@ -46,7 +46,7 @@ describe Cubes::Teapot do
           Engine::GameObject.create(
             name: "Camera", pos: Vector[Engine::Window.framebuffer_width / 2, Engine::Window.framebuffer_height / 2, 1000],
             components: [
-              Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: Engine::Window.framebuffer_width / Engine::Window.framebuffer_height, near: 0.1, far: 2000)
+              Engine::Components::PerspectiveCamera.create(fov: 45.0, aspect: Engine::Window.framebuffer_width / Engine::Window.framebuffer_height, near: 0.1, far: 2000)
             ]
           )
         end

@@ -3,14 +3,12 @@
 module Engine::Components
   class PerspectiveCamera < Engine::Component
     include Engine::MatrixHelpers
+
+    serialize :fov, :aspect, :near, :far
+
     attr_reader :near, :far
 
-    def initialize(fov:, aspect:, near:, far:)
-      @fov = fov
-      @aspect = aspect
-      @near = near
-      @far = far
-
+    def awake
       Engine::Camera.instance = self
     end
 
