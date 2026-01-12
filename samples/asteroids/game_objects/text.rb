@@ -10,7 +10,7 @@ module Asteroids
         scale: Vector[1,1,1] * size,
         rotation: rotation,
         components: [
-          Engine::Components::UIFontRenderer.new(Engine::Font.new(font_path), text),
+          Engine::Components::UIFontRenderer.new(Engine::Font.create(font_file_path: font_path), text),
           *components
         ])
     end

@@ -4,13 +4,13 @@ require "json"
 
 module Engine
   class Font
+    include Serializable
+
+    serialize :font_file_path
+
     TEXTURE_SIZE = 1024
     GLYPH_COUNT = 16
     CELL_SIZE = TEXTURE_SIZE / GLYPH_COUNT
-
-    def initialize(font_file_path)
-      @font_file_path = font_file_path
-    end
 
     def texture
       @texture ||=
