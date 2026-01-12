@@ -22,7 +22,7 @@ describe Cubes::Teapot do
           Cubes::Teapot.create(Vector[500, 500], Vector[43, 68, 38], 500)
           Engine::GameObject.create(
             name: "light", pos: Vector[1200, 1200, 100], components: [
-            Engine::Components::PointLight.new(range: 1000, colour: Vector[0.6, 0.6, 0.6])
+            Engine::Components::PointLight.create(range: 1000, colour: Vector[0.6, 0.6, 0.6])
           ])
         end
         at(1) { check_screenshot(__dir__ + "/teapot_orthographic.png") }
@@ -38,7 +38,7 @@ describe Cubes::Teapot do
           Cubes::Teapot.create(Vector[500, 500], Vector[43, 68, 38], 500)
           Engine::GameObject.create(
             name: "light", pos: Vector[Engine::Window.framebuffer_width / 2, 500, 100], components: [
-            Engine::Components::PointLight.new(
+            Engine::Components::PointLight.create(
               range: 300,
               colour: Vector[0.5, 0.5, 0.5],
             )

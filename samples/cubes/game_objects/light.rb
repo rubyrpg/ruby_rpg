@@ -7,7 +7,7 @@ module Cubes
         name: "Light",
         pos: pos,
         components: [
-          Engine::Components::PointLight.new(range: range, colour: colour),
+          Engine::Components::PointLight.create(range: range, colour: colour),
         ]
       )
     end

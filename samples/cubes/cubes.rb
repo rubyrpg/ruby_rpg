@@ -89,7 +89,7 @@ Engine.start do
   #   "PointLight",
   #   pos: Vector[-20, 70, -10],
   #   components: [
-  #     Engine::Components::PointLight.new(range: 150, colour: Vector[0.1, 0.1, 0.1], cast_shadows: true),
+  #     Engine::Components::PointLight.create(range: 150, colour: Vector[0.1, 0.1, 0.1], cast_shadows: true),
   #     SpotlightController.new
   #   ]
   # )
