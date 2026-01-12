@@ -2,11 +2,13 @@
 
 module Engine::Components
   class SpriteAnimator < Engine::Component
-    def initialize(material, frame_coords:, frame_rate: 1, loop: true)
-      @material = material
-      @frame_coords = frame_coords
-      @frame_rate = frame_rate
-      @loop = loop
+    serialize :material, :frame_coords, :frame_rate, :loop
+
+    attr_reader :frame_rate, :loop
+
+    def awake
+      @frame_rate ||= 1
+      @loop = true if @loop.nil?
     end
 
     def start

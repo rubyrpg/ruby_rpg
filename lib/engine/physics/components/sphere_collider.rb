@@ -2,10 +2,12 @@
 
 module Engine::Physics::Components
   class SphereCollider < Engine::Component
+    serialize :radius
+
     attr_accessor :radius
 
-    def initialize(radius)
-      @radius = radius
+    def awake
+      @radius ||= 1
     end
 
     def start

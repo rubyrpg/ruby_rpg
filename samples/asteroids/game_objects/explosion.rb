@@ -18,8 +18,8 @@ module Asteroids
         pos: pos,
         scale: Vector[200, 200, 1],
         components: [
-          Engine::Components::SpriteAnimator.new(
-            material,
+          Engine::Components::SpriteAnimator.create(
+            material: material,
             frame_coords: EXPLOSION_FRAMES,
             frame_rate: 20,
             loop: false

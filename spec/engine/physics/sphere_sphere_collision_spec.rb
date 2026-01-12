@@ -10,8 +10,8 @@ describe "two spheres colliding" do
           name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[10, 0, 0],
               gravity: Vector[0, 0, 0],
               mass: mass_1
@@ -26,8 +26,8 @@ describe "two spheres colliding" do
           name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[0, 0, 0],
               gravity: Vector[0, 0, 0],
               mass: mass_2
@@ -83,8 +83,8 @@ describe "two spheres colliding" do
           name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[10, 0, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -97,8 +97,8 @@ describe "two spheres colliding" do
           name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[-10, 0, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -130,8 +130,8 @@ describe "two spheres colliding" do
           name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[10, 10, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -144,8 +144,8 @@ describe "two spheres colliding" do
           name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[-10, 10, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -177,8 +177,8 @@ describe "two spheres colliding" do
           name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[1, 10, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -191,8 +191,8 @@ describe "two spheres colliding" do
           name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[-1, -10, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -226,8 +226,8 @@ describe "two spheres colliding" do
           name: "object_1",
           pos: Vector[0, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01),
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01),
+            Engine::Physics::Components::Rigidbody.create(
               velocity: Vector[10, 0, 0],
               gravity: Vector[0, 0, 0]
             )
@@ -240,7 +240,7 @@ describe "two spheres colliding" do
           name: "object_2",
           pos: Vector[2, 0, 0],
           components: [
-            Engine::Physics::Components::SphereCollider.new(1.01)
+            Engine::Physics::Components::SphereCollider.create(radius: 1.01)
           ]
         )
       end

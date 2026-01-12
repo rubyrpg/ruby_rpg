@@ -3,7 +3,7 @@
 describe Engine::Physics::Components::Rigidbody do
   describe '#update' do
     let(:rigidbody) do
-      described_class.new(
+      described_class.create(
         velocity:,
         angular_velocity:,
         gravity:,
@@ -174,7 +174,7 @@ describe Engine::Physics::Components::Rigidbody do
   describe "#kinetic_energy" do
     context "for a stationary object" do
       let(:rigidbody) do
-        described_class.new(
+        described_class.create(
           velocity: Vector[0, 0, 0],
           angular_velocity: Vector[0, 0, 0],
           gravity: Vector[0, 0, 0],
@@ -189,7 +189,7 @@ describe Engine::Physics::Components::Rigidbody do
 
     context "for a moving object" do
       let(:rigidbody) do
-        described_class.new(
+        described_class.create(
           velocity: Vector[5, 0, 0],
           angular_velocity: Vector[0, 0, 0],
           gravity: Vector[0, 0, 0],
@@ -204,7 +204,7 @@ describe Engine::Physics::Components::Rigidbody do
 
     context "for a rotating object" do
       let(:rigidbody) do
-        described_class.new(
+        described_class.create(
           velocity: Vector[0, 0, 0],
           angular_velocity: Vector[0, 5, 0],
           gravity: Vector[0, 0, 0],
@@ -219,7 +219,7 @@ describe Engine::Physics::Components::Rigidbody do
 
     context "for a rotating body with a non-standard inertia tensor" do
       let(:rigidbody) do
-        described_class.new(
+        described_class.create(
           velocity: Vector[0, 0, 0],
           angular_velocity: Vector[0, 5, 0],
           gravity: Vector[0, 0, 0],
@@ -239,7 +239,7 @@ describe Engine::Physics::Components::Rigidbody do
 
     context "for a moving and rotating object" do
       let(:rigidbody) do
-        described_class.new(
+        described_class.create(
           velocity: Vector[5, 0, 0],
           angular_velocity: Vector[0, 5, 0],
           gravity: Vector[0, 0, 0],
@@ -255,7 +255,7 @@ describe Engine::Physics::Components::Rigidbody do
 
   describe "#momenturn" do
     let(:rigidbody) do
-      described_class.new(
+      described_class.create(
         velocity: Vector[5, 0, 0],
         angular_velocity: Vector[0, 5, 0],
         gravity: Vector[0, 0, 0],
@@ -277,7 +277,7 @@ describe Engine::Physics::Components::Rigidbody do
       )
     end
     let(:rigidbody) do
-      described_class.new(
+      described_class.create(
         velocity:,
         angular_velocity:,
         gravity: Vector[0, 0, 0],
@@ -329,7 +329,7 @@ describe Engine::Physics::Components::Rigidbody do
 
   describe "#velocity_at_point" do
     let(:rigidbody) do
-      described_class.new(
+      described_class.create(
         velocity:,
         angular_velocity:,
         gravity: Vector[0, 0, 0],
