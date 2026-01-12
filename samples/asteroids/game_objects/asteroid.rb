@@ -12,7 +12,7 @@ module Asteroids
           [AsteroidComponent.new(radius),
            ConstantDrift.new(rand(150)),
            ClampToScreen.new,
-           Engine::Components::SpriteRenderer.new(asteroid_material)]
+           Engine::Components::SpriteRenderer.create(material: asteroid_material)]
       )
     end
 

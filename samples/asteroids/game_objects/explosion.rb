@@ -24,7 +24,7 @@ module Asteroids
             frame_rate: 20,
             loop: false
           ),
-          Engine::Components::SpriteRenderer.new(material),
+          Engine::Components::SpriteRenderer.create(material: material),
           DestroyAfter.new(1)
         ]
       )

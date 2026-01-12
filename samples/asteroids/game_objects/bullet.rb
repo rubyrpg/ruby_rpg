@@ -14,7 +14,7 @@ module Asteroids
           Projectile.new,
           ConstantDrift.new(900),
           DestroyAfter.new(2),
-          Engine::Components::SpriteRenderer.new(bullet_material)
+          Engine::Components::SpriteRenderer.create(material: bullet_material)
         ]
       )
     end

@@ -2,10 +2,11 @@
 
 module Engine::Components
   class SpriteRenderer < Engine::Component
+    serialize :material
+
     attr_reader :material
 
-    def initialize(material)
-      @material = material
+    def awake
     end
 
     def colour=(value)

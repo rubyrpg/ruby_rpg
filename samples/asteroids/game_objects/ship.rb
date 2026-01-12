@@ -12,7 +12,7 @@ module Asteroids
           [ShipEngine.create,
            ClampToScreen.new,
            Gun.new,
-           Engine::Components::SpriteRenderer.new(ship_material)]
+           Engine::Components::SpriteRenderer.create(material:ship_material)]
       )
 
       ship.add_child Engine::GameObject.create(
@@ -23,7 +23,7 @@ module Asteroids
         components:
           [
             ShieldComponent.create,
-            Engine::Components::SpriteRenderer.new(shield_material)
+            Engine::Components::SpriteRenderer.create(material:shield_material)
           ]
       )
 
