@@ -2,18 +2,12 @@
 
 module Engine::Components
   class UISpriteRenderer < Engine::Component
+    serialize :v1, :v2, :v3, :v4, :material
+
     attr_reader :v1, :v2, :v3, :v4, :material
 
     def ui_renderer?
       true
-    end
-
-    def initialize(tl, tr, br, bl, material)
-      @v1 = tl
-      @v2 = tr
-      @v3 = br
-      @v4 = bl
-      @material = material
     end
 
     def start

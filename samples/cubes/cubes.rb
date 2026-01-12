@@ -125,4 +125,22 @@ Engine.start do
 
   # UI text (screen-space, fixed position)
   UIText.create(Vector[50, 50, 0], Vector[0, 0, 0], 30, "UI Text")
+
+  # UI Sprite (screen-space quad - top-left corner)
+  ui_sprite_material = Engine::Material.create(shader: Engine::Shader.ui_sprite)
+  ui_sprite_material.set_texture("image", Engine::Texture.for("assets/chessboard.png"))
+  ui_sprite_material.set_vec4("spriteColor", [1, 1, 1, 1])
+  Engine::GameObject.create(
+    name: "UI Sprite",
+    pos: Vector[0, 0, 0],
+    components: [
+      Engine::Components::UISpriteRenderer.create(
+        v1: Vector[100, 900],    # top-left
+        v2: Vector[300, 900],    # top-right
+        v3: Vector[300, 700],    # bottom-right
+        v4: Vector[100, 700],    # bottom-left
+        material: ui_sprite_material
+      )
+    ]
+  )
 end
