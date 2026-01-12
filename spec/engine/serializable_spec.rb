@@ -32,20 +32,11 @@ class TestParent
   include Engine::Serializable
   serialize :name
   attr_reader :name
-
-  def initialize(name)
-    @name = name
-  end
 end
 
 class TestChild < TestParent
   serialize :age
   attr_reader :age
-
-  def initialize(name, age)
-    super(name)
-    @age = age
-  end
 end
 
 describe Engine::Serializable do
@@ -81,14 +72,9 @@ describe Engine::Serializable do
       klass = Class.new do
         include Engine::Serializable
         serialize :name, :age
-
-        def initialize(name, age)
-          @name = name
-          @age = age
-        end
       end
 
-      instance = klass.new("test", 42)
+      instance = klass.create(name: "test", age: 42)
       result = instance.to_serialized
 
       expect(result[:name]).to eq({ _class: "String", value: "test" })
@@ -96,7 +82,7 @@ describe Engine::Serializable do
     end
 
     it "includes uuid and class in output" do
-      instance = TestSerializableClass.new
+      instance = TestSerializableClass.create
       result = instance.to_serialized
 
       expect(result[:uuid]).to eq(instance.uuid)
@@ -104,13 +90,13 @@ describe Engine::Serializable do
     end
 
     it "serializes nested Serializable objects as references" do
-      inner = TestSerializableClass.new
+      inner = TestSerializableClass.create
       klass = Class.new do
         include Engine::Serializable
         serialize :child
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@child, inner)
       result = instance.to_serialized
 
@@ -123,7 +109,7 @@ describe Engine::Serializable do
         serialize :uniforms
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@uniforms, { shininess: 0.5, name: "metal" })
       result = instance.to_serialized
 
@@ -142,7 +128,7 @@ describe Engine::Serializable do
         serialize :items
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@items, [1, "two", 3.0])
       result = instance.to_serialized
 
@@ -157,13 +143,13 @@ describe Engine::Serializable do
     end
 
     it "serializes references inside hashes" do
-      inner = TestSerializableClass.new
+      inner = TestSerializableClass.create
       klass = Class.new do
         include Engine::Serializable
         serialize :data
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@data, { child: inner })
       result = instance.to_serialized
 
@@ -346,7 +332,7 @@ describe Engine::Serializable do
     end
 
     it "serializes inherited attributes" do
-      instance = TestChild.new("bob", 25)
+      instance = TestChild.create(name: "bob", age: 25)
       result = instance.to_serialized
 
       expect(result[:name]).to eq({ _class: "String", value: "bob" })
@@ -375,7 +361,7 @@ describe Engine::Serializable do
         serialize :value
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@value, nil)
       result = instance.to_serialized
 
@@ -388,7 +374,7 @@ describe Engine::Serializable do
         serialize :enabled, :disabled
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@enabled, true)
       instance.instance_variable_set(:@disabled, false)
       result = instance.to_serialized
@@ -403,7 +389,7 @@ describe Engine::Serializable do
         serialize :mode
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@mode, :fast)
       result = instance.to_serialized
 
@@ -429,7 +415,7 @@ describe Engine::Serializable do
         serialize :position
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@position, Vector[1.0, 2.0, 3.0])
       result = instance.to_serialized
 
@@ -454,7 +440,7 @@ describe Engine::Serializable do
         serialize :transform
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@transform, Matrix[[1, 0], [0, 1]])
       result = instance.to_serialized
 
@@ -479,7 +465,7 @@ describe Engine::Serializable do
         serialize :rotation
       end
 
-      instance = klass.new
+      instance = klass.create
       instance.instance_variable_set(:@rotation, Engine::Quaternion.new(1.0, 0.0, 0.0, 0.0))
       result = instance.to_serialized
 
@@ -509,23 +495,20 @@ describe Engine::Serializable do
         include Engine::Serializable
         attr_reader :path
 
-        def initialize(path)
-          @path = path
-        end
-
         def serializable_data
           { path: @path }
         end
       end
       stub_const("TestFactoryClass", klass)
 
-      instance = klass.new("/textures/wood.png")
+      instance = klass.allocate
+      instance.instance_variable_set(:@path, "/textures/wood.png")
       parent = Class.new do
         include Engine::Serializable
         serialize :asset
       end
 
-      wrapper = parent.new
+      wrapper = parent.create
       wrapper.instance_variable_set(:@asset, instance)
       result = wrapper.to_serialized
 
@@ -537,12 +520,10 @@ describe Engine::Serializable do
         include Engine::Serializable
         attr_reader :path
 
-        def initialize(path)
-          @path = path
-        end
-
         def self.from_serializable_data(data)
-          new(data[:path])
+          instance = allocate
+          instance.instance_variable_set(:@path, data[:path])
+          instance
         end
       end
       stub_const("TestFactoryClass2", klass)
@@ -562,7 +543,7 @@ describe Engine::Serializable do
     after { File.delete(temp_file) if File.exist?(temp_file) }
 
     it "saves to a YAML file" do
-      instance = TestPrimitives.new
+      instance = TestPrimitives.create
       instance.instance_variable_set(:@name, "test")
       instance.instance_variable_set(:@age, 25)
 
@@ -646,19 +627,19 @@ describe Engine::Serializable do
 
   describe "uuid" do
     it "generates a uuid on first access" do
-      instance = test_class.new
+      instance = test_class.create
       expect(instance.uuid).to match(/\A[0-9a-f-]{36}\z/)
     end
 
     it "returns the same uuid on subsequent accesses" do
-      instance = test_class.new
+      instance = test_class.create
       uuid = instance.uuid
       expect(instance.uuid).to eq(uuid)
     end
 
     it "generates unique uuids for different instances" do
-      instance1 = test_class.new
-      instance2 = test_class.new
+      instance1 = test_class.create
+      instance2 = test_class.create
       expect(instance1.uuid).not_to eq(instance2.uuid)
     end
   end

@@ -6,6 +6,7 @@ require 'yaml'
 module Engine
   module Serializable
     class UnauthorizedClassError < StandardError; end
+    class InitializeNotAllowedError < StandardError; end
 
     # Placeholder for unresolved references during first pass
     UnresolvedRef = Struct.new(:uuid, :class_name)
@@ -15,6 +16,16 @@ module Engine
     def self.included(base)
       base.extend(ClassMethods)
       @allowed_classes[base.name] = base if base.name
+
+      # Prevent subclasses from defining initialize
+      base.define_singleton_method(:method_added) do |method_name|
+        if method_name == :initialize
+          raise InitializeNotAllowedError,
+            "#{self.name} cannot define 'initialize'. " \
+            "Serializable classes must use 'awake' for initialization logic and be created with '.create'"
+        end
+        super(method_name) if defined?(super)
+      end
     end
 
     # Default awake implementation - override in subclasses

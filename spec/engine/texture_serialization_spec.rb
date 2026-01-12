@@ -24,13 +24,9 @@ describe "Texture serialization" do
         include Engine::Serializable
         serialize :texture
         attr_reader :texture
-
-        def initialize(texture)
-          @texture = texture
-        end
       end
 
-      wrapper = wrapper_class.new(mock_texture)
+      wrapper = wrapper_class.create(texture: mock_texture)
       result = wrapper.to_serialized
 
       expect(result[:texture][:_class]).to eq("Engine::Texture")

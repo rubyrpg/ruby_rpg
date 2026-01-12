@@ -24,13 +24,9 @@ describe "Shader serialization" do
         include Engine::Serializable
         serialize :shader
         attr_reader :shader
-
-        def initialize(shader)
-          @shader = shader
-        end
       end
 
-      wrapper = wrapper_class.new(mock_shader)
+      wrapper = wrapper_class.create(shader: mock_shader)
       result = wrapper.to_serialized
 
       expect(result[:shader][:_class]).to eq("Engine::Shader")
