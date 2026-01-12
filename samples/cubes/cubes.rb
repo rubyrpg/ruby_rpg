@@ -1,5 +1,6 @@
 require_relative "../../lib/ruby_rpg"
 require_relative "components/spotlight_controller"
+require_relative "components/sound_test"
 
 def load_material(name)
   Engine::Serializable.from_file(File.join(GAME_DIR, "assets/#{name}.mat"))
@@ -36,7 +37,11 @@ Engine.start do
   sphere = Engine::StandardObjects::Sphere.create(
     pos: Vector[0, 20, 0],
     scale: Vector[10, 10, 10],
-    material: load_material("hdr_sphere")
+    material: load_material("hdr_sphere"),
+    components: [
+      Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/boom.wav")),
+      Cubes::SoundTest.new
+    ]
   )
   Engine::StandardObjects::Cube.create(
     pos: Vector[25, 20, -30],
