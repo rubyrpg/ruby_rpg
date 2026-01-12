@@ -25,7 +25,7 @@ module Engine::Components
     end
 
     def start
-      @mesh_renderer = MeshRenderer.new(Engine::Mesh.quad, material)
+      @mesh_renderer = MeshRenderer.create(mesh: Engine::Mesh.quad, material: material)
       @mesh_renderer.set_game_object(game_object)
       @mesh_renderer.start
       set_default_frame_coords

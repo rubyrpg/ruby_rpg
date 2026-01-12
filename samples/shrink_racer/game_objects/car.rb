@@ -21,8 +21,10 @@ module ShrinkRacer
         scale: Vector[1, 1, 1],
         components: [
           spinner,
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/cars/suv"), material),
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/cars/suv"),
+            material: material
+          ),
         ],
         parent: parent
       )

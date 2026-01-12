@@ -16,9 +16,10 @@ module ShrinkRacer
         rotation: Vector[0, 0, 0],
         scale: Vector[1, 1, 1],
         components: [
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/road_tiles/roadTile_" + tile_number),
-                                               material, static: true
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/road_tiles/roadTile_" + tile_number),
+            material: material,
+            static: true
           ),
         ],
         parent: parent
@@ -90,10 +91,10 @@ module ShrinkRacer
         rotation: rotation,
         scale: Vector[1, 1, 1],
         components: [
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/road_tiles/roadTile_" + file_number),
-                                               tree_material,
-                                               static: true
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/road_tiles/roadTile_" + file_number),
+            material: tree_material,
+            static: true
           ),
         ],
         parent: parent

@@ -2,13 +2,14 @@
 
 module Engine::Components
   class MeshRenderer < Engine::Component
+    serialize :mesh, :material, :static
+
     attr_reader :mesh, :material, :static
 
-    def initialize(mesh, material, static: false)
-      @mesh = mesh
-      @material = material
-      @static = static
+    def awake
+      @static = false if @static.nil?
       @last_synced_version = nil
+      @renderer_key = nil
     end
 
     def renderer_key

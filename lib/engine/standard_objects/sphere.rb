@@ -10,9 +10,9 @@ module Engine
           rotation: rotation,
           scale: scale,
           components: [
-            Engine::Components::MeshRenderer.new(
-              Engine::Mesh.from_engine("sphere"),
-              material || StandardObjects.default_material
+            Engine::Components::MeshRenderer.create(
+              mesh: Engine::Mesh.from_engine("sphere"),
+              material: material || StandardObjects.default_material
             ),
             *components
           ]

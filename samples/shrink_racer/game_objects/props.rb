@@ -18,8 +18,11 @@ module ShrinkRacer
         rotation: Vector[0, rand(0..360), 0],
         scale: Vector[0.3, 0.3, 0.3],
         components: [
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/cars/cone"), cone_material, static: true),
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/cars/cone"),
+            material: cone_material,
+            static: true
+          ),
         ],
         parent: parent
       )
@@ -43,8 +46,10 @@ module ShrinkRacer
         scale: Vector[0.5, 0.5, 0.3],
         components: [
           Spinner.create,
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/props/coin"), coin_material),
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/props/coin"),
+            material: coin_material
+          ),
         ],
         parent: parent
       )
