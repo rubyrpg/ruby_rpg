@@ -34,7 +34,7 @@ module ShrinkRacer
         rotation: Vector[0, 0, 0],
         parent: parent,
         components: [
-          Engine::Components::SpotLight.new(
+          Engine::Components::SpotLight.create(
             range: 30,
             colour: Vector[0.03, 0.028, 0.024],
             inner_angle: 0,
@@ -49,7 +49,7 @@ module ShrinkRacer
         rotation: Vector[0, 0, 0],
         parent: parent,
         components: [
-          Engine::Components::SpotLight.new(
+          Engine::Components::SpotLight.create(
             range: 30,
             colour: Vector[0.03, 0.028, 0.024],
             inner_angle: 0,
