@@ -2,16 +2,16 @@
 
 module Engine::Components
   class FontRendererBase < Engine::Component
+    serialize :font, :string
+
     attr_reader :mesh, :texture
 
-    def initialize(font, string)
+    def awake
       @mesh = Engine::PolygonMesh.new(
         [Vector[-0.5, 0.5], Vector[0.5, 0.5], Vector[0.5, -0.5], Vector[-0.5, -0.5]],
         [[0, 0], [1, 0], [1, 1], [0, 1]]
       )
-      @texture = font.texture.texture
-      @string = string
-      @font = font
+      @texture = @font.texture.texture
     end
 
     def start

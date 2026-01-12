@@ -10,7 +10,7 @@ module Cubes
         scale: Vector[1, 1, 1] * size,
         rotation: rotation,
         components: [
-          Engine::Components::FontRenderer.new(Engine::Font.create(font_file_path: font_path), text)
+          Engine::Components::FontRenderer.create(font: Engine::Font.create(font_file_path: font_path), string: text)
         ])
     end
   end
