@@ -8,10 +8,6 @@ module Engine
 
     attr_reader :shader
 
-    def awake
-      # shader should be set via create(shader: ...) or deserialization
-    end
-
     def self.default_white_texture
       @default_white_texture ||= create_1x1_texture(255, 255, 255, 255)
     end

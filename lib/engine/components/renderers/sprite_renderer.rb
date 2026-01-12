@@ -6,9 +6,6 @@ module Engine::Components
 
     attr_reader :material
 
-    def awake
-    end
-
     def colour=(value)
       material.set_vec4("spriteColor", colour_to_vec4(value))
     end
