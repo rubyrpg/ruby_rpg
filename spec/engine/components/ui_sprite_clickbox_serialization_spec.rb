@@ -16,8 +16,8 @@ describe Engine::Components::UISpriteClickbox do
     it "serializes and deserializes correctly" do
       original = Engine::Components::UISpriteClickbox.create
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.mouse_inside).to eq(false)

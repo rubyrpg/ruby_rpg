@@ -39,8 +39,8 @@ describe Engine::Components::SpotLight do
         cast_shadows: true
       )
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.range).to eq(500)

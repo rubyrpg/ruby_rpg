@@ -29,7 +29,7 @@ describe Engine::Components::FontRendererBase do
         string: "Hello World"
       )
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:string]).to eq({ _class: "String", value: "Hello World" })
       expect(serialized[:font][:_ref]).to eq("test-font-uuid")

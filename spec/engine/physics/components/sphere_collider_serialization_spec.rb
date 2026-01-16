@@ -19,8 +19,8 @@ describe Engine::Physics::Components::SphereCollider do
     it "serializes and deserializes correctly" do
       original = Engine::Physics::Components::SphereCollider.create(radius: 3.5)
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.radius).to eq(3.5)

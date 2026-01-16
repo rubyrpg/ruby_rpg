@@ -36,8 +36,8 @@ describe Engine::Physics::Components::Rigidbody do
         coefficient_of_friction: 0.5
       )
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.velocity).to eq(Vector[1, 2, 3])

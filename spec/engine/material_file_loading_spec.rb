@@ -54,7 +54,7 @@ describe "Material file loading" do
 
     File.write(temp_file, yaml_content)
 
-    material = Engine::Serializable.from_file(temp_file)
+    material = Engine::Serialization::YamlPersistence.load(temp_file)
 
     expect(material).to be_a(Engine::Material)
     expect(material.uuid).to eq("test-material-001")

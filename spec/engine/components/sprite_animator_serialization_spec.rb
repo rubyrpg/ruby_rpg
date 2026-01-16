@@ -39,8 +39,8 @@ describe Engine::Components::SpriteAnimator do
         loop: false
       )
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.frame_rate).to eq(15)

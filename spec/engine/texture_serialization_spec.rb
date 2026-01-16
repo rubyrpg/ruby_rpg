@@ -27,7 +27,7 @@ describe "Texture serialization" do
       end
 
       wrapper = wrapper_class.create(texture: mock_texture)
-      result = wrapper.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(wrapper)
 
       expect(result[:texture][:_class]).to eq("Engine::Texture")
       expect(result[:texture][:path]).to eq("textures/wood.png")

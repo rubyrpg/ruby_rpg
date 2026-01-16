@@ -39,7 +39,7 @@ describe Engine::Components::MeshRenderer do
         static: true
       )
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:static]).to eq({ _class: "TrueClass", value: true })
       expect(serialized[:material][:_ref]).to eq("test-material-uuid")

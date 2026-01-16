@@ -26,8 +26,8 @@ describe Engine::Components::PerspectiveCamera do
         far: 500.0
       )
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.instance_variable_get(:@fov)).to eq(60.0)

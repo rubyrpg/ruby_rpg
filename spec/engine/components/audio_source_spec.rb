@@ -25,12 +25,12 @@ describe Engine::Components::AudioSource do
     it "serializes and deserializes correctly" do
       original = Engine::Components::AudioSource.create(clip_path: "assets/boom.wav", radius: 500)
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:clip_path]).to eq({ _class: "String", value: "assets/boom.wav" })
       expect(serialized[:radius]).to eq({ _class: "Integer", value: 500 })
 
-      restored = Engine::Serializable.from_serialized(serialized)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.instance_variable_get(:@clip_path)).to eq("assets/boom.wav")

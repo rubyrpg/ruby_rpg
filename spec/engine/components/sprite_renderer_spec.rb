@@ -19,15 +19,15 @@ describe Engine::Components::SpriteRenderer do
     it "serializes and deserializes correctly" do
       original = Engine::Components::SpriteRenderer.create(material: mock_material)
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:material][:_ref]).to eq("test-material-uuid")
 
-      restored = Engine::Serializable.from_serialized(serialized)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
-      # Without deserialize_all, refs remain unresolved
-      expect(restored.material).to be_a(Engine::Serializable::UnresolvedRef)
+      # Without GraphSerializer.deserialize, refs remain unresolved
+      expect(restored.material).to be_a(Engine::Serialization::ObjectSerializer::UnresolvedRef)
       expect(restored.material.uuid).to eq("test-material-uuid")
     end
   end

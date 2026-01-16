@@ -14,11 +14,11 @@ describe Engine::Font do
     it "serializes and deserializes correctly" do
       original = Engine::Font.create(font_file_path: "fonts/arial.ttf")
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:font_file_path]).to eq({ _class: "String", value: "fonts/arial.ttf" })
 
-      restored = Engine::Serializable.from_serialized(serialized)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.instance_variable_get(:@font_file_path)).to eq("fonts/arial.ttf")

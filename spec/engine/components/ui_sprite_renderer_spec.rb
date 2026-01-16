@@ -35,7 +35,7 @@ describe Engine::Components::UISpriteRenderer do
         material: mock_material
       )
 
-      serialized = original.to_serialized
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:v1]).to eq({ _class: "Vector", value: [0, 0] })
       expect(serialized[:material][:_ref]).to eq("test-material-uuid")

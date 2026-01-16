@@ -1,9 +1,11 @@
 require_relative "../../lib/ruby_rpg"
 require_relative "components/spotlight_controller"
 require_relative "components/sound_test"
+require_relative "components/camera_rotator"
+require_relative "components/spinner"
 
 def load_material(name)
-  Engine::Serializable.from_file(File.join(GAME_DIR, "assets/#{name}.mat"))
+  Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/#{name}.mat"))
 end
 
 Engine.start do

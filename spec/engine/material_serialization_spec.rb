@@ -27,14 +27,14 @@ describe "Material serialization" do
 
   describe "#to_serialized" do
     it "serializes all material attributes" do
-      result = mock_material.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(mock_material)
 
       expect(result[:_class]).to eq("Engine::Material")
       expect(result[:uuid]).to be_a(String)
     end
 
     it "serializes the shader using custom hooks" do
-      result = mock_material.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(mock_material)
 
       expect(result[:shader][:_class]).to eq("Engine::Shader")
       expect(result[:shader][:vertex_path]).to eq("./shaders/test_vertex.glsl")
@@ -42,7 +42,7 @@ describe "Material serialization" do
     end
 
     it "serializes textures using custom hooks" do
-      result = mock_material.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(mock_material)
 
       expect(result[:textures][:_class]).to eq("Hash")
       expect(result[:textures][:value]["image"][:_class]).to eq("Engine::Texture")
@@ -50,14 +50,14 @@ describe "Material serialization" do
     end
 
     it "serializes floats hash" do
-      result = mock_material.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(mock_material)
 
       expect(result[:floats][:_class]).to eq("Hash")
       expect(result[:floats][:value]["roughness"]).to eq({ _class: "Float", value: 0.5 })
     end
 
     it "serializes vec3s with Vector type" do
-      result = mock_material.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(mock_material)
 
       expect(result[:vec3s][:_class]).to eq("Hash")
       expect(result[:vec3s][:value]["baseColour"]).to eq({ _class: "Vector", value: [1.0, 0.5, 0.0] })

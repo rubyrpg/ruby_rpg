@@ -27,7 +27,7 @@ describe "Shader serialization" do
       end
 
       wrapper = wrapper_class.create(shader: mock_shader)
-      result = wrapper.to_serialized
+      result = Engine::Serialization::ObjectSerializer.serialize(wrapper)
 
       expect(result[:shader][:_class]).to eq("Engine::Shader")
       expect(result[:shader][:vertex_path]).to eq("./shaders/test_vertex.glsl")

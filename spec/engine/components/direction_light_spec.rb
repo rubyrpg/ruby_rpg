@@ -31,8 +31,8 @@ describe Engine::Components::DirectionLight do
         shadow_distance: 100.0
       )
 
-      serialized = original.to_serialized
-      restored = Engine::Serializable.from_serialized(serialized)
+      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
+      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
       restored.awake
 
       expect(restored.colour).to eq([0.8, 0.9, 1.0])
