@@ -2,6 +2,9 @@
 
 module Engine::Physics::Components
   class Rigidbody < Engine::Component
+    serialize :velocity, :angular_velocity, :mass, :inertia_tensor, :gravity,
+              :coefficient_of_restitution, :coefficient_of_friction
+
     attr_accessor :velocity,
                   :angular_velocity,
                   :force,
@@ -10,29 +13,21 @@ module Engine::Physics::Components
                   :coefficient_of_restitution,
                   :coefficient_of_friction
 
-    def initialize(
-      velocity: Vector[0, 0, 0],
-      angular_velocity: Vector[0, 0, 0],
-      mass: 1,
-      inertia_tensor: nil,
-      gravity: Vector[0, -9.81, 0],
-      coefficient_of_restitution: 1,
-      coefficient_of_friction: 0
-    )
-      @velocity = velocity
-      @angular_velocity = angular_velocity
-      @force = gravity * mass
-      @gravity = gravity
-      @impulses = []
-      @angular_impulses = []
-      @mass = mass
-      @inertia_tensor = inertia_tensor || Matrix[
+    def awake
+      @velocity ||= Vector[0, 0, 0]
+      @angular_velocity ||= Vector[0, 0, 0]
+      @mass ||= 1
+      @gravity ||= Vector[0, -9.81, 0]
+      @coefficient_of_restitution ||= 1
+      @coefficient_of_friction ||= 0
+      @inertia_tensor ||= Matrix[
         [1, 0, 0],
         [0, 1, 0],
         [0, 0, 1]
-      ] * mass
-      @coefficient_of_restitution = coefficient_of_restitution
-      @coefficient_of_friction = coefficient_of_friction
+      ] * @mass
+      @force = @gravity * @mass
+      @impulses = []
+      @angular_impulses = []
     end
 
     def start

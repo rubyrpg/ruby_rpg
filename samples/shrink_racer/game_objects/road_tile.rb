@@ -3,22 +3,23 @@
 module ShrinkRacer
   module RoadTile
     def self.create(tile_number, pos, rotation)
-      parent = Engine::GameObject.new(
-        "Road Tile",
+      parent = Engine::GameObject.create(
+        name: "Road Tile",
         pos: pos,
         rotation: rotation,
         scale: Vector[1, 1, 1],
       )
 
-      Engine::GameObject.new(
-        "Road Tile",
+      Engine::GameObject.create(
+        name: "Road Tile",
         pos: Vector[-1.5, 0, 1.5],
         rotation: Vector[0, 0, 0],
         scale: Vector[1, 1, 1],
         components: [
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/road_tiles/roadTile_" + tile_number),
-                                               material, static: true
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/road_tiles/roadTile_" + tile_number),
+            material: material,
+            static: true
           ),
         ],
         parent: parent
@@ -75,8 +76,8 @@ module ShrinkRacer
         "020" => Vector[-0.85, 0, 0.75]
       }
       scale = rand(0.5..1.0)
-      parent = Engine::GameObject.new(
-        "Tree",
+      parent = Engine::GameObject.create(
+        name: "Tree",
         pos: pos,
         rotation: rotation,
         scale: Vector[scale, scale, scale],
@@ -84,16 +85,16 @@ module ShrinkRacer
           TreeCollider.new(0.2 * scale),
         ]
       )
-      Engine::GameObject.new(
-        "Tree",
+      Engine::GameObject.create(
+        name: "Tree",
         pos: offsets[file_number],
         rotation: rotation,
         scale: Vector[1, 1, 1],
         components: [
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/road_tiles/roadTile_" + file_number),
-                                               tree_material,
-                                               static: true
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/road_tiles/roadTile_" + file_number),
+            material: tree_material,
+            static: true
           ),
         ],
         parent: parent
@@ -106,7 +107,7 @@ module ShrinkRacer
     def self.material
       @material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.vertex_lit)
+          material = Engine::Material.create(shader: Engine::Shader.vertex_lit)
           material.set_texture("image", nil)
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.5)
@@ -121,7 +122,7 @@ module ShrinkRacer
     def self.tree_material
       @tree_material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.vertex_lit)
+          material = Engine::Material.create(shader: Engine::Shader.vertex_lit)
           material.set_texture("image", nil)
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.8)

@@ -7,8 +7,8 @@ module Asteroids
     MAX_SPEED = 400
     TURNING_SPEED = 300
 
-    def initialize
-      @speed = Vector[0, 0, 0]
+    def awake
+      @speed ||= Vector[0, 0, 0]
     end
 
     def update(delta_time)

@@ -3,14 +3,14 @@
 describe Engine::Physics::Components::SphereCollider do
   describe '#collision_for' do
     context 'when colliding with another sphere' do
-      let(:collider) { described_class.new(radius) }
+      let(:collider) { described_class.create(radius:) }
       let!(:collider_object) do
-        Engine::GameObject.new(
-          "collider_object",
+        Engine::GameObject.create(
+          name: "collider_object",
           pos: position,
           components: [
             collider,
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::Rigidbody.create(
               velocity:,
               coefficient_of_restitution:,
               coefficient_of_friction:
@@ -22,14 +22,14 @@ describe Engine::Physics::Components::SphereCollider do
       let(:coefficient_of_friction) { 0 }
       let(:velocity) { Vector[0, 0, 0] }
 
-      let(:other_collider) { described_class.new(other_radius) }
+      let(:other_collider) { described_class.create(radius: other_radius) }
       let!(:other_collider_object) do
-        Engine::GameObject.new(
-          "other_collider_object",
+        Engine::GameObject.create(
+          name: "other_collider_object",
           pos: other_position,
           components: [
             other_collider,
-            Engine::Physics::Components::Rigidbody.new(
+            Engine::Physics::Components::Rigidbody.create(
               velocity: other_velocity,
               coefficient_of_restitution: other_coefficient_of_restitution,
               coefficient_of_friction: other_coefficient_of_friction

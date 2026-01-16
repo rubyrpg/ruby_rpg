@@ -24,9 +24,9 @@ module Rendering
       GL.ClearColor(1.0, 1.0, 1.0, 1.0)
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
-      ssao_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
-      ssao_material.set_texture("normalTexture", PostProcessingEffect.normal_texture)
-      ssao_material.set_texture("noiseTexture", noise_texture)
+      ssao_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
+      ssao_material.set_runtime_texture("normalTexture", PostProcessingEffect.normal_texture)
+      ssao_material.set_runtime_texture("noiseTexture", noise_texture)
 
       ssao_material.set_mat4("projection", camera.projection.transpose)
       ssao_material.set_mat4("view", camera.view_matrix)
@@ -44,8 +44,8 @@ module Rendering
       @blur_rt.bind
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
-      blur_material.set_texture("ssaoTexture", @ssao_rt.color_texture)
-      blur_material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+      blur_material.set_runtime_texture("ssaoTexture", @ssao_rt.color_texture)
+      blur_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
 
       screen_quad.draw_with_material(blur_material)
       @blur_rt.unbind
@@ -54,8 +54,8 @@ module Rendering
       output_rt.bind
       GL.Clear(GL::COLOR_BUFFER_BIT)
 
-      combine_material.set_texture("screenTexture", input_rt.color_texture)
-      combine_material.set_texture("ssaoTexture", @blur_rt.color_texture)
+      combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
+      combine_material.set_runtime_texture("ssaoTexture", @blur_rt.color_texture)
 
       screen_quad.draw_with_material(combine_material)
       output_rt.unbind
@@ -129,10 +129,10 @@ module Rendering
 
     def ssao_material
       @ssao_material ||= begin
-        material = Engine::Material.new(
-          Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssao/frag.glsl'
+        material = Engine::Material.create(
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssao/frag.glsl'
           )
         )
 
@@ -150,10 +150,10 @@ module Rendering
 
     def blur_material
       @blur_material ||= begin
-        material = Engine::Material.new(
-          Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/ssao/blur_frag.glsl'
+        material = Engine::Material.create(
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/ssao/blur_frag.glsl'
           )
         )
         material.set_int("blurSize", @blur_size)
@@ -163,10 +163,10 @@ module Rendering
     end
 
     def combine_material
-      @combine_material ||= Engine::Material.new(
-        Engine::Shader.new(
-          './shaders/fullscreen_vertex.glsl',
-          './shaders/post_process/ssao/combine_frag.glsl'
+      @combine_material ||= Engine::Material.create(
+        shader: Engine::Shader.create(
+          vertex_path: './shaders/fullscreen_vertex.glsl',
+          fragment_path: './shaders/post_process/ssao/combine_frag.glsl'
         )
       )
     end

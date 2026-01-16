@@ -28,11 +28,11 @@ Engine.start do
 
   car = Car.create_suv(track[:start_pos], track[:start_rot])
 
-  Engine::GameObject.new(
-    "Direction Light",
+  Engine::GameObject.create(
+    name: "Direction Light",
     rotation: Vector[-60, 180, 30],
     components: [
-      Engine::Components::DirectionLight.new(
+      Engine::Components::DirectionLight.create(
         colour: Vector[1.0, 0.6, 0.4],  # warm orange-pink twilight
         cast_shadows: true,
         shadow_distance: 20.0
@@ -40,8 +40,8 @@ Engine.start do
     ])
 
   coin_counter = UIText.create(Vector[100, 1080 - 100, 0], Vector[0, 0, 0], 100, " ")
-  Engine::GameObject.new(
-    "Game Controller",
+  Engine::GameObject.create(
+    name: "Game Controller",
     components: [
       GameController.new(coin_counter.ui_renderers[0]),
     ],

@@ -3,9 +3,9 @@
 module ShrinkRacer
   module Car
     def self.create_suv(pos, rotation)
-      spinner = SpinEffect.new
-      parent = Engine::GameObject.new(
-        "Car",
+      spinner = SpinEffect.create
+      parent = Engine::GameObject.create(
+        name: "Car",
         pos: pos,
         rotation: rotation,
         scale: Vector[0.1, 0.1, 0.1],
@@ -14,27 +14,29 @@ module ShrinkRacer
           CarController.new(spinner),
         ]
       )
-      Engine::GameObject.new(
-        "SUV",
+      Engine::GameObject.create(
+        name: "SUV",
         pos: Vector[0, 0, 0],
         rotation: Vector[0, 0, 0],
         scale: Vector[1, 1, 1],
         components: [
           spinner,
-          Engine::Components::MeshRenderer.new(Engine::Mesh.for(
-            "assets/cars/suv"), material),
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/cars/suv"),
+            material: material
+          ),
         ],
         parent: parent
       )
 
       # Headlights
-      Engine::GameObject.new(
-        "Headlight Left",
+      Engine::GameObject.create(
+        name: "Headlight Left",
         pos: Vector[-0.75, 1, 0],
         rotation: Vector[0, 0, 0],
         parent: parent,
         components: [
-          Engine::Components::SpotLight.new(
+          Engine::Components::SpotLight.create(
             range: 30,
             colour: Vector[0.03, 0.028, 0.024],
             inner_angle: 0,
@@ -43,13 +45,13 @@ module ShrinkRacer
           )
         ]
       )
-      Engine::GameObject.new(
-        "Headlight Right",
+      Engine::GameObject.create(
+        name: "Headlight Right",
         pos: Vector[0.75, 1, 0],
         rotation: Vector[0, 0, 0],
         parent: parent,
         components: [
-          Engine::Components::SpotLight.new(
+          Engine::Components::SpotLight.create(
             range: 30,
             colour: Vector[0.03, 0.028, 0.024],
             inner_angle: 0,
@@ -67,8 +69,8 @@ module ShrinkRacer
     def self.material
       @material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.default)
-          material.set_texture("image", Engine::Texture.for("assets/cars/Textures/colormap.png", flip: true).texture)
+          material = Engine::Material.create(shader: Engine::Shader.default)
+          material.set_texture("image", Engine::Texture.for("assets/cars/Textures/colormap.png", flip: true))
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.6)

@@ -4,8 +4,8 @@ describe Engine::Components::PerspectiveCamera do
   describe "when mapping a point to the screen" do
     context "when the camera is at the origin" do
       it "maps the point to the correct screen position" do
-        camera = Engine::Components::PerspectiveCamera.new(fov: 90.0, aspect: 1.0, near: 1.0, far: 10.0)
-        Engine::GameObject.new("Camera",
+        camera = Engine::Components::PerspectiveCamera.create(fov: 90.0, aspect: 1.0, near: 1.0, far: 10.0)
+        Engine::GameObject.create(name: "Camera",
                                pos: Vector[0, 0, 0],
                                rotation: Vector[0, 0, 0],
                                scale: Vector[1, 1, 1],
@@ -25,8 +25,8 @@ describe Engine::Components::PerspectiveCamera do
 
   describe "#projection" do
     it "projects points correctly" do
-      camera = Engine::Components::PerspectiveCamera.new(fov: 90, aspect: 1, near: 1.0, far: 10.0)
-      Engine::GameObject.new("Camera",
+      camera = Engine::Components::PerspectiveCamera.create(fov: 90, aspect: 1, near: 1.0, far: 10.0)
+      Engine::GameObject.create(name: "Camera",
                              pos: Vector[0, 0, 0],
                              rotation: Vector[0, 0, 0],
                              scale: Vector[1, 1, 1],
@@ -41,8 +41,8 @@ describe Engine::Components::PerspectiveCamera do
     end
 
     it "projects points correctly when the fov is 45" do
-      camera = Engine::Components::PerspectiveCamera.new(fov: 53.1301024, aspect: 1, near: 1.0, far: 10.0)
-      Engine::GameObject.new("Camera",
+      camera = Engine::Components::PerspectiveCamera.create(fov: 53.1301024, aspect: 1, near: 1.0, far: 10.0)
+      Engine::GameObject.create(name: "Camera",
                              pos: Vector[0, 0, 0],
                              rotation: Vector[0, 0, 0],
                              scale: Vector[1, 1, 1],

@@ -3,7 +3,7 @@
 describe Engine::Font do
   describe "#string_indices" do
     it "returns the indices of the string" do
-      font = Engine::Font.new("spec/fixtures/UbuntuMono-R.ttf")
+      font = Engine::Font.create(font_file_path:"spec/fixtures/UbuntuMono-R.ttf")
 
       expect(font.string_indices("Hello")).to eq([71, 100, 107, 107, 110])
     end
@@ -27,7 +27,7 @@ describe Engine::Font do
 
     it "returns the offsets of the string" do
       allow(File).to receive(:read).and_return(JSON.dump(widths))
-      font = Engine::Font.new("spec/fixtures/UbuntuMono-R.ttf")
+      font = Engine::Font.create(font_file_path:"spec/fixtures/UbuntuMono-R.ttf")
 
       expect(font.string_offsets("Hello\nworld"))
         .to eq([

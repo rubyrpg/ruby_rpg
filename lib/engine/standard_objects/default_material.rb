@@ -4,7 +4,7 @@ module Engine
   module StandardObjects
     def self.default_material
       @default_material ||= begin
-        mat = Engine::Material.new(Engine::Shader.default)
+        mat = Engine::Material.create(shader: Engine::Shader.default)
         mat.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
         mat.set_texture("image", nil)
         mat.set_texture("normalMap", nil)

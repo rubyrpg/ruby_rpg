@@ -2,11 +2,9 @@
 
 module Engine::Components
   class SpriteRenderer < Engine::Component
-    attr_reader :material
+    serialize :material
 
-    def initialize(material)
-      @material = material
-    end
+    attr_reader :material
 
     def colour=(value)
       material.set_vec4("spriteColor", colour_to_vec4(value))
@@ -25,7 +23,7 @@ module Engine::Components
     end
 
     def start
-      @mesh_renderer = MeshRenderer.new(Engine::Mesh.quad, material)
+      @mesh_renderer = MeshRenderer.create(mesh: Engine::Mesh.quad, material: material)
       @mesh_renderer.set_game_object(game_object)
       @mesh_renderer.start
       set_default_frame_coords

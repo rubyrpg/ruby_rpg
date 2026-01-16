@@ -1,0 +1,116 @@
+---
+- :_class: Engine::GameObject
+  :uuid: cff06b3e-cb16-4dc4-be24-4344480653a5
+  :name:
+    :_class: String
+    :value: Plane
+  :pos:
+    :_class: Vector
+    :value:
+    - -10.0
+    - 0
+    - -25.0
+  :rotation:
+    :_class: Vector
+    :value:
+    - 90
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 100
+    - 100
+    - 100
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 55161488-d49a-4c4f-8e30-6ec4462f0614
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 55161488-d49a-4c4f-8e30-6ec4462f0614
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: f6186897-46ac-4c5e-b938-1c8666ba8d67
+  :material:
+    :_class: Engine::Material
+    :_ref: floor-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Mesh
+  :uuid: f6186897-46ac-4c5e-b938-1c8666ba8d67
+  :mesh_file:
+    :_class: String
+    :value: plane
+  :source:
+    :_class: Symbol
+    :value: engine
+- :_class: Engine::Material
+  :uuid: floor-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.5
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+      baseColour:
+        :_class: Vector
+        :value:
+        - 1.0
+        - 1.0
+        - 1.0
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value:
+      image:
+        :_class: Engine::Texture
+        :path: assets/chessboard.png
+        :flip: false
+      normalMap:
+        :_class: Engine::Texture
+        :path: assets/brick_normal.png
+        :flip: false

@@ -13,16 +13,16 @@ describe Cubes::Teapot do
     it "renders the teapot" do
       within_game_context(load_path: "./samples/cubes") do
         at(0) do
-          Engine::GameObject.new(
-            "Camera", pos: Vector[Engine::Window.framebuffer_width / 2, Engine::Window.framebuffer_height / 2, 1000],
+          Engine::GameObject.create(
+            name: "Camera", pos: Vector[Engine::Window.framebuffer_width / 2, Engine::Window.framebuffer_height / 2, 1000],
             components: [
-              Engine::Components::OrthographicCamera.new(width: Engine::Window.framebuffer_width, height: Engine::Window.framebuffer_height, far: 2000)
+              Engine::Components::OrthographicCamera.create(width: Engine::Window.framebuffer_width, height: Engine::Window.framebuffer_height, far: 2000)
             ]
           )
           Cubes::Teapot.create(Vector[500, 500], Vector[43, 68, 38], 500)
-          Engine::GameObject.new(
-            "light", pos: Vector[1200, 1200, 100], components: [
-            Engine::Components::PointLight.new(range: 1000, colour: Vector[0.6, 0.6, 0.6])
+          Engine::GameObject.create(
+            name: "light", pos: Vector[1200, 1200, 100], components: [
+            Engine::Components::PointLight.create(range: 1000, colour: Vector[0.6, 0.6, 0.6])
           ])
         end
         at(1) { check_screenshot(__dir__ + "/teapot_orthographic.png") }
@@ -36,17 +36,17 @@ describe Cubes::Teapot do
       within_game_context(load_path: "./samples/cubes") do
         at(0) do
           Cubes::Teapot.create(Vector[500, 500], Vector[43, 68, 38], 500)
-          Engine::GameObject.new(
-            "light", pos: Vector[Engine::Window.framebuffer_width / 2, 500, 100], components: [
-            Engine::Components::PointLight.new(
+          Engine::GameObject.create(
+            name: "light", pos: Vector[Engine::Window.framebuffer_width / 2, 500, 100], components: [
+            Engine::Components::PointLight.create(
               range: 300,
               colour: Vector[0.5, 0.5, 0.5],
             )
           ])
-          Engine::GameObject.new(
-            "Camera", pos: Vector[Engine::Window.framebuffer_width / 2, Engine::Window.framebuffer_height / 2, 1000],
+          Engine::GameObject.create(
+            name: "Camera", pos: Vector[Engine::Window.framebuffer_width / 2, Engine::Window.framebuffer_height / 2, 1000],
             components: [
-              Engine::Components::PerspectiveCamera.new(fov: 45.0, aspect: Engine::Window.framebuffer_width / Engine::Window.framebuffer_height, near: 0.1, far: 2000)
+              Engine::Components::PerspectiveCamera.create(fov: 45.0, aspect: Engine::Window.framebuffer_width / Engine::Window.framebuffer_height, near: 0.1, far: 2000)
             ]
           )
         end

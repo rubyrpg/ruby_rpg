@@ -24,8 +24,8 @@ module Rendering
     def blur_pass(source_rt, dest_rt, direction, screen_quad)
       dest_rt.bind
       material.set_vec2("direction", direction)
-      material.set_texture("screenTexture", source_rt.color_texture)
-      material.set_texture("depthTexture", PostProcessingEffect.depth_texture)
+      material.set_runtime_texture("screenTexture", source_rt.color_texture)
+      material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       screen_quad.draw_with_material(material)
       dest_rt.unbind
     end
@@ -34,10 +34,10 @@ module Rendering
 
     def material
       @material ||= begin
-        mat = Engine::Material.new(
-          Engine::Shader.new(
-            './shaders/fullscreen_vertex.glsl',
-            './shaders/post_process/dof_blur_frag.glsl'
+        mat = Engine::Material.create(
+          shader: Engine::Shader.create(
+            vertex_path: './shaders/fullscreen_vertex.glsl',
+            fragment_path: './shaders/post_process/dof_blur_frag.glsl'
           )
         )
         mat.set_float("focusDistance", @focus_distance)

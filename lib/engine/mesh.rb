@@ -2,22 +2,28 @@
 
 module Engine
   class Mesh
-    attr_reader :vertex_data, :index_data
-    private_class_method :new
+    include Serializable
 
-    def initialize(base_path)
-      @vertex_data = Mesh.load_vertex(base_path)
-      @index_data = Mesh.load_index(base_path)
+    serialize :mesh_file, :source
+
+    attr_reader :mesh_file, :source
+
+    def vertex_data
+      @vertex_data ||= Mesh.load_vertex(base_path)
+    end
+
+    def index_data
+      @index_data ||= Mesh.load_index(base_path)
     end
 
     def self.for(mesh_file)
       base_path = File.join(GAME_DIR, "_imported", mesh_file)
-      mesh_cache[base_path] ||= new(base_path)
+      mesh_cache[base_path] ||= create(mesh_file: mesh_file, source: :game)
     end
 
     def self.from_engine(mesh_file)
       base_path = File.join(ENGINE_DIR, "assets", "_imported", mesh_file)
-      mesh_cache[base_path] ||= new(base_path)
+      mesh_cache[base_path] ||= create(mesh_file: mesh_file, source: :engine)
     end
 
     def self.mesh_cache
@@ -46,6 +52,16 @@ module Engine
 
     def self.quad
       @quad ||= QuadMesh.new
+    end
+
+    private
+
+    def base_path
+      @base_path ||= if @source == :engine
+        File.join(ENGINE_DIR, "assets", "_imported", @mesh_file)
+      else
+        File.join(GAME_DIR, "_imported", @mesh_file)
+      end
     end
   end
 end

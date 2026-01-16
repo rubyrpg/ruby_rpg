@@ -16,13 +16,16 @@ module Engine::Components
       { dir: Vector[0, 0, -1], up: Vector[0, -1, 0] }    # -Z
     ].freeze
 
+    serialize :range, :colour, :cast_shadows
+
     attr_accessor :range, :colour, :cast_shadows, :shadow_layer_index
 
-    def initialize(range: 300, colour: [1.0, 1.0, 1.0], cast_shadows: false)
-      @range = range
-      @colour = colour
-      @cast_shadows = cast_shadows
+    def awake
+      @range ||= 300
+      @colour ||= [1.0, 1.0, 1.0]
+      @cast_shadows = false if @cast_shadows.nil?
       @shadow_layer_index = nil
+      @cached_light_space_matrices = nil
     end
 
     def start

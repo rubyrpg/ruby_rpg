@@ -4,7 +4,7 @@ module Engine::Components
   class UISpriteClickbox < Engine::Component
     attr_reader :mouse_inside, :clicked, :mouse_entered, :mouse_exited
 
-    def initialize
+    def awake
       @mouse_inside = false
       @clicked = false
       @mouse_entered = false

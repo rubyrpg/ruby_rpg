@@ -4,15 +4,18 @@ module Engine::Components
   class SpotLight < Engine::Component
     include Engine::MatrixHelpers
 
+    serialize :range, :colour, :inner_angle, :outer_angle, :cast_shadows
+
     attr_accessor :range, :colour, :inner_angle, :outer_angle, :cast_shadows, :shadow_layer_index
 
-    def initialize(range: 300, colour: [1.0, 1.0, 1.0], inner_angle: 12.5, outer_angle: 17.5, cast_shadows: false)
-      @range = range
-      @colour = colour
-      @inner_angle = inner_angle
-      @outer_angle = outer_angle
-      @cast_shadows = cast_shadows
-      @shadow_layer_index = nil  # Set by RenderPipeline when rendering shadows
+    def awake
+      @range ||= 300
+      @colour ||= [1.0, 1.0, 1.0]
+      @inner_angle ||= 12.5
+      @outer_angle ||= 17.5
+      @cast_shadows = false if @cast_shadows.nil?
+      @shadow_layer_index = nil
+      @cached_light_space_matrix = nil
     end
 
     def start

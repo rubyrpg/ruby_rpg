@@ -1,5 +1,7 @@
 module Engine
   class Component
+    include Serializable
+
     def self.method_added(name)
       @methods ||= Set.new
       return if name == :initialize || name == :destroyed?

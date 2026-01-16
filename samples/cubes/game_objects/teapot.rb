@@ -3,15 +3,15 @@
 module Cubes
   module Teapot
     def self.create(pos, rotation, size)
-      Engine::GameObject.new(
-        "Cube",
+      Engine::GameObject.create(
+        name: "Cube",
         pos: pos,
         rotation: rotation,
         scale: Vector[size, size, size],
         components: [
-          Engine::Components::MeshRenderer.new(
-            Engine::Mesh.for("assets/teapot"),
-            material,
+          Engine::Components::MeshRenderer.create(
+            mesh: Engine::Mesh.for("assets/teapot"),
+            material: material,
           ),
         ]
       )
@@ -22,9 +22,9 @@ module Cubes
     def self.material
       @material ||=
         begin
-          material = Engine::Material.new(Engine::Shader.default)
-          material.set_texture("image", Engine::Texture.for("assets/chessboard.png").texture)
-          material.set_texture("normalMap", Engine::Texture.for("assets/brick_normal.png").texture)
+          material = Engine::Material.create(shader: Engine::Shader.default)
+          material.set_texture("image", Engine::Texture.for("assets/chessboard.png"))
+          material.set_texture("normalMap", Engine::Texture.for("assets/brick_normal.png"))
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.7)
           material.set_float("specularPower", 32.0)

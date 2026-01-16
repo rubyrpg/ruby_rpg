@@ -2,11 +2,11 @@
 
 module Engine
   class Material
-    attr_reader :shader
+    include Serializable
 
-    def initialize(shader)
-      @shader = shader
-    end
+    serialize :shader, :floats, :ints, :vec2s, :vec3s, :vec4s, :mat4s, :textures
+
+    attr_reader :shader
 
     def self.default_white_texture
       @default_white_texture ||= create_1x1_texture(255, 255, 255, 255)
@@ -56,8 +56,14 @@ module Engine
       ints[name] = value
     end
 
-    def set_texture(name, value)
-      textures[name] = value
+    def set_texture(name, texture)
+      textures[name] = texture
+    end
+
+    # TODO: Runtime textures are not serializable. We need to revisit this
+    # to make render targets serializable or find another approach.
+    def set_runtime_texture(name, gl_id)
+      runtime_textures[name] = gl_id
     end
 
     def set_cubemap(name, value)
@@ -93,9 +99,14 @@ module Engine
       ints.each do |name, value|
         shader.set_int(name, value)
       end
-      textures.each.with_index do |(name, value), slot|
+      # Start with shader's expected textures (defaulting to nil for fallbacks)
+      expected = shader.expected_textures.each_with_object({}) { |name, h| h[name] = nil }
+      all_textures = expected.merge(textures).merge(runtime_textures)
+      all_textures.each.with_index do |(name, value), slot|
         GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
-        if value
+        if value.is_a?(Texture)
+          GL.BindTexture(GL::TEXTURE_2D, value.texture)
+        elsif value
           GL.BindTexture(GL::TEXTURE_2D, value)
         else
           GL.BindTexture(GL::TEXTURE_2D, fallback_texture_for(name))
@@ -104,7 +115,7 @@ module Engine
       end
 
       # Cubemaps start after regular textures
-      cubemap_start_slot = textures.size
+      cubemap_start_slot = all_textures.size
       cubemaps.each.with_index do |(name, value), i|
         slot = cubemap_start_slot + i
         GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
@@ -188,6 +199,10 @@ module Engine
 
     def textures
       @textures ||= {}
+    end
+
+    def runtime_textures
+      @runtime_textures ||= {}
     end
 
     def cubemaps

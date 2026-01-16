@@ -2,10 +2,12 @@
 
 module Engine::Components
   class AudioSource < Engine::Component
-    def initialize(clip, radius: 1000)
-      @clip = clip
-      @radius = radius
-      @source = NativeAudio::AudioSource.new(clip)
+    serialize :clip_path, :radius
+
+    def awake
+      @radius ||= 1000
+      @clip = NativeAudio::Clip.new(@clip_path)
+      @source = NativeAudio::AudioSource.new(@clip)
     end
 
     def play

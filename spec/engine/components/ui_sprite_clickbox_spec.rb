@@ -3,8 +3,8 @@
 describe Engine::Components::UISpriteClickbox do
   context "when there is no sprite renderer" do
     let (:game_object) do
-      Engine::GameObject.new("Test",
-                             components: [Engine::Components::UISpriteClickbox.new]
+      Engine::GameObject.create(name: "Test",
+                             components: [Engine::Components::UISpriteClickbox.create]
       )
     end
 
@@ -20,13 +20,16 @@ describe Engine::Components::UISpriteClickbox do
     end
 
     let(:game_object) do
-      Engine::GameObject.new("Test",
+      Engine::GameObject.create(name: "Test",
                              components: [
-                               Engine::Components::UISpriteRenderer.new(
-                                 Vector[-100, 50], Vector[50, 50], Vector[50, -50], Vector[-50, -50],
-                                 nil
+                               Engine::Components::UISpriteRenderer.create(
+                                 v1: Vector[-100, 50],
+                                 v2: Vector[50, 50],
+                                 v3: Vector[50, -50],
+                                 v4: Vector[-50, -50],
+                                 material: nil
                                ),
-                               Engine::Components::UISpriteClickbox.new
+                               Engine::Components::UISpriteClickbox.create
                              ]
       )
     end

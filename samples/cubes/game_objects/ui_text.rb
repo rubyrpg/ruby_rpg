@@ -4,13 +4,13 @@ module Cubes
   module UIText
     def self.create(pos, rotation, size, text)
       font_path = "assets/arial.ttf"
-      Engine::GameObject.new(
-        "UIText",
+      Engine::GameObject.create(
+        name: "UIText",
         pos: pos,
         scale: Vector[1, 1, 1] * size,
         rotation: rotation,
         components: [
-          Engine::Components::UIFontRenderer.new(Engine::Font.new(font_path), text)
+          Engine::Components::UIFontRenderer.create(font: Engine::Font.create(font_file_path: font_path), string: text)
         ])
     end
   end
