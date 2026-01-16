@@ -1,0 +1,1377 @@
+---
+- :_class: Engine::GameObject
+  :uuid: d50ff3be-0faa-4790-a5ff-c6f437d83963
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -40
+    - 5
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 4d7b0682-42d8-4142-9f33-eec25e49aedc
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 4d7b0682-42d8-4142-9f33-eec25e49aedc
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-red-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Mesh
+  :uuid: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :mesh_file:
+    :_class: String
+    :value: cube
+  :source:
+    :_class: Symbol
+    :value: engine
+- :_class: Engine::Material
+  :uuid: cube-red-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 1.0
+        - 0.2
+        - 0.2
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: 459a20c8-991c-4650-901a-8c9e5a47b288
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -40
+    - 14
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 259c7f04-86bb-4904-b4a1-4b20782c6aae
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 259c7f04-86bb-4904-b4a1-4b20782c6aae
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-green-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-green-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 0.2
+        - 1.0
+        - 0.2
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: f23864ac-d1c0-4531-91cd-1cba9ebf9145
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -40
+    - 23
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: '09e4cd3f-2873-44d0-9dd9-05f6074455f4'
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: '09e4cd3f-2873-44d0-9dd9-05f6074455f4'
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-blue-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-blue-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 0.2
+        - 0.2
+        - 1.0
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: a607872f-b38f-49a5-84f2-678f4e8f68a3
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -40
+    - 32
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: fe2a0555-e132-4809-a9b2-0a3576f6c587
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: fe2a0555-e132-4809-a9b2-0a3576f6c587
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-yellow-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-yellow-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 1.0
+        - 1.0
+        - 0.2
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: aa5b4bf8-8cb6-4801-a9de-8e71e9fef276
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -31
+    - 5
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 057bd017-619c-475c-abba-f324a1c12aa8
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 057bd017-619c-475c-abba-f324a1c12aa8
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-green-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 45c9daee-d5f2-43db-9e3c-e9efbe018d5f
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -31
+    - 14
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: b3a00f31-70b1-4b6e-8d4e-d57e02c8c3a6
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: b3a00f31-70b1-4b6e-8d4e-d57e02c8c3a6
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-blue-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: e6a31544-b88f-4f9a-b018-634dd82828d0
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -31
+    - 23
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 7d2383dc-02c8-4604-bb1b-42cde1aa96e7
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 7d2383dc-02c8-4604-bb1b-42cde1aa96e7
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-yellow-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 2bdb1130-2d56-4eda-b9b5-21357465fc07
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -31
+    - 32
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: a33f3203-b6b8-48de-9171-6b34868b3361
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: a33f3203-b6b8-48de-9171-6b34868b3361
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-magenta-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-magenta-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 1.0
+        - 0.2
+        - 1.0
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: 3960301f-aaed-449b-8731-aa09f7b29e01
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -22
+    - 5
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: a5aa4bce-6c20-4002-8bda-88efb6670921
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: a5aa4bce-6c20-4002-8bda-88efb6670921
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-blue-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: c34086d1-0ca2-40ea-86ed-2b53e8d424f1
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -22
+    - 14
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 2d64ccdd-0fd5-4a25-bb53-7637575485b9
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 2d64ccdd-0fd5-4a25-bb53-7637575485b9
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-yellow-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 5a5f4e3b-69be-4969-acbb-2d01e32f4fb2
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -22
+    - 23
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 59e3a57c-d3a2-43ba-9dd5-f6002d88836d
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 59e3a57c-d3a2-43ba-9dd5-f6002d88836d
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-magenta-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 92acf3b2-6469-4802-a028-7013f8e68f8c
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -22
+    - 32
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 55208113-c571-4fd5-839f-61b0492d9e77
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 55208113-c571-4fd5-839f-61b0492d9e77
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-cyan-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-cyan-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 0.2
+        - 1.0
+        - 1.0
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: 055e9ba2-e4ad-4b00-98f2-07db75d3d721
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -13
+    - 5
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 725829b9-6d61-4c42-8f04-72dae98ec798
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 725829b9-6d61-4c42-8f04-72dae98ec798
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-yellow-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 7387e8b4-cedd-44e8-8a85-49780161274f
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -13
+    - 14
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: c677a421-e07a-4455-b865-e6764564eb99
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: c677a421-e07a-4455-b865-e6764564eb99
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-magenta-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 4d258d39-3a55-4db7-8731-0b73bd6900f7
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -13
+    - 23
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 74c97130-485a-4047-a6a9-6d1b2c50883a
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 74c97130-485a-4047-a6a9-6d1b2c50883a
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-cyan-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 9d884762-024c-40ad-902b-2bb7b749b820
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -13
+    - 32
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 74411958-99f2-4ff4-95d8-1a1758c6bbca
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 74411958-99f2-4ff4-95d8-1a1758c6bbca
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-orange-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-orange-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 1.0
+        - 0.6
+        - 0.2
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}
+- :_class: Engine::GameObject
+  :uuid: 1a8d0753-37aa-443e-b515-2322a9b7f6f3
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -4
+    - 5
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: dd771fee-6254-4df0-85ec-537de4413154
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: dd771fee-6254-4df0-85ec-537de4413154
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-magenta-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 84f62252-9d0a-408b-8117-1e5c6aaf7cac
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -4
+    - 14
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 290471b7-b2f4-4ddd-8a1b-c5d5f7f7b47e
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 290471b7-b2f4-4ddd-8a1b-c5d5f7f7b47e
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-cyan-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: 4bf3ac92-6a41-40c9-a444-96acfa1cf1e7
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -4
+    - 23
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: df4b076d-a5cb-427c-9f95-421e2281a797
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: df4b076d-a5cb-427c-9f95-421e2281a797
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-orange-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::GameObject
+  :uuid: c5518648-bb05-4a1f-bf56-28f351e39e80
+  :name:
+    :_class: String
+    :value: Cube
+  :pos:
+    :_class: Vector
+    :value:
+    - -4
+    - 32
+    - -30
+  :rotation:
+    :_class: Vector
+    :value:
+    - 0
+    - 0
+    - 0
+  :scale:
+    :_class: Vector
+    :value:
+    - 8
+    - 8
+    - 8
+  :components:
+    :_class: Array
+    :value: []
+  :renderers:
+    :_class: Array
+    :value:
+    - :_class: Engine::Components::MeshRenderer
+      :_ref: 260bfbf7-6049-4ed4-a61d-3738b80dec1e
+  :ui_renderers:
+    :_class: Array
+    :value: []
+  :parent:
+    :_class: NilClass
+    :value:
+- :_class: Engine::Components::MeshRenderer
+  :uuid: 260bfbf7-6049-4ed4-a61d-3738b80dec1e
+  :mesh:
+    :_class: Engine::Mesh
+    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+  :material:
+    :_class: Engine::Material
+    :_ref: cube-purple-material-001
+  :static:
+    :_class: FalseClass
+    :value: false
+- :_class: Engine::Material
+  :uuid: cube-purple-material-001
+  :shader:
+    :_class: Engine::Shader
+    :vertex_path: "./shaders/mesh_vertex.glsl"
+    :fragment_path: "./shaders/mesh_frag.glsl"
+  :floats:
+    :_class: Hash
+    :value:
+      diffuseStrength:
+        :_class: Float
+        :value: 0.5
+      specularStrength:
+        :_class: Float
+        :value: 0.7
+      specularPower:
+        :_class: Float
+        :value: 32.0
+      roughness:
+        :_class: Float
+        :value: 0.7
+  :ints:
+    :_class: Hash
+    :value: {}
+  :vec2s:
+    :_class: Hash
+    :value: {}
+  :vec3s:
+    :_class: Hash
+    :value:
+      baseColour:
+        :_class: Vector
+        :value:
+        - 0.6
+        - 0.2
+        - 1.0
+      ambientLight:
+        :_class: Vector
+        :value:
+        - 0.02
+        - 0.02
+        - 0.02
+  :vec4s:
+    :_class: Hash
+    :value: {}
+  :mat4s:
+    :_class: Hash
+    :value: {}
+  :textures:
+    :_class: Hash
+    :value: {}

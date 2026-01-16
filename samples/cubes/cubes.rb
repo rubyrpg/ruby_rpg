@@ -51,30 +51,8 @@ Engine.start do
     components: [Spinner.create(speed: 45)]
   )
 
-  # Wall of colourful cubes
-  cube_materials = [
-    load_material("cube_red"),
-    load_material("cube_green"),
-    load_material("cube_blue"),
-    load_material("cube_yellow"),
-    load_material("cube_magenta"),
-    load_material("cube_cyan"),
-    load_material("cube_orange"),
-    load_material("cube_purple"),
-  ]
-  cube_size = 4
-  spacing = cube_size * 2 + 1  # cubes are 2 units, scaled, plus gap
-  wall_width = 5
-  wall_height = 4
-  start_pos = Vector[-40, 5, -30]
-
-  wall_width.times do |x|
-    wall_height.times do |y|
-      material = cube_materials[(x + y) % cube_materials.length]
-      pos = start_pos + Vector[x * spacing, y * spacing, 0]
-      Engine::StandardObjects::Cube.create(pos: pos, scale: Vector[cube_size * 2, cube_size * 2, cube_size * 2], material: material)
-    end
-  end
+  # Wall of colourful cubes (loaded from scene file)
+  Engine::Serialization::YamlPersistence.load_all([File.join(GAME_DIR, "assets/wall_of_cubes.scene")])
 
   # # Single white directional light for testing SSR
   Engine::GameObject.create(
@@ -108,15 +86,8 @@ Engine.start do
 
   # Sphere.create(spotlight_pos, 0, 2)  # temporarily disabled for shadow debug
 
-  # Floor planes (3x3 grid) - shiny for SSR
-  tile_size = 50
-
-  Engine::StandardObjects::Plane.create(
-    pos: Vector[-0.2*tile_size, 0, -0.5*tile_size],
-    rotation: Vector[90, 0, 0],
-    scale: Vector[tile_size * 2, tile_size * 2, tile_size * 2],
-    material: load_material("floor")
-  )
+  # Floor (loaded from scene file)
+  Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/floor.scene"))
 
 
   # Back wall (disabled for testing)

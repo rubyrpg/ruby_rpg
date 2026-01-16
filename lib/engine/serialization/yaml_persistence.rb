@@ -11,6 +11,21 @@ module Engine
           File.write(path, data.to_yaml)
         end
 
+        def save_all(objects, path)
+          all_data = objects.flat_map { |obj| GraphSerializer.serialize(obj) }
+          seen_uuids = {}
+          unique_data = all_data.select do |obj_data|
+            uuid = obj_data[:uuid]
+            if seen_uuids[uuid]
+              false
+            else
+              seen_uuids[uuid] = true
+              true
+            end
+          end
+          File.write(path, unique_data.to_yaml)
+        end
+
         def load(path)
           data = YAML.load_file(path, permitted_classes: [Symbol])
           data_array = data.is_a?(Array) ? data : [data]
