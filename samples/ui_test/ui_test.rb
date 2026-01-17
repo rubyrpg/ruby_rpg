@@ -301,4 +301,138 @@ Engine.start do
       Engine::Components::UI::FontRenderer.create(font: font, string: "Status: Ready")
     ]
   )
+
+  # Right sidebar - 200px wide, showing justify modes
+  right_sidebar = Engine::GameObject.create(
+    name: "RightSidebar",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_ratio: 1.0,
+        left_offset: -200,
+        top_offset: 50,
+        bottom_offset: 50
+      ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.25, 0.25, 0.3))
+    ]
+  )
+
+  # Label for right sidebar
+  Engine::GameObject.create(
+    name: "RightSidebarTitle",
+    parent: right_sidebar,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 10,
+        bottom_ratio: 1.0, bottom_offset: -40
+      ),
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Justify Modes")
+    ]
+  )
+
+  # justify: :start example
+  start_row = Engine::GameObject.create(
+    name: "StartRow",
+    parent: right_sidebar,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 50,
+        bottom_ratio: 1.0, bottom_offset: -80
+      ),
+      Engine::Components::UI::Flex.create(direction: :row, justify: :start, gap: 5)
+    ]
+  )
+
+  # Different sized buttons for :start
+  [40, 60, 30].each_with_index do |width, i|
+    Engine::GameObject.create(
+      name: "StartBtn#{i}",
+      parent: start_row,
+      components: [
+        Engine::Components::UI::Rect.create(flex_width: width),
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.4, 0.4))
+      ]
+    )
+  end
+
+  # justify: :center example
+  center_row = Engine::GameObject.create(
+    name: "CenterRow",
+    parent: right_sidebar,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 90,
+        bottom_ratio: 1.0, bottom_offset: -120
+      ),
+      Engine::Components::UI::Flex.create(direction: :row, justify: :center, gap: 5)
+    ]
+  )
+
+  [40, 60, 30].each_with_index do |width, i|
+    Engine::GameObject.create(
+      name: "CenterBtn#{i}",
+      parent: center_row,
+      components: [
+        Engine::Components::UI::Rect.create(flex_width: width),
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.4, 0.7, 0.4))
+      ]
+    )
+  end
+
+  # justify: :end example
+  end_row = Engine::GameObject.create(
+    name: "EndRow",
+    parent: right_sidebar,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 130,
+        bottom_ratio: 1.0, bottom_offset: -160
+      ),
+      Engine::Components::UI::Flex.create(direction: :row, justify: :end, gap: 5)
+    ]
+  )
+
+  [40, 60, 30].each_with_index do |width, i|
+    Engine::GameObject.create(
+      name: "EndBtn#{i}",
+      parent: end_row,
+      components: [
+        Engine::Components::UI::Rect.create(flex_width: width),
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.4, 0.4, 0.7))
+      ]
+    )
+  end
+
+  # justify: :stretch example (default)
+  stretch_row = Engine::GameObject.create(
+    name: "StretchRow",
+    parent: right_sidebar,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 170,
+        bottom_ratio: 1.0, bottom_offset: -200
+      ),
+      Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 5)
+    ]
+  )
+
+  3.times do |i|
+    Engine::GameObject.create(
+      name: "StretchBtn#{i}",
+      parent: stretch_row,
+      components: [
+        Engine::Components::UI::Rect.create,
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.7, 0.4))
+      ]
+    )
+  end
 end

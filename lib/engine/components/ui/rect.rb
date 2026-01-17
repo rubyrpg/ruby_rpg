@@ -4,10 +4,12 @@ module Engine::Components
   module UI
     class Rect < Engine::Component
       serialize :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
-                :left_offset, :right_offset, :top_offset, :bottom_offset
+                :left_offset, :right_offset, :top_offset, :bottom_offset,
+                :flex_width, :flex_height
 
       attr_reader :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
-                  :left_offset, :right_offset, :top_offset, :bottom_offset
+                  :left_offset, :right_offset, :top_offset, :bottom_offset,
+                  :flex_width, :flex_height
 
       def awake
         @left_ratio    ||= 0.0

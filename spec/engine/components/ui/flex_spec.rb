@@ -13,14 +13,16 @@ describe Engine::Components::UI::Flex do
 
       expect(flex.direction).to eq(:row)
       expect(flex.gap).to eq(0)
+      expect(flex.justify).to eq(:stretch)
     end
 
     it "creates a Flex with custom values" do
-      flex = Engine::Components::UI::Flex.create(direction: :column, gap: 10)
+      flex = Engine::Components::UI::Flex.create(direction: :column, gap: 10, justify: :start)
       flex.awake
 
       expect(flex.direction).to eq(:column)
       expect(flex.gap).to eq(10)
+      expect(flex.justify).to eq(:start)
     end
   end
 
@@ -205,6 +207,170 @@ describe Engine::Components::UI::Flex do
 
         expect(rects[2].left).to be_within(0.01).of(800.0 * 2 / 3)
         expect(rects[2].right).to be_within(0.01).of(800)
+      end
+    end
+
+    context "with justify: :start" do
+      it "positions children at start with their flex_width" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :start, gap: 10)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 100)]
+        )
+
+        Engine::GameObject.create(
+          name: "Child2",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 150)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+        rect2 = children[1].components.first.computed_rect
+
+        # First child at left edge, 100px wide
+        expect(rect1.left).to eq(0)
+        expect(rect1.right).to eq(100)
+        expect(rect1.width).to eq(100)
+
+        # Second child after gap, 150px wide
+        expect(rect2.left).to eq(110)  # 100 + 10 gap
+        expect(rect2.right).to eq(260)
+        expect(rect2.width).to eq(150)
+
+        # Both full height
+        expect(rect1.bottom).to eq(0)
+        expect(rect1.top).to eq(600)
+      end
+
+      it "raises error when flex_width is missing" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :start)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create]  # no flex_width!
+        )
+
+        child_rect = parent.children.first.components.first
+        expect { child_rect.computed_rect }
+          .to raise_error("UI::Rect requires flex_width when parent Flex has justify: :start")
+      end
+    end
+
+    context "with justify: :end" do
+      it "positions children at end" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :end, gap: 10)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 100)]
+        )
+
+        Engine::GameObject.create(
+          name: "Child2",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 150)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+        rect2 = children[1].components.first.computed_rect
+
+        # Children at right edge: 800 - 100 - 10 - 150 = 540 remaining
+        expect(rect1.left).to eq(540)
+        expect(rect1.right).to eq(640)
+
+        expect(rect2.left).to eq(650)
+        expect(rect2.right).to eq(800)
+      end
+    end
+
+    context "with justify: :center" do
+      it "positions children in center" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :center, gap: 0)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 200)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+
+        # 800 - 200 = 600 remaining, 300 on each side
+        expect(rect1.left).to eq(300)
+        expect(rect1.right).to eq(500)
+      end
+    end
+
+    context "with column direction and justify: :start" do
+      it "positions children from top with their flex_height" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :column, justify: :start, gap: 10)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_height: 50)]
+        )
+
+        Engine::GameObject.create(
+          name: "Child2",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_height: 80)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+        rect2 = children[1].components.first.computed_rect
+
+        # First child at top, 50px tall
+        expect(rect1.top).to eq(600)
+        expect(rect1.bottom).to eq(550)
+        expect(rect1.height).to eq(50)
+
+        # Second child below gap, 80px tall
+        expect(rect2.top).to eq(540)  # 550 - 10 gap
+        expect(rect2.bottom).to eq(460)
+        expect(rect2.height).to eq(80)
+
+        # Both full width
+        expect(rect1.left).to eq(0)
+        expect(rect1.right).to eq(800)
       end
     end
   end
