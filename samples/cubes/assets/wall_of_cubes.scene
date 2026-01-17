@@ -40,21 +40,14 @@
   :uuid: 4d7b0682-42d8-4142-9f33-eec25e49aedc
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-red-material-001
   :static:
     :_class: FalseClass
     :value: false
-- :_class: Engine::Mesh
-  :uuid: 599b0b64-ff08-4c04-9b97-700753d42f13
-  :mesh_file:
-    :_class: String
-    :value: cube
-  :source:
-    :_class: Symbol
-    :value: engine
 - :_class: Engine::Material
   :uuid: cube-red-material-001
   :shader:
@@ -147,7 +140,8 @@
   :uuid: 259c7f04-86bb-4904-b4a1-4b20782c6aae
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-green-material-001
@@ -246,7 +240,8 @@
   :uuid: '09e4cd3f-2873-44d0-9dd9-05f6074455f4'
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-blue-material-001
@@ -345,7 +340,8 @@
   :uuid: fe2a0555-e132-4809-a9b2-0a3576f6c587
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-yellow-material-001
@@ -444,7 +440,8 @@
   :uuid: 057bd017-619c-475c-abba-f324a1c12aa8
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-green-material-001
@@ -492,7 +489,8 @@
   :uuid: b3a00f31-70b1-4b6e-8d4e-d57e02c8c3a6
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-blue-material-001
@@ -540,7 +538,8 @@
   :uuid: 7d2383dc-02c8-4604-bb1b-42cde1aa96e7
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-yellow-material-001
@@ -588,7 +587,8 @@
   :uuid: a33f3203-b6b8-48de-9171-6b34868b3361
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-magenta-material-001
@@ -687,7 +687,8 @@
   :uuid: a5aa4bce-6c20-4002-8bda-88efb6670921
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-blue-material-001
@@ -735,7 +736,8 @@
   :uuid: 2d64ccdd-0fd5-4a25-bb53-7637575485b9
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-yellow-material-001
@@ -783,7 +785,8 @@
   :uuid: 59e3a57c-d3a2-43ba-9dd5-f6002d88836d
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-magenta-material-001
@@ -831,7 +834,8 @@
   :uuid: 55208113-c571-4fd5-839f-61b0492d9e77
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-cyan-material-001
@@ -930,7 +934,8 @@
   :uuid: 725829b9-6d61-4c42-8f04-72dae98ec798
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-yellow-material-001
@@ -978,7 +983,8 @@
   :uuid: c677a421-e07a-4455-b865-e6764564eb99
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-magenta-material-001
@@ -1026,7 +1032,8 @@
   :uuid: 74c97130-485a-4047-a6a9-6d1b2c50883a
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-cyan-material-001
@@ -1074,7 +1081,8 @@
   :uuid: 74411958-99f2-4ff4-95d8-1a1758c6bbca
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-orange-material-001
@@ -1173,7 +1181,8 @@
   :uuid: dd771fee-6254-4df0-85ec-537de4413154
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-magenta-material-001
@@ -1221,7 +1230,8 @@
   :uuid: 290471b7-b2f4-4ddd-8a1b-c5d5f7f7b47e
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-cyan-material-001
@@ -1269,7 +1279,8 @@
   :uuid: df4b076d-a5cb-427c-9f95-421e2281a797
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-orange-material-001
@@ -1317,7 +1328,8 @@
   :uuid: 260bfbf7-6049-4ed4-a61d-3738b80dec1e
   :mesh:
     :_class: Engine::Mesh
-    :_ref: 599b0b64-ff08-4c04-9b97-700753d42f13
+    :mesh_file: cube
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: cube-purple-material-001

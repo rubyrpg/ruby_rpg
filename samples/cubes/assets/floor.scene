@@ -40,21 +40,14 @@
   :uuid: 55161488-d49a-4c4f-8e30-6ec4462f0614
   :mesh:
     :_class: Engine::Mesh
-    :_ref: f6186897-46ac-4c5e-b938-1c8666ba8d67
+    :mesh_file: plane
+    :source: engine
   :material:
     :_class: Engine::Material
     :_ref: floor-material-001
   :static:
     :_class: FalseClass
     :value: false
-- :_class: Engine::Mesh
-  :uuid: f6186897-46ac-4c5e-b938-1c8666ba8d67
-  :mesh_file:
-    :_class: String
-    :value: plane
-  :source:
-    :_class: Symbol
-    :value: engine
 - :_class: Engine::Material
   :uuid: floor-material-001
   :shader:

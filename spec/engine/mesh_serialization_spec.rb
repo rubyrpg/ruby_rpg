@@ -2,22 +2,19 @@
 
 describe Engine::Mesh do
   describe "serialization" do
-    it "serializes mesh_file and source attributes" do
+    it "returns serializable_data with mesh_file and source" do
       mesh = Engine::Mesh.from_engine("cube")
 
-      serialized = Engine::Serialization::ObjectSerializer.serialize(mesh)
-
-      expect(serialized[:_class]).to eq("Engine::Mesh")
-      expect(serialized[:mesh_file]).to eq({ _class: "String", value: "cube" })
-      expect(serialized[:source]).to eq({ _class: "Symbol", value: "engine" })
+      expect(mesh.serializable_data).to eq({
+        mesh_file: "cube",
+        source: :engine
+      })
     end
 
-    it "deserializes and reconstructs base_path from attributes" do
-      mesh = Engine::Mesh.from_engine("cube")
-      serialized = Engine::Serialization::ObjectSerializer.serialize(mesh)
+    it "reconstructs mesh from serializable_data via from_serializable_data" do
+      data = { mesh_file: "cube", source: :engine }
 
-      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
-      restored.awake
+      restored = Engine::Mesh.from_serializable_data(data)
 
       expect(restored.mesh_file).to eq("cube")
       expect(restored.source).to eq(:engine)
@@ -76,20 +73,26 @@ describe Engine::Mesh do
   end
 
   describe "round-trip serialization" do
-    it "can serialize and deserialize a mesh" do
-      original = Engine::Mesh.from_engine("cube")
+    it "serializes mesh inline when contained in another object" do
+      wrapper_class = Class.new do
+        include Engine::Serializable
+        serialize :mesh
+        attr_reader :mesh
+      end
+      stub_const("MeshWrapper", wrapper_class)
+      Engine::Serializable.register_class(wrapper_class)
 
-      serialized = Engine::Serialization::ObjectSerializer.serialize(original)
-      restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)
-      restored.awake
+      mesh = Engine::Mesh.from_engine("cube")
+      wrapper = wrapper_class.create(mesh: mesh)
+      result = Engine::Serialization::ObjectSerializer.serialize(wrapper)
 
-      expect(restored.mesh_file).to eq(original.mesh_file)
-      expect(restored.source).to eq(original.source)
-      expect(restored.vertex_data).to eq(original.vertex_data)
-      expect(restored.index_data).to eq(original.index_data)
+      expect(result[:mesh][:_class]).to eq("Engine::Mesh")
+      expect(result[:mesh][:mesh_file]).to eq("cube")
+      expect(result[:mesh][:source]).to eq(:engine)
+      expect(result[:mesh]).not_to have_key(:_ref)
     end
 
-    it "uses GraphSerializer to serialize mesh with parent object" do
+    it "uses GraphSerializer to serialize mesh inline with parent object" do
       wrapper_class = Class.new do
         include Engine::Serializable
         serialize :mesh
@@ -102,9 +105,17 @@ describe Engine::Mesh do
       wrapper = wrapper_class.create(mesh: mesh)
 
       serialized = Engine::Serialization::GraphSerializer.serialize(wrapper)
+
+      # Mesh should be inlined, not a separate object in the graph
+      expect(serialized.length).to eq(1)
+      expect(serialized.first[:mesh][:_class]).to eq("Engine::Mesh")
+      expect(serialized.first[:mesh][:mesh_file]).to eq("cube")
+
       restored = Engine::Serialization::GraphSerializer.deserialize(serialized)
 
-      restored_wrapper = restored.find { |o| o.is_a?(wrapper_class) }
+      # Only the wrapper should be in the restored array (mesh is inlined)
+      expect(restored.length).to eq(1)
+      restored_wrapper = restored.first
       expect(restored_wrapper.mesh.mesh_file).to eq("cube")
       expect(restored_wrapper.mesh.source).to eq(:engine)
     end

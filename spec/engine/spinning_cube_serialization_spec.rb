@@ -58,8 +58,9 @@ describe "Spinning cube serialization" do
     expect(class_names).to include("Engine::GameObject")
     expect(class_names).to include("Engine::Components::MeshRenderer")
     expect(class_names).to include("Cubes::Spinner")
-    expect(class_names).to include("Engine::Mesh")
     expect(class_names).to include("Engine::Material")
+    # Mesh is now inlined in MeshRenderer, not a separate object
+    expect(class_names).not_to include("Engine::Mesh")
 
     # Deserialize
     restored_objects = Engine::Serialization::GraphSerializer.deserialize(serialized)

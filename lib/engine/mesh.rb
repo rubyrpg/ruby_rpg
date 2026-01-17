@@ -4,9 +4,19 @@ module Engine
   class Mesh
     include Serializable
 
-    serialize :mesh_file, :source
-
     attr_reader :mesh_file, :source
+
+    def self.from_serializable_data(data)
+      if data[:source].to_sym == :engine
+        from_engine(data[:mesh_file])
+      else
+        self.for(data[:mesh_file])
+      end
+    end
+
+    def serializable_data
+      { mesh_file: @mesh_file, source: @source }
+    end
 
     def vertex_data
       @vertex_data ||= Mesh.load_vertex(base_path)
