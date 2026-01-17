@@ -34,6 +34,10 @@ module Engine::Components
     end
 
     def computed_rect
+      # Check if parent has a layout component
+      parent_flex = game_object.parent&.components&.find { |c| c.is_a?(UIFlex) }
+      return parent_flex.rect_for_child(self) if parent_flex
+
       pr = parent_rect
 
       Engine::UI::Rect.new(

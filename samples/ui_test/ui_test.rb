@@ -55,7 +55,7 @@ Engine.start do
   )
 
   # Bottom bar - full width, 50px tall at bottom
-  Engine::GameObject.create(
+  bottom_bar = Engine::GameObject.create(
     name: "BottomBar",
     components: [
       Engine::Components::UIRect.create(
@@ -66,8 +66,42 @@ Engine.start do
     ]
   )
 
+  # Flex row of buttons in bottom bar
+  button_row = Engine::GameObject.create(
+    name: "ButtonRow",
+    parent: bottom_bar,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 220,
+        right_offset: 100,
+        top_offset: 5,
+        bottom_offset: 5
+      ),
+      Engine::Components::UIFlex.create(direction: :row, gap: 10)
+    ]
+  )
+
+  # Create 4 buttons
+  button_colors = [
+    [0.6, 0.2, 0.2],  # red
+    [0.2, 0.6, 0.2],  # green
+    [0.2, 0.2, 0.6],  # blue
+    [0.6, 0.6, 0.2]   # yellow
+  ]
+
+  button_colors.each_with_index do |color, i|
+    Engine::GameObject.create(
+      name: "Button#{i}",
+      parent: button_row,
+      components: [
+        Engine::Components::UIRect.create,
+        Engine::Components::UISpriteRenderer.create(material: create_ui_material(*color))
+      ]
+    )
+  end
+
   # Left sidebar - 200px wide, between top and bottom bars
-  Engine::GameObject.create(
+  left_sidebar = Engine::GameObject.create(
     name: "LeftSidebar",
     components: [
       Engine::Components::UIRect.create(
@@ -79,6 +113,33 @@ Engine.start do
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.3, 0.3, 0.3))
     ]
   )
+
+  # Flex column of menu items in sidebar
+  menu_column = Engine::GameObject.create(
+    name: "MenuColumn",
+    parent: left_sidebar,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 10,
+        right_offset: 10,
+        top_offset: 10,
+        bottom_offset: 10
+      ),
+      Engine::Components::UIFlex.create(direction: :column, gap: 5)
+    ]
+  )
+
+  # Create 5 menu items
+  5.times do |i|
+    Engine::GameObject.create(
+      name: "MenuItem#{i}",
+      parent: menu_column,
+      components: [
+        Engine::Components::UIRect.create,
+        Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.5, 0.6, 0.7))
+      ]
+    )
+  end
 
   # Center panel - centered, 50% width, 50% height
   center_panel = Engine::GameObject.create(
