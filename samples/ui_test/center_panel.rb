@@ -1,0 +1,78 @@
+# frozen_string_literal: true
+
+def create_center_panel(font)
+  center_panel = Engine::GameObject.create(
+    name: "CenterPanel",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_ratio: 0.25,
+        right_ratio: 0.25,
+        bottom_ratio: 0.25,
+        top_ratio: 0.25
+      ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.1, 0.3, 0.5, 0.9))
+    ]
+  )
+
+  # Nested box with 20px margin
+  Engine::GameObject.create(
+    name: "CenterPanelInner",
+    parent: center_panel,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 20,
+        right_offset: 20,
+        bottom_offset: 20,
+        top_offset: 20
+      ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
+    ]
+  )
+
+  # Large title
+  Engine::GameObject.create(
+    name: "LargeText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_offset: 20,
+        bottom_ratio: 1.0, bottom_offset: -80
+      ),
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Large Title")
+    ]
+  )
+
+  # Medium text
+  Engine::GameObject.create(
+    name: "MediumText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_ratio: 0.5, top_offset: -10,
+        bottom_ratio: 0.5, bottom_offset: -30
+      ),
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Medium text here")
+    ]
+  )
+
+  # Small text
+  Engine::GameObject.create(
+    name: "SmallText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_ratio: 1.0, top_offset: -50,
+        bottom_offset: 20
+      ),
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Small footer text")
+    ]
+  )
+
+  center_panel
+end
