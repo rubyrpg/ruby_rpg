@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-describe Engine::Components::UIFlex do
+describe Engine::Components::UI::Flex do
   before do
     allow(Engine::Window).to receive(:framebuffer_width).and_return(800)
     allow(Engine::Window).to receive(:framebuffer_height).and_return(600)
   end
 
   describe ".create" do
-    it "creates a UIFlex with default values" do
-      flex = Engine::Components::UIFlex.create
+    it "creates a Flex with default values" do
+      flex = Engine::Components::UI::Flex.create
       flex.awake
 
       expect(flex.direction).to eq(:row)
       expect(flex.gap).to eq(0)
     end
 
-    it "creates a UIFlex with custom values" do
-      flex = Engine::Components::UIFlex.create(direction: :column, gap: 10)
+    it "creates a Flex with custom values" do
+      flex = Engine::Components::UI::Flex.create(direction: :column, gap: 10)
       flex.awake
 
       expect(flex.direction).to eq(:column)
@@ -30,21 +30,21 @@ describe Engine::Components::UIFlex do
         parent = Engine::GameObject.create(
           name: "Parent",
           components: [
-            Engine::Components::UIRect.create,
-            Engine::Components::UIFlex.create(direction: :row, gap: 0)
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, gap: 0)
           ]
         )
 
         child1 = Engine::GameObject.create(
           name: "Child1",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         child2 = Engine::GameObject.create(
           name: "Child2",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         child1_rect = child1.components.first
@@ -73,21 +73,21 @@ describe Engine::Components::UIFlex do
         parent = Engine::GameObject.create(
           name: "Parent",
           components: [
-            Engine::Components::UIRect.create,
-            Engine::Components::UIFlex.create(direction: :row, gap: 20)
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, gap: 20)
           ]
         )
 
         child1 = Engine::GameObject.create(
           name: "Child1",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         child2 = Engine::GameObject.create(
           name: "Child2",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         rect1 = child1.components.first.computed_rect
@@ -107,21 +107,21 @@ describe Engine::Components::UIFlex do
         parent = Engine::GameObject.create(
           name: "Parent",
           components: [
-            Engine::Components::UIRect.create,
-            Engine::Components::UIFlex.create(direction: :column, gap: 0)
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :column, gap: 0)
           ]
         )
 
         child1 = Engine::GameObject.create(
           name: "Child1",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         child2 = Engine::GameObject.create(
           name: "Child2",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         rect1 = child1.components.first.computed_rect
@@ -146,21 +146,21 @@ describe Engine::Components::UIFlex do
         parent = Engine::GameObject.create(
           name: "Parent",
           components: [
-            Engine::Components::UIRect.create,
-            Engine::Components::UIFlex.create(direction: :column, gap: 20)
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :column, gap: 20)
           ]
         )
 
         child1 = Engine::GameObject.create(
           name: "Child1",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         child2 = Engine::GameObject.create(
           name: "Child2",
           parent: parent,
-          components: [Engine::Components::UIRect.create]
+          components: [Engine::Components::UI::Rect.create]
         )
 
         rect1 = child1.components.first.computed_rect
@@ -180,8 +180,8 @@ describe Engine::Components::UIFlex do
         parent = Engine::GameObject.create(
           name: "Parent",
           components: [
-            Engine::Components::UIRect.create,
-            Engine::Components::UIFlex.create(direction: :row, gap: 0)
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, gap: 0)
           ]
         )
 
@@ -189,7 +189,7 @@ describe Engine::Components::UIFlex do
           Engine::GameObject.create(
             name: "Child#{i}",
             parent: parent,
-            components: [Engine::Components::UIRect.create]
+            components: [Engine::Components::UI::Rect.create]
           )
         end
 

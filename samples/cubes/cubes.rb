@@ -68,11 +68,11 @@ Engine.start do
   panel = Engine::GameObject.create(
     name: "UIPanel",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_ratio: 0.02, right_ratio: 0.75,
         bottom_ratio: 0.02, top_ratio: 0.7
       ),
-      Engine::Components::UISpriteRenderer.create(material: ui_material)
+      Engine::Components::UI::SpriteRenderer.create(material: ui_material)
     ]
   )
 
@@ -81,11 +81,11 @@ Engine.start do
     name: "UIButton",
     parent: panel,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 10, right_offset: 10,
         bottom_offset: 10, top_offset: 10
       ),
-      Engine::Components::UISpriteRenderer.create(material: child_material)
+      Engine::Components::UI::SpriteRenderer.create(material: child_material)
     ]
   )
 end

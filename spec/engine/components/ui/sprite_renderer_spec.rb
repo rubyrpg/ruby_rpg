@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Engine::Components::UISpriteRenderer do
+describe Engine::Components::UI::SpriteRenderer do
   let(:mock_material) do
     material = Engine::Material.allocate
     material.instance_variable_set(:@uuid, "test-material-uuid")
@@ -9,7 +9,7 @@ describe Engine::Components::UISpriteRenderer do
 
   describe ".create" do
     it "creates a ui sprite renderer with material" do
-      renderer = Engine::Components::UISpriteRenderer.create(
+      renderer = Engine::Components::UI::SpriteRenderer.create(
         material: mock_material
       )
 
@@ -19,7 +19,7 @@ describe Engine::Components::UISpriteRenderer do
 
   describe "serialization round-trip" do
     it "serializes and deserializes correctly" do
-      original = Engine::Components::UISpriteRenderer.create(
+      original = Engine::Components::UI::SpriteRenderer.create(
         material: mock_material
       )
 

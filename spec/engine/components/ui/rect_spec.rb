@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-describe Engine::Components::UIRect do
+describe Engine::Components::UI::Rect do
   before do
     allow(Engine::Window).to receive(:framebuffer_width).and_return(800)
     allow(Engine::Window).to receive(:framebuffer_height).and_return(600)
   end
 
   describe ".create" do
-    it "creates a UIRect with default values that fill the parent" do
-      rect = Engine::Components::UIRect.create
+    it "creates a Rect with default values that fill the parent" do
+      rect = Engine::Components::UI::Rect.create
       rect.awake
 
       expect(rect.left_ratio).to eq(0.0)
@@ -21,8 +21,8 @@ describe Engine::Components::UIRect do
       expect(rect.top_offset).to eq(0)
     end
 
-    it "creates a UIRect with custom ratios" do
-      rect = Engine::Components::UIRect.create(
+    it "creates a Rect with custom ratios" do
+      rect = Engine::Components::UI::Rect.create(
         left_ratio: 0.25,
         right_ratio: 0.75,
         bottom_ratio: 0.1,
@@ -42,7 +42,7 @@ describe Engine::Components::UIRect do
       it "computes rect relative to screen" do
         game_object = Engine::GameObject.create(
           name: "Test",
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_ratio: 0.0,
             right_ratio: 0.5,
             bottom_ratio: 0.0,
@@ -63,7 +63,7 @@ describe Engine::Components::UIRect do
       it "applies pixel offsets" do
         game_object = Engine::GameObject.create(
           name: "Test",
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_offset: 10,
             right_offset: 10,
             bottom_offset: 20,
@@ -82,11 +82,11 @@ describe Engine::Components::UIRect do
       end
     end
 
-    context "with a parent UIRect" do
+    context "with a parent Rect" do
       it "computes rect relative to parent" do
         parent = Engine::GameObject.create(
           name: "Parent",
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_ratio: 0.0,
             right_ratio: 0.5,
             bottom_ratio: 0.0,
@@ -98,7 +98,7 @@ describe Engine::Components::UIRect do
         child = Engine::GameObject.create(
           name: "Child",
           parent: parent,
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_ratio: 0.0,
             right_ratio: 0.5,
             bottom_ratio: 0.0,
@@ -120,7 +120,7 @@ describe Engine::Components::UIRect do
       it "applies offsets within parent bounds" do
         parent = Engine::GameObject.create(
           name: "Parent",
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_ratio: 0.25,
             right_ratio: 0.25,
             bottom_ratio: 0.25,
@@ -132,7 +132,7 @@ describe Engine::Components::UIRect do
         child = Engine::GameObject.create(
           name: "Child",
           parent: parent,
-          components: [Engine::Components::UIRect.create(
+          components: [Engine::Components::UI::Rect.create(
             left_offset: 10,
             right_offset: 10,
             bottom_offset: 10,
@@ -155,7 +155,7 @@ describe Engine::Components::UIRect do
 
   describe "serialization round-trip" do
     it "serializes and deserializes correctly" do
-      original = Engine::Components::UIRect.create(
+      original = Engine::Components::UI::Rect.create(
         left_ratio: 0.1,
         right_ratio: 0.9,
         bottom_ratio: 0.2,

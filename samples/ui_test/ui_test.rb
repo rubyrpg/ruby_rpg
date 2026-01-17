@@ -31,11 +31,11 @@ Engine.start do
   top_bar = Engine::GameObject.create(
     name: "TopBar",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         bottom_ratio: 1.0,
         bottom_offset: -50  # expand downward
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
     ]
   )
 
@@ -44,13 +44,13 @@ Engine.start do
     name: "TopBarLabel",
     parent: top_bar,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 10,
         right_ratio: 0.5,
         top_offset: 5,
         bottom_offset: 5
       ),
-      Engine::Components::UIFontRenderer.create(font: load_font, string: "UI Test")
+      Engine::Components::UI::FontRenderer.create(font: load_font, string: "UI Test")
     ]
   )
 
@@ -58,11 +58,11 @@ Engine.start do
   bottom_bar = Engine::GameObject.create(
     name: "BottomBar",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         top_ratio: 1.0,
         top_offset: -50
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
     ]
   )
 
@@ -71,13 +71,13 @@ Engine.start do
     name: "ButtonRow",
     parent: bottom_bar,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 220,
         right_offset: 100,
         top_offset: 5,
         bottom_offset: 5
       ),
-      Engine::Components::UIFlex.create(direction: :row, gap: 10)
+      Engine::Components::UI::Flex.create(direction: :row, gap: 10)
     ]
   )
 
@@ -94,8 +94,8 @@ Engine.start do
       name: "Button#{i}",
       parent: button_row,
       components: [
-        Engine::Components::UIRect.create,
-        Engine::Components::UISpriteRenderer.create(material: create_ui_material(*color))
+        Engine::Components::UI::Rect.create,
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(*color))
       ]
     )
   end
@@ -104,13 +104,13 @@ Engine.start do
   left_sidebar = Engine::GameObject.create(
     name: "LeftSidebar",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         right_ratio: 1.0,
         right_offset: -200,  # expand rightward
         top_offset: 50,      # shrink down from top
         bottom_offset: 50    # shrink up from bottom
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.3, 0.3, 0.3))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.3, 0.3, 0.3))
     ]
   )
 
@@ -119,13 +119,13 @@ Engine.start do
     name: "MenuColumn",
     parent: left_sidebar,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 10,
         right_offset: 10,
         top_offset: 10,
         bottom_offset: 10
       ),
-      Engine::Components::UIFlex.create(direction: :column, gap: 5)
+      Engine::Components::UI::Flex.create(direction: :column, gap: 5)
     ]
   )
 
@@ -135,8 +135,8 @@ Engine.start do
       name: "MenuItem#{i}",
       parent: menu_column,
       components: [
-        Engine::Components::UIRect.create,
-        Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.5, 0.6, 0.7))
+        Engine::Components::UI::Rect.create,
+        Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.5, 0.6, 0.7))
       ]
     )
   end
@@ -145,13 +145,13 @@ Engine.start do
   center_panel = Engine::GameObject.create(
     name: "CenterPanel",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_ratio: 0.25,
         right_ratio: 0.25,
         bottom_ratio: 0.25,
         top_ratio: 0.25
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.1, 0.3, 0.5, 0.9))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.1, 0.3, 0.5, 0.9))
     ]
   )
 
@@ -160,13 +160,13 @@ Engine.start do
     name: "CenterPanelInner",
     parent: center_panel,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 20,
         right_offset: 20,
         bottom_offset: 20,
         top_offset: 20
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
     ]
   )
 
@@ -175,13 +175,13 @@ Engine.start do
   Engine::GameObject.create(
     name: "TopLeft",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 10,
         right_ratio: 1.0, right_offset: -80,
         bottom_ratio: 1.0, bottom_offset: -80,
         top_offset: 10
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.8, 0.2, 0.2))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.8, 0.2, 0.2))
     ]
   )
 
@@ -189,13 +189,13 @@ Engine.start do
   Engine::GameObject.create(
     name: "TopRight",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_ratio: 1.0, left_offset: -80,
         right_offset: 10,
         bottom_ratio: 1.0, bottom_offset: -80,
         top_offset: 10
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.8, 0.2))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.8, 0.2))
     ]
   )
 
@@ -203,13 +203,13 @@ Engine.start do
   Engine::GameObject.create(
     name: "BottomLeft",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 10,
         right_ratio: 1.0, right_offset: -80,
         bottom_offset: 10,
         top_ratio: 1.0, top_offset: -80
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.8))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.8))
     ]
   )
 
@@ -217,13 +217,13 @@ Engine.start do
   Engine::GameObject.create(
     name: "BottomRight",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_ratio: 1.0, left_offset: -80,
         right_offset: 10,
         bottom_offset: 10,
         top_ratio: 1.0, top_offset: -80
       ),
-      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.8, 0.8, 0.2))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.8, 0.8, 0.2))
     ]
   )
 
@@ -235,13 +235,13 @@ Engine.start do
     name: "LargeText",
     parent: center_panel,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 20,
         right_offset: 20,
         top_offset: 20,
         bottom_ratio: 1.0, bottom_offset: -80
       ),
-      Engine::Components::UIFontRenderer.create(font: font, string: "Large Title")
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Large Title")
     ]
   )
 
@@ -250,13 +250,13 @@ Engine.start do
     name: "MediumText",
     parent: center_panel,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 20,
         right_offset: 20,
         top_ratio: 0.5, top_offset: -10,
         bottom_ratio: 0.5, bottom_offset: -30
       ),
-      Engine::Components::UIFontRenderer.create(font: font, string: "Medium text here")
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Medium text here")
     ]
   )
 
@@ -265,13 +265,13 @@ Engine.start do
     name: "SmallText",
     parent: center_panel,
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 20,
         right_offset: 20,
         top_ratio: 1.0, top_offset: -50,
         bottom_offset: 20
       ),
-      Engine::Components::UIFontRenderer.create(font: font, string: "Small footer text")
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Small footer text")
     ]
   )
 
@@ -279,12 +279,12 @@ Engine.start do
   Engine::GameObject.create(
     name: "SidebarTitle",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         right_ratio: 1.0, right_offset: -200,
         top_offset: 60,
         bottom_ratio: 1.0, bottom_offset: -90
       ),
-      Engine::Components::UIFontRenderer.create(font: font, string: "Menu")
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Menu")
     ]
   )
 
@@ -292,13 +292,13 @@ Engine.start do
   Engine::GameObject.create(
     name: "BottomBarLabel",
     components: [
-      Engine::Components::UIRect.create(
+      Engine::Components::UI::Rect.create(
         left_offset: 220,
         right_ratio: 0.5,
         top_ratio: 1.0, top_offset: -40,
         bottom_offset: 10
       ),
-      Engine::Components::UIFontRenderer.create(font: font, string: "Status: Ready")
+      Engine::Components::UI::FontRenderer.create(font: font, string: "Status: Ready")
     ]
   )
 end

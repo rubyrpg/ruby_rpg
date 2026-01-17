@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-describe Engine::Components::UISpriteClickbox do
-  context "when there is no UIRect" do
+describe Engine::Components::UI::SpriteClickbox do
+  context "when there is no UI::Rect" do
     let(:game_object) do
       Engine::GameObject.create(name: "Test",
-                                components: [Engine::Components::UISpriteClickbox.create])
+                                components: [Engine::Components::UI::SpriteClickbox.create])
     end
 
     it "raises an error" do
       expect { game_object.components.first.start }
-        .to raise_error("UISpriteClickbox requires a UIRect component")
+        .to raise_error("UI::SpriteClickbox requires a UI::Rect component")
     end
   end
 
   context "when clicking a sprite" do
     before do
-      allow_any_instance_of(Engine::Components::UISpriteRenderer).to receive(:start)
+      allow_any_instance_of(Engine::Components::UI::SpriteRenderer).to receive(:start)
       allow(Engine::Window).to receive(:framebuffer_width).and_return(800)
       allow(Engine::Window).to receive(:framebuffer_height).and_return(600)
       allow(Engine::Window).to receive(:height).and_return(600)
@@ -24,19 +24,19 @@ describe Engine::Components::UISpriteClickbox do
     let(:game_object) do
       Engine::GameObject.create(name: "Test",
                                 components: [
-                                  Engine::Components::UIRect.create(
+                                  Engine::Components::UI::Rect.create(
                                     left_ratio: 0.0,
                                     right_ratio: 0.5,
                                     bottom_ratio: 0.0,
                                     top_ratio: 0.5
                                   ),
-                                  Engine::Components::UISpriteRenderer.create(material: nil),
-                                  Engine::Components::UISpriteClickbox.create
+                                  Engine::Components::UI::SpriteRenderer.create(material: nil),
+                                  Engine::Components::UI::SpriteClickbox.create
                                 ])
     end
 
-    let(:clickbox) { game_object.components.find { |c| c.is_a? Engine::Components::UISpriteClickbox } }
-    let(:ui_rect) { game_object.components.find { |c| c.is_a? Engine::Components::UIRect } }
+    let(:clickbox) { game_object.components.find { |c| c.is_a? Engine::Components::UI::SpriteClickbox } }
+    let(:ui_rect) { game_object.components.find { |c| c.is_a? Engine::Components::UI::Rect } }
 
     before do
       ui_rect.awake
