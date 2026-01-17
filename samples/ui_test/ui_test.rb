@@ -1,5 +1,9 @@
 require_relative "../../lib/ruby_rpg"
 
+def load_font
+  Engine::Font.create(font_file_path: "assets/Arial.ttf")
+end
+
 def create_ui_material(r, g, b, a = 1.0)
   mat = Engine::Material.create(shader: Engine::Shader.ui_sprite)
   mat.set_vec4("spriteColor", [r, g, b, a])
@@ -24,7 +28,7 @@ Engine.start do
   )
 
   # Top bar - full width, 50px tall at top
-  Engine::GameObject.create(
+  top_bar = Engine::GameObject.create(
     name: "TopBar",
     components: [
       Engine::Components::UIRect.create(
@@ -32,6 +36,21 @@ Engine.start do
         bottom_offset: -50  # expand downward
       ),
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
+    ]
+  )
+
+  # Text label in top bar
+  Engine::GameObject.create(
+    name: "TopBarLabel",
+    parent: top_bar,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 10,
+        right_ratio: 0.5,
+        top_offset: 5,
+        bottom_offset: 5
+      ),
+      Engine::Components::UIFontRenderer.create(font: load_font, string: "UI Test")
     ]
   )
 
@@ -144,6 +163,81 @@ Engine.start do
         top_ratio: 1.0, top_offset: -80
       ),
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.8, 0.8, 0.2))
+    ]
+  )
+
+  # Text examples at different sizes inside the center panel
+  font = load_font
+
+  # Large title (60px)
+  Engine::GameObject.create(
+    name: "LargeText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_offset: 20,
+        bottom_ratio: 1.0, bottom_offset: -80
+      ),
+      Engine::Components::UIFontRenderer.create(font: font, string: "Large Title")
+    ]
+  )
+
+  # Medium text (40px)
+  Engine::GameObject.create(
+    name: "MediumText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_ratio: 0.5, top_offset: -10,
+        bottom_ratio: 0.5, bottom_offset: -30
+      ),
+      Engine::Components::UIFontRenderer.create(font: font, string: "Medium text here")
+    ]
+  )
+
+  # Small text (20px)
+  Engine::GameObject.create(
+    name: "SmallText",
+    parent: center_panel,
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 20,
+        right_offset: 20,
+        top_ratio: 1.0, top_offset: -50,
+        bottom_offset: 20
+      ),
+      Engine::Components::UIFontRenderer.create(font: font, string: "Small footer text")
+    ]
+  )
+
+  # Label in left sidebar
+  Engine::GameObject.create(
+    name: "SidebarTitle",
+    components: [
+      Engine::Components::UIRect.create(
+        right_ratio: 1.0, right_offset: -200,
+        top_offset: 60,
+        bottom_ratio: 1.0, bottom_offset: -90
+      ),
+      Engine::Components::UIFontRenderer.create(font: font, string: "Menu")
+    ]
+  )
+
+  # Bottom bar label
+  Engine::GameObject.create(
+    name: "BottomBarLabel",
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 220,
+        right_ratio: 0.5,
+        top_ratio: 1.0, top_offset: -40,
+        bottom_offset: 10
+      ),
+      Engine::Components::UIFontRenderer.create(font: font, string: "Status: Ready")
     ]
   )
 end
