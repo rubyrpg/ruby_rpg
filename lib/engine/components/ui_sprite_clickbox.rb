@@ -12,8 +12,8 @@ module Engine::Components
     end
 
     def start
-      @renderer = game_object.ui_renderers.find { |r| r.is_a?(Engine::Components::UISpriteRenderer) }
-      raise "UISpriteClickbox requires a UISpriteRenderer" unless @renderer
+      @ui_rect = game_object.components.find { |c| c.is_a?(UIRect) }
+      raise "UISpriteClickbox requires a UIRect component" unless @ui_rect
     end
 
     def update(delta_time)
@@ -33,30 +33,12 @@ module Engine::Components
     private
 
     def point_inside?(point)
-      local_point = game_object.world_to_local_coordinate(Vector[point[0], point[1], 0])
-      local_point = Vector[local_point[0], local_point[1]]
+      rect = @ui_rect.computed_rect
 
-      tl = @renderer.v1
-      tr = @renderer.v2
-      br = @renderer.v3
-      bl = @renderer.v4
-
-      point_in_triangle(local_point, tl, tr, br) ||
-        point_in_triangle(local_point, tl, br, bl)
-    end
-
-    def point_in_triangle(point, v1, v2, v3)
-      mapped_point = point - v1
-      mapped_v2 = v2 - v1
-      mapped_v3 = v3 - v1
-
-      matrix = Matrix[
-        [mapped_v2[0], mapped_v3[0]],
-        [mapped_v2[1], mapped_v3[1]]
-      ]
-
-      remapped_point = matrix.inverse * mapped_point
-      remapped_point[0] >= 0 && remapped_point[1] >= 0 && remapped_point[0] + remapped_point[1] <= 1
+      point[0] >= rect.left &&
+        point[0] <= rect.right &&
+        point[1] >= rect.bottom &&
+        point[1] <= rect.top
     end
   end
 end

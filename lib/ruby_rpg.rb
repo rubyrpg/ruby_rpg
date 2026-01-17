@@ -55,6 +55,8 @@ require_relative "engine/window"
 require_relative "engine/video_mode"
 require_relative "engine/cursor"
 
+require_relative "engine/ui/rect"
+require_relative "engine/components/ui_rect"
 require_relative "engine/components/orthographic_camera"
 require_relative "engine/components/perspective_camera"
 require_relative "engine/components/renderers/sprite_renderer"
