@@ -38,9 +38,9 @@ module Engine::Components
 
       Engine::UI::Rect.new(
         left:   pr.left   + (pr.width  * @left_ratio)   + @left_offset,
-        right:  pr.right  - (pr.width  * @right_ratio)  + @right_offset,
+        right:  pr.right  - (pr.width  * @right_ratio)  - @right_offset,
         bottom: pr.bottom + (pr.height * @bottom_ratio) + @bottom_offset,
-        top:    pr.top    - (pr.height * @top_ratio)    + @top_offset
+        top:    pr.top    - (pr.height * @top_ratio)    - @top_offset
       )
     end
   end

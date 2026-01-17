@@ -82,8 +82,8 @@ Engine.start do
     parent: panel,
     components: [
       Engine::Components::UIRect.create(
-        left_offset: 10, right_offset: -10,
-        bottom_offset: 10, top_offset: -10
+        left_offset: 10, right_offset: 10,
+        bottom_offset: 10, top_offset: 10
       ),
       Engine::Components::UISpriteRenderer.create(material: child_material)
     ]

@@ -29,7 +29,7 @@ Engine.start do
     components: [
       Engine::Components::UIRect.create(
         bottom_ratio: 1.0,
-        bottom_offset: -50
+        bottom_offset: -50  # expand downward
       ),
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
     ]
@@ -53,9 +53,9 @@ Engine.start do
     components: [
       Engine::Components::UIRect.create(
         right_ratio: 1.0,
-        right_offset: -200,
-        top_offset: -50,
-        bottom_offset: 50
+        right_offset: -200,  # expand rightward
+        top_offset: 50,      # shrink down from top
+        bottom_offset: 50    # shrink up from bottom
       ),
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.3, 0.3, 0.3))
     ]
@@ -82,45 +82,68 @@ Engine.start do
     components: [
       Engine::Components::UIRect.create(
         left_offset: 20,
-        right_offset: -20,
+        right_offset: 20,
         bottom_offset: 20,
-        top_offset: -20
+        top_offset: 20
       ),
       Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
     ]
   )
 
-  # Corner boxes - small 80x80 boxes in each corner
-  corners = [
-    { name: "TopLeft", left: 0, right: 1.0, bottom: 1.0, top: 0, l_off: 10, r_off: -80, b_off: -80, t_off: -10 },
-    { name: "TopRight", left: 1.0, right: 0, bottom: 1.0, top: 0, l_off: -80, r_off: -10, b_off: -80, t_off: -10 },
-    { name: "BottomLeft", left: 0, right: 1.0, bottom: 0, top: 1.0, l_off: 10, r_off: -80, b_off: 10, t_off: -80 },
-    { name: "BottomRight", left: 1.0, right: 0, bottom: 0, top: 1.0, l_off: -80, r_off: -10, b_off: 10, t_off: -80 }
-  ]
+  # Corner boxes - small 80x80 boxes in each corner (10px from edges)
+  # Red - top left
+  Engine::GameObject.create(
+    name: "TopLeft",
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 10,
+        right_ratio: 1.0, right_offset: -80,
+        bottom_ratio: 1.0, bottom_offset: -80,
+        top_offset: 10
+      ),
+      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.8, 0.2, 0.2))
+    ]
+  )
 
-  colors = [
-    [0.8, 0.2, 0.2],  # red
-    [0.2, 0.8, 0.2],  # green
-    [0.2, 0.2, 0.8],  # blue
-    [0.8, 0.8, 0.2]   # yellow
-  ]
+  # Green - top right
+  Engine::GameObject.create(
+    name: "TopRight",
+    components: [
+      Engine::Components::UIRect.create(
+        left_ratio: 1.0, left_offset: -80,
+        right_offset: 10,
+        bottom_ratio: 1.0, bottom_offset: -80,
+        top_offset: 10
+      ),
+      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.8, 0.2))
+    ]
+  )
 
-  corners.each_with_index do |corner, i|
-    Engine::GameObject.create(
-      name: corner[:name],
-      components: [
-        Engine::Components::UIRect.create(
-          left_ratio: corner[:left],
-          right_ratio: corner[:right],
-          bottom_ratio: corner[:bottom],
-          top_ratio: corner[:top],
-          left_offset: corner[:l_off],
-          right_offset: corner[:r_off],
-          bottom_offset: corner[:b_off],
-          top_offset: corner[:t_off]
-        ),
-        Engine::Components::UISpriteRenderer.create(material: create_ui_material(*colors[i]))
-      ]
-    )
-  end
+  # Blue - bottom left
+  Engine::GameObject.create(
+    name: "BottomLeft",
+    components: [
+      Engine::Components::UIRect.create(
+        left_offset: 10,
+        right_ratio: 1.0, right_offset: -80,
+        bottom_offset: 10,
+        top_ratio: 1.0, top_offset: -80
+      ),
+      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.8))
+    ]
+  )
+
+  # Yellow - bottom right
+  Engine::GameObject.create(
+    name: "BottomRight",
+    components: [
+      Engine::Components::UIRect.create(
+        left_ratio: 1.0, left_offset: -80,
+        right_offset: 10,
+        bottom_offset: 10,
+        top_ratio: 1.0, top_offset: -80
+      ),
+      Engine::Components::UISpriteRenderer.create(material: create_ui_material(0.8, 0.8, 0.2))
+    ]
+  )
 end

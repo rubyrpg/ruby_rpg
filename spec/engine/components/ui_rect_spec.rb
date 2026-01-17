@@ -65,9 +65,9 @@ describe Engine::Components::UIRect do
           name: "Test",
           components: [Engine::Components::UIRect.create(
             left_offset: 10,
-            right_offset: -10,
+            right_offset: 10,
             bottom_offset: 20,
-            top_offset: -20
+            top_offset: 20
           )]
         )
         ui_rect = game_object.components.first
@@ -134,9 +134,9 @@ describe Engine::Components::UIRect do
           parent: parent,
           components: [Engine::Components::UIRect.create(
             left_offset: 10,
-            right_offset: -10,
+            right_offset: 10,
             bottom_offset: 10,
-            top_offset: -10
+            top_offset: 10
           )]
         )
         child_rect = child.components.first
