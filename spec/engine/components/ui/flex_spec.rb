@@ -373,5 +373,99 @@ describe Engine::Components::UI::Flex do
         expect(rect1.right).to eq(800)
       end
     end
+
+    context "with flex_weight in stretch mode" do
+      it "distributes space by weight" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 0)
+          ]
+        )
+
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_weight: 1)]
+        )
+
+        Engine::GameObject.create(
+          name: "Child2",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_weight: 2)]
+        )
+
+        Engine::GameObject.create(
+          name: "Child3",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_weight: 1)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+        rect2 = children[1].components.first.computed_rect
+        rect3 = children[2].components.first.computed_rect
+
+        # Total weight = 4, so: 1/4 = 200px, 2/4 = 400px, 1/4 = 200px
+        expect(rect1.width).to eq(200)
+        expect(rect2.width).to eq(400)
+        expect(rect3.width).to eq(200)
+
+        expect(rect1.left).to eq(0)
+        expect(rect1.right).to eq(200)
+        expect(rect2.left).to eq(200)
+        expect(rect2.right).to eq(600)
+        expect(rect3.left).to eq(600)
+        expect(rect3.right).to eq(800)
+      end
+
+      it "combines fixed width with weighted children" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [
+            Engine::Components::UI::Rect.create,
+            Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 0)
+          ]
+        )
+
+        # Fixed 100px
+        Engine::GameObject.create(
+          name: "Child1",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_width: 100)]
+        )
+
+        # Weight 2 of remaining 700px
+        Engine::GameObject.create(
+          name: "Child2",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_weight: 2)]
+        )
+
+        # Weight 1 of remaining 700px
+        Engine::GameObject.create(
+          name: "Child3",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(flex_weight: 1)]
+        )
+
+        children = parent.children.to_a
+        rect1 = children[0].components.first.computed_rect
+        rect2 = children[1].components.first.computed_rect
+        rect3 = children[2].components.first.computed_rect
+
+        # Child1 = 100px fixed
+        # Remaining = 700px, total weight = 3
+        # Child2 = 700 * 2/3 = 466.67px
+        # Child3 = 700 * 1/3 = 233.33px
+        expect(rect1.width).to eq(100)
+        expect(rect2.width).to be_within(0.01).of(700 * 2.0 / 3)
+        expect(rect3.width).to be_within(0.01).of(700 * 1.0 / 3)
+
+        expect(rect1.left).to eq(0)
+        expect(rect1.right).to eq(100)
+      end
+    end
   end
 end

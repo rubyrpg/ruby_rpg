@@ -3,6 +3,7 @@ require_relative "top_bar"
 require_relative "bottom_bar"
 require_relative "left_sidebar"
 require_relative "right_sidebar"
+require_relative "column_panel"
 require_relative "center_panel"
 require_relative "corners"
 
@@ -37,6 +38,7 @@ Engine.start do
   create_bottom_bar(font)
   create_left_sidebar(font)
   create_right_sidebar(font)
+  create_column_panel(font)
   create_center_panel(font)
   create_corners
 end
