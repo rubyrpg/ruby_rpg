@@ -374,6 +374,84 @@ describe Engine::Components::UI::Flex do
       end
     end
 
+    context "with cross-axis sizing" do
+      context "row direction with flex_height" do
+        it "uses flex_height for child height and aligns at top" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :row, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child1",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_height: 100)]
+          )
+
+          Engine::GameObject.create(
+            name: "Child2",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create]  # no flex_height, should stretch
+          )
+
+          children = parent.children.to_a
+          rect1 = children[0].components.first.computed_rect
+          rect2 = children[1].components.first.computed_rect
+
+          # Child1 should be 100px tall, aligned at top
+          expect(rect1.top).to eq(0)
+          expect(rect1.bottom).to eq(100)
+          expect(rect1.height).to eq(100)
+
+          # Child2 should stretch to full height
+          expect(rect2.top).to eq(0)
+          expect(rect2.bottom).to eq(600)
+          expect(rect2.height).to eq(600)
+        end
+      end
+
+      context "column direction with flex_width" do
+        it "uses flex_width for child width and aligns at left" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :column, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child1",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_width: 200)]
+          )
+
+          Engine::GameObject.create(
+            name: "Child2",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create]  # no flex_width, should stretch
+          )
+
+          children = parent.children.to_a
+          rect1 = children[0].components.first.computed_rect
+          rect2 = children[1].components.first.computed_rect
+
+          # Child1 should be 200px wide, aligned at left
+          expect(rect1.left).to eq(0)
+          expect(rect1.right).to eq(200)
+          expect(rect1.width).to eq(200)
+
+          # Child2 should stretch to full width
+          expect(rect2.left).to eq(0)
+          expect(rect2.right).to eq(800)
+          expect(rect2.width).to eq(800)
+        end
+      end
+    end
+
     context "with flex_weight in stretch mode" do
       it "distributes space by weight" do
         parent = Engine::GameObject.create(

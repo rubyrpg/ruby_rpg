@@ -30,11 +30,11 @@ def create_right_sidebar(font)
   )
 
   create_justify_example(right_sidebar, font, "StartRow", 50, :start, [0.7, 0.4, 0.4])
-  create_justify_example(right_sidebar, font, "CenterRow", 95, :center, [0.4, 0.7, 0.4])
-  create_justify_example(right_sidebar, font, "EndRow", 140, :end, [0.4, 0.4, 0.7])
-  create_stretch_example(right_sidebar, font, 185)
-  create_weighted_example(right_sidebar, font, 230)
-  create_mixed_example(right_sidebar, font, 275)
+  create_justify_example(right_sidebar, font, "CenterRow", 125, :center, [0.4, 0.7, 0.4])
+  create_justify_example(right_sidebar, font, "EndRow", 200, :end, [0.4, 0.4, 0.7])
+  create_stretch_example(right_sidebar, font, 275)
+  create_weighted_example(right_sidebar, font, 350)
+  create_mixed_example(right_sidebar, font, 425)
 
   right_sidebar
 end
@@ -55,7 +55,7 @@ def create_justify_example(parent, font, name, top_offset, justify, color)
     ]
   )
 
-  # Row
+  # Row - taller to show cross-axis sizing
   row = Engine::GameObject.create(
     name: name,
     parent: parent,
@@ -64,18 +64,20 @@ def create_justify_example(parent, font, name, top_offset, justify, color)
         left_offset: 10,
         right_offset: 10,
         top_offset: top_offset + 20,
-        bottom_ratio: 1.0, bottom_offset: -(top_offset + 45)
+        bottom_ratio: 1.0, bottom_offset: -(top_offset + 70)
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
       Engine::Components::UI::Flex.create(direction: :row, justify: justify, gap: 5)
     ]
   )
 
-  [40, 60, 30].each_with_index do |width, i|
+  # Different flex_heights to demo cross-axis sizing (align at top)
+  [{width: 40, height: 20}, {width: 60, height: 35}, {width: 30, height: nil}].each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "#{name}Btn#{i}",
       parent: row,
       components: [
-        Engine::Components::UI::Rect.create(flex_width: width),
+        Engine::Components::UI::Rect.create(flex_width: dims[:width], flex_height: dims[:height]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(*color))
       ]
     )
@@ -98,7 +100,7 @@ def create_stretch_example(parent, font, top_offset)
     ]
   )
 
-  # Row
+  # Row - taller to show cross-axis sizing
   row = Engine::GameObject.create(
     name: "StretchRow",
     parent: parent,
@@ -107,18 +109,20 @@ def create_stretch_example(parent, font, top_offset)
         left_offset: 10,
         right_offset: 10,
         top_offset: top_offset + 20,
-        bottom_ratio: 1.0, bottom_offset: -(top_offset + 45)
+        bottom_ratio: 1.0, bottom_offset: -(top_offset + 70)
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
       Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 5)
     ]
   )
 
-  3.times do |i|
+  # Different flex_heights: 25px, stretch, 40px
+  [25, nil, 40].each_with_index do |height, i|
     Engine::GameObject.create(
       name: "StretchBtn#{i}",
       parent: row,
       components: [
-        Engine::Components::UI::Rect.create,
+        Engine::Components::UI::Rect.create(flex_height: height),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.7, 0.4))
       ]
     )
@@ -141,7 +145,7 @@ def create_weighted_example(parent, font, top_offset)
     ]
   )
 
-  # Row
+  # Row - taller to show cross-axis sizing
   row = Engine::GameObject.create(
     name: "WeightedRow",
     parent: parent,
@@ -150,19 +154,20 @@ def create_weighted_example(parent, font, top_offset)
         left_offset: 10,
         right_offset: 10,
         top_offset: top_offset + 20,
-        bottom_ratio: 1.0, bottom_offset: -(top_offset + 45)
+        bottom_ratio: 1.0, bottom_offset: -(top_offset + 70)
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
       Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 5)
     ]
   )
 
-  # weight 1, weight 2, weight 1
-  [1, 2, 1].each_with_index do |weight, i|
+  # weight 1, weight 2, weight 1 - with different heights
+  [{weight: 1, height: 20}, {weight: 2, height: nil}, {weight: 1, height: 35}].each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "WeightedBtn#{i}",
       parent: row,
       components: [
-        Engine::Components::UI::Rect.create(flex_weight: weight),
+        Engine::Components::UI::Rect.create(flex_weight: dims[:weight], flex_height: dims[:height]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.6, 0.4, 0.7))
       ]
     )
@@ -185,7 +190,7 @@ def create_mixed_example(parent, font, top_offset)
     ]
   )
 
-  # Row
+  # Row - taller to show cross-axis sizing
   row = Engine::GameObject.create(
     name: "MixedRow",
     parent: parent,
@@ -194,23 +199,24 @@ def create_mixed_example(parent, font, top_offset)
         left_offset: 10,
         right_offset: 10,
         top_offset: top_offset + 20,
-        bottom_ratio: 1.0, bottom_offset: -(top_offset + 45)
+        bottom_ratio: 1.0, bottom_offset: -(top_offset + 70)
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
       Engine::Components::UI::Flex.create(direction: :row, justify: :stretch, gap: 5)
     ]
   )
 
-  # Fixed 30px
+  # Fixed 30px with fixed height
   Engine::GameObject.create(
     name: "MixedFixed",
     parent: row,
     components: [
-      Engine::Components::UI::Rect.create(flex_width: 30),
+      Engine::Components::UI::Rect.create(flex_width: 30, flex_height: 30),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.5, 0.3))
     ]
   )
 
-  # Weighted (takes remaining space)
+  # Weighted (takes remaining space, stretches height)
   Engine::GameObject.create(
     name: "MixedWeighted",
     parent: row,

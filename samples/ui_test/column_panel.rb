@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 def create_column_panel(font)
-  # Position: left of right sidebar, 150px wide
+  # Position: left of right sidebar, wider to show cross-axis sizing
   panel = Engine::GameObject.create(
     name: "ColumnPanel",
     components: [
       Engine::Components::UI::Rect.create(
         left_ratio: 1.0,
-        left_offset: -360,
+        left_offset: -460,
         right_offset: 210,
         top_ratio: 0,
         top_offset: 60,
@@ -81,7 +81,7 @@ def create_column_example(parent, font, label, justify, color)
     ]
   )
 
-  # Column flex container
+  # Column flex container with background to show cross-axis sizing
   column = Engine::GameObject.create(
     name: "Col#{label}Flex",
     parent: container,
@@ -92,16 +92,18 @@ def create_column_example(parent, font, label, justify, color)
         top_offset: 22,
         bottom_offset: 2
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.1, 0.1, 0.1)),
       Engine::Components::UI::Flex.create(direction: :column, justify: justify, gap: 2)
     ]
   )
 
-  [50, 20, 90].each_with_index do |height, i|
+  # Different widths to demo cross-axis sizing (align at left)
+  [{height: 50, width: 30}, {height: 20, width: nil}, {height: 90, width: 45}].each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "Col#{label}Item#{i}",
       parent: column,
       components: [
-        Engine::Components::UI::Rect.create(flex_height: height),
+        Engine::Components::UI::Rect.create(flex_height: dims[:height], flex_width: dims[:width]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(*color))
       ]
     )
@@ -132,7 +134,7 @@ def create_column_stretch_example(parent, font)
     ]
   )
 
-  # Column flex container
+  # Column flex container with background to show cross-axis sizing
   column = Engine::GameObject.create(
     name: "ColStretchFlex",
     parent: container,
@@ -143,18 +145,18 @@ def create_column_stretch_example(parent, font)
         top_offset: 22,
         bottom_offset: 2
       ),
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.1, 0.1, 0.1)),
       Engine::Components::UI::Flex.create(direction: :column, justify: :stretch, gap: 2)
     ]
   )
 
-  # Weights 1:2:1 to show proportional sizing
-  weights = [1, 2, 1]
-  weights.each_with_index do |weight, i|
+  # Weights 1:2:1 with different widths to show cross-axis sizing
+  [{weight: 1, width: 25}, {weight: 2, width: nil}, {weight: 1, width: 40}].each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "ColStretchItem#{i}",
       parent: column,
       components: [
-        Engine::Components::UI::Rect.create(flex_weight: weight),
+        Engine::Components::UI::Rect.create(flex_weight: dims[:weight], flex_width: dims[:width]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.7, 0.4))
       ]
     )

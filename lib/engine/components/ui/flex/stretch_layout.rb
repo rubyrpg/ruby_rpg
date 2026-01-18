@@ -14,7 +14,7 @@ module Engine::Components
             main_start += sizes[i] + gap
           end
 
-          build_rect(parent_rect, main_start: main_start, main_size: sizes[index])
+          build_rect(parent_rect, main_start: main_start, main_size: sizes[index], child_ui_rect: child_ui_rect)
         end
 
         private

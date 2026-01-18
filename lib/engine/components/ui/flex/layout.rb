@@ -29,19 +29,29 @@ module Engine::Components
           @gap * (children.length - 1)
         end
 
-        def build_rect(parent_rect, main_start:, main_size:)
+        def build_rect(parent_rect, main_start:, main_size:, child_ui_rect: nil)
           # Y-down coordinate system: both row and column increment main_start
           if row?
+            # Cross-axis is vertical; use flex_height if specified, else stretch
+            cross_size = child_ui_rect&.flex_height
+            top = parent_rect.top
+            bottom = cross_size ? top + cross_size : parent_rect.bottom
+
             Engine::UI::Rect.new(
               left: main_start,
               right: main_start + main_size,
-              bottom: parent_rect.bottom,
-              top: parent_rect.top
+              top: top,
+              bottom: bottom
             )
           else
+            # Cross-axis is horizontal; use flex_width if specified, else stretch
+            cross_size = child_ui_rect&.flex_width
+            left = parent_rect.left
+            right = cross_size ? left + cross_size : parent_rect.right
+
             Engine::UI::Rect.new(
-              left: parent_rect.left,
-              right: parent_rect.right,
+              left: left,
+              right: right,
               top: main_start,
               bottom: main_start + main_size
             )
