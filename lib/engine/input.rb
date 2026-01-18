@@ -73,8 +73,8 @@ module Engine
     def self.mouse_callback(x, y)
       @mouse_pos_updated = true
       @old_mouse_pos = @mouse_pos
-      screen_height = Window.height
-      @mouse_pos = Vector[x, screen_height - y]
+      # Y-down coordinate system: use GLFW y directly
+      @mouse_pos = Vector[x, y]
     end
 
     def self.mouse_button_callback(button, action)

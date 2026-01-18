@@ -51,8 +51,8 @@ describe Engine::Components::UI::SpriteClickbox do
       expect(clickbox.mouse_entered).to be false
       expect(clickbox.mouse_exited).to be false
 
-      # Move mouse inside the rect (rect is 0-400 x, 0-300 y)
-      Engine::Input.mouse_callback(200, 450)  # 450 from top = 150 from bottom in 600h window
+      # Y-down: rect is 0-400 x, 300-600 y (top=300, bottom=600)
+      Engine::Input.mouse_callback(200, 450)  # 450 is inside 300-600
       clickbox.update(0)
       expect(clickbox.clicked).to be false
       expect(clickbox.mouse_inside).to be true

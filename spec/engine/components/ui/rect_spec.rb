@@ -54,10 +54,12 @@ describe Engine::Components::UI::Rect do
 
         computed = ui_rect.computed_rect
 
+        # Y-down: top=0 at screen top, bottom=600 at screen bottom
+        # top_ratio=0.5 means top edge is 50% down from screen top
         expect(computed.left).to eq(0)
         expect(computed.right).to eq(400)
-        expect(computed.bottom).to eq(0)
         expect(computed.top).to eq(300)
+        expect(computed.bottom).to eq(600)
       end
 
       it "applies pixel offsets" do
@@ -75,10 +77,11 @@ describe Engine::Components::UI::Rect do
 
         computed = ui_rect.computed_rect
 
+        # Y-down: top_offset pushes top edge down, bottom_offset pushes bottom edge up
         expect(computed.left).to eq(10)
         expect(computed.right).to eq(790)
-        expect(computed.bottom).to eq(20)
-        expect(computed.top).to eq(580)
+        expect(computed.top).to eq(20)
+        expect(computed.bottom).to eq(580)
       end
     end
 
@@ -110,11 +113,12 @@ describe Engine::Components::UI::Rect do
 
         computed = child_rect.computed_rect
 
-        # Parent is 0-400 x 0-300, child is half of that
+        # Y-down: Parent is 0-400 x 300-600 (top=300, bottom=600)
+        # Child is half of parent, so 0-200 x 450-600
         expect(computed.left).to eq(0)
         expect(computed.right).to eq(200)
-        expect(computed.bottom).to eq(0)
-        expect(computed.top).to eq(150)
+        expect(computed.top).to eq(450)
+        expect(computed.bottom).to eq(600)
       end
 
       it "applies offsets within parent bounds" do
@@ -144,11 +148,12 @@ describe Engine::Components::UI::Rect do
 
         computed = child_rect.computed_rect
 
-        # Parent is 200-600 x 150-450
+        # Y-down: Parent is 200-600 x 150-450 (top=150, bottom=450)
+        # Child with 10px offsets: 210-590 x 160-440
         expect(computed.left).to eq(210)
         expect(computed.right).to eq(590)
-        expect(computed.bottom).to eq(160)
-        expect(computed.top).to eq(440)
+        expect(computed.top).to eq(160)
+        expect(computed.bottom).to eq(440)
       end
     end
   end

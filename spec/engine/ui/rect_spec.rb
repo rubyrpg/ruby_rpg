@@ -9,8 +9,9 @@ describe Engine::UI::Rect do
   end
 
   describe "#height" do
-    it "returns the difference between top and bottom" do
-      rect = Engine::UI::Rect.new(left: 0, right: 100, bottom: 20, top: 120)
+    it "returns the difference between bottom and top (Y-down)" do
+      # Y-down: top < bottom, so height = bottom - top
+      rect = Engine::UI::Rect.new(left: 0, right: 100, top: 20, bottom: 120)
       expect(rect.height).to eq(100)
     end
   end

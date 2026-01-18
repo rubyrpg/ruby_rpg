@@ -29,11 +29,12 @@ module Engine::Components
       end
 
       def screen_rect
+        # Y-down: top=0, bottom=height
         Engine::UI::Rect.new(
           left: 0,
           right: Engine::Window.framebuffer_width,
-          bottom: 0,
-          top: Engine::Window.framebuffer_height
+          top: 0,
+          bottom: Engine::Window.framebuffer_height
         )
       end
 
@@ -44,11 +45,12 @@ module Engine::Components
 
         pr = parent_rect
 
+        # Y-down: top increases downward from parent top, bottom decreases upward from parent bottom
         Engine::UI::Rect.new(
           left:   pr.left   + (pr.width  * @left_ratio)   + @left_offset,
           right:  pr.right  - (pr.width  * @right_ratio)  - @right_offset,
-          bottom: pr.bottom + (pr.height * @bottom_ratio) + @bottom_offset,
-          top:    pr.top    - (pr.height * @top_ratio)    - @top_offset
+          top:    pr.top    + (pr.height * @top_ratio)    + @top_offset,
+          bottom: pr.bottom - (pr.height * @bottom_ratio) - @bottom_offset
         )
       end
     end

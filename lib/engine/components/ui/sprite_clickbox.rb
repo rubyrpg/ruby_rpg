@@ -36,10 +36,11 @@ module Engine::Components
       def point_inside?(point)
         rect = @ui_rect.computed_rect
 
+        # Y-down: top < bottom
         point[0] >= rect.left &&
           point[0] <= rect.right &&
-          point[1] >= rect.bottom &&
-          point[1] <= rect.top
+          point[1] >= rect.top &&
+          point[1] <= rect.bottom
       end
     end
   end

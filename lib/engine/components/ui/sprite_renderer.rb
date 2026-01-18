@@ -45,11 +45,12 @@ module Engine::Components
       end
 
       def set_camera_matrix
+        # Y-down coordinate system: (0,0) at top-left, Y increases downward
         camera_matrix = Matrix[
           [2.0 / Engine::Window.framebuffer_width, 0, 0, 0],
-          [0, 2.0 / Engine::Window.framebuffer_height, 0, 0],
+          [0, -2.0 / Engine::Window.framebuffer_height, 0, 0],
           [0, 0, 1, 0],
-          [-1, -1, 0, 1]
+          [-1, 1, 0, 1]
         ]
         material.set_mat4("camera", camera_matrix)
       end
@@ -97,11 +98,12 @@ module Engine::Components
       end
 
       def update_vertex_buffer(rect)
+        # UV coords flipped for Y-down: V=0 at top, V=1 at bottom
         vertices = [
-          rect.left,  rect.bottom, 0, 0, 1,  # bottom-left
-          rect.right, rect.bottom, 0, 1, 1,  # bottom-right
-          rect.right, rect.top,    0, 1, 0,  # top-right
-          rect.left,  rect.top,    0, 0, 0   # top-left
+          rect.left,  rect.bottom, 0, 0, 0,  # bottom-left
+          rect.right, rect.bottom, 0, 1, 0,  # bottom-right
+          rect.right, rect.top,    0, 1, 1,  # top-right
+          rect.left,  rect.top,    0, 0, 1   # top-left
         ]
 
         GL.BindBuffer(GL::ARRAY_BUFFER, @vbo)

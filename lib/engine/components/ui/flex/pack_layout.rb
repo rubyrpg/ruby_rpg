@@ -16,12 +16,13 @@ module Engine::Components
           available = row? ? parent_rect.width : parent_rect.height
           start_offset = calculate_start_offset(available, total_content, children.length)
 
+          # Y-down: both row and column increment main_start
           main_start = main_axis_start(parent_rect)
-          main_start += row? ? start_offset : -start_offset
+          main_start += start_offset
 
           children.each_with_index do |_, i|
             break if i == index
-            main_start += row? ? (sizes[i] + gap) : -(sizes[i] + gap)
+            main_start += sizes[i] + gap
           end
 
           build_rect(parent_rect, main_start: main_start, main_size: sizes[index])

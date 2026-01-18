@@ -8,7 +8,8 @@ module Engine
       end
 
       def height
-        top - bottom
+        # Y-down: bottom > top
+        bottom - top
       end
     end
   end

@@ -7,10 +7,11 @@ module Engine::Components
         def rect_for_child(child_ui_rect, index, children, parent_rect)
           sizes = calculate_sizes(children, parent_rect)
 
+          # Y-down: both row and column increment main_start
           main_start = main_axis_start(parent_rect)
           children.each_with_index do |_, i|
             break if i == index
-            main_start += row? ? (sizes[i] + gap) : -(sizes[i] + gap)
+            main_start += sizes[i] + gap
           end
 
           build_rect(parent_rect, main_start: main_start, main_size: sizes[index])

@@ -30,6 +30,7 @@ module Engine::Components
         end
 
         def build_rect(parent_rect, main_start:, main_size:)
+          # Y-down coordinate system: both row and column increment main_start
           if row?
             Engine::UI::Rect.new(
               left: main_start,
@@ -41,8 +42,8 @@ module Engine::Components
             Engine::UI::Rect.new(
               left: parent_rect.left,
               right: parent_rect.right,
-              bottom: main_start - main_size,
-              top: main_start
+              top: main_start,
+              bottom: main_start + main_size
             )
           end
         end

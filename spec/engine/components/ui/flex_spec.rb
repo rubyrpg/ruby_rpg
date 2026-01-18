@@ -64,11 +64,11 @@ describe Engine::Components::UI::Flex do
         expect(rect2.right).to eq(800)
         expect(rect2.width).to eq(400)
 
-        # Full height
-        expect(rect1.bottom).to eq(0)
-        expect(rect1.top).to eq(600)
-        expect(rect2.bottom).to eq(0)
-        expect(rect2.top).to eq(600)
+        # Full height (Y-down: top=0, bottom=600)
+        expect(rect1.top).to eq(0)
+        expect(rect1.bottom).to eq(600)
+        expect(rect2.top).to eq(0)
+        expect(rect2.bottom).to eq(600)
       end
 
       it "applies gap between children" do
@@ -129,14 +129,14 @@ describe Engine::Components::UI::Flex do
         rect1 = child1.components.first.computed_rect
         rect2 = child2.components.first.computed_rect
 
-        # First child at top
-        expect(rect1.top).to eq(600)
+        # Y-down: first child at top (top=0)
+        expect(rect1.top).to eq(0)
         expect(rect1.bottom).to eq(300)
         expect(rect1.height).to eq(300)
 
-        # Second child below
+        # Second child below (top=300)
         expect(rect2.top).to eq(300)
-        expect(rect2.bottom).to eq(0)
+        expect(rect2.bottom).to eq(600)
         expect(rect2.height).to eq(300)
 
         # Full width
@@ -168,12 +168,12 @@ describe Engine::Components::UI::Flex do
         rect1 = child1.components.first.computed_rect
         rect2 = child2.components.first.computed_rect
 
-        # 600px - 20px gap = 580px / 2 = 290px each
-        expect(rect1.top).to eq(600)
-        expect(rect1.bottom).to eq(310)
+        # Y-down: 600px - 20px gap = 580px / 2 = 290px each
+        expect(rect1.top).to eq(0)
+        expect(rect1.bottom).to eq(290)
 
-        expect(rect2.top).to eq(290)  # 310 - 20 gap
-        expect(rect2.bottom).to eq(0)
+        expect(rect2.top).to eq(310)  # 290 + 20 gap
+        expect(rect2.bottom).to eq(600)
       end
     end
 
@@ -246,9 +246,9 @@ describe Engine::Components::UI::Flex do
         expect(rect2.right).to eq(260)
         expect(rect2.width).to eq(150)
 
-        # Both full height
-        expect(rect1.bottom).to eq(0)
-        expect(rect1.top).to eq(600)
+        # Both full height (Y-down)
+        expect(rect1.top).to eq(0)
+        expect(rect1.bottom).to eq(600)
       end
 
       it "raises error when flex_width is missing" do
@@ -358,14 +358,14 @@ describe Engine::Components::UI::Flex do
         rect1 = children[0].components.first.computed_rect
         rect2 = children[1].components.first.computed_rect
 
-        # First child at top, 50px tall
-        expect(rect1.top).to eq(600)
-        expect(rect1.bottom).to eq(550)
+        # Y-down: first child at top, 50px tall
+        expect(rect1.top).to eq(0)
+        expect(rect1.bottom).to eq(50)
         expect(rect1.height).to eq(50)
 
         # Second child below gap, 80px tall
-        expect(rect2.top).to eq(540)  # 550 - 10 gap
-        expect(rect2.bottom).to eq(460)
+        expect(rect2.top).to eq(60)  # 50 + 10 gap
+        expect(rect2.bottom).to eq(140)
         expect(rect2.height).to eq(80)
 
         # Both full width

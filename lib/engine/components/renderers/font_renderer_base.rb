@@ -7,9 +7,10 @@ module Engine::Components
     attr_reader :mesh, :texture
 
     def awake
+      # Original vertex order for ear-clipping, UVs flipped for Y-down camera
       @mesh = Engine::PolygonMesh.new(
         [Vector[-0.5, 0.5], Vector[0.5, 0.5], Vector[0.5, -0.5], Vector[-0.5, -0.5]],
-        [[0, 0], [1, 0], [1, 1], [0, 1]]
+        [[0, 1], [1, 1], [1, 0], [0, 0]]
       )
       @texture = @font.texture.texture
     end
