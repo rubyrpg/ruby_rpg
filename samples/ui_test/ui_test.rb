@@ -18,6 +18,33 @@ def create_ui_material(r, g, b, a = 1.0)
   mat
 end
 
+def create_sprite_material(texture_path)
+  texture = Engine::Texture.for(texture_path)
+  mat = Engine::Material.create(shader: Engine::Shader.ui_sprite)
+  mat.set_vec4("spriteColor", [1, 1, 1, 1])
+  mat.set_runtime_texture("image", texture.texture)
+  mat
+end
+
+def create_smiley_sprite
+  Engine::GameObject.create(
+    name: "SmileySprite",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 50,
+        top_offset: 100,
+        right_ratio: 1.0,
+        right_offset: -170,
+        bottom_ratio: 1.0,
+        bottom_offset: -220
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_sprite_material("assets/smiley.png")
+      )
+    ]
+  )
+end
+
 Engine.start do
   Rendering::RenderPipeline.set_skybox_colors(
     ground: Vector[0, 0, 0],
@@ -41,4 +68,5 @@ Engine.start do
   create_column_panel(font)
   create_center_panel(font)
   create_corners
+  create_smiley_sprite
 end
