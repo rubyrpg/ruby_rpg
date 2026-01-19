@@ -60,8 +60,7 @@ module Engine::Components
     end
 
     def set_shader_texture
-      GL.ActiveTexture(GL::TEXTURE0)
-      GL.BindTexture(GL::TEXTURE_2D, texture)
+      Engine::Material.bind_texture(0, GL::TEXTURE_2D, texture)
       shader.set_int("fontTexture", 0)
     end
 
