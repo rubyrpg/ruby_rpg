@@ -97,13 +97,18 @@ def create_column_example(parent, font, label, justify, color)
     ]
   )
 
-  # Different widths to demo cross-axis sizing (align at left)
-  [{height: 50, width: 30}, {height: 20, width: nil}, {height: 90, width: 45}].each_with_index do |dims, i|
+  # Different widths and alignments to demo cross-axis sizing
+  items = [
+    {height: 50, width: 30, align: :start},
+    {height: 20, width: 40, align: :center},
+    {height: 90, width: 35, align: :end}
+  ]
+  items.each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "Col#{label}Item#{i}",
       parent: column,
       components: [
-        Engine::Components::UI::Rect.create(flex_height: dims[:height], flex_width: dims[:width]),
+        Engine::Components::UI::Rect.create(flex_height: dims[:height], flex_width: dims[:width], flex_align: dims[:align]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(*color))
       ]
     )
@@ -150,13 +155,18 @@ def create_column_stretch_example(parent, font)
     ]
   )
 
-  # Weights 1:2:1 with different widths to show cross-axis sizing
-  [{weight: 1, width: 25}, {weight: 2, width: nil}, {weight: 1, width: 40}].each_with_index do |dims, i|
+  # Weights 1:2:1 with different widths and alignments
+  items = [
+    {weight: 1, width: 25, align: :start},
+    {weight: 2, width: nil, align: nil},  # stretches
+    {weight: 1, width: 40, align: :end}
+  ]
+  items.each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "ColStretchItem#{i}",
       parent: column,
       components: [
-        Engine::Components::UI::Rect.create(flex_weight: dims[:weight], flex_width: dims[:width]),
+        Engine::Components::UI::Rect.create(flex_weight: dims[:weight], flex_width: dims[:width], flex_align: dims[:align]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.7, 0.4))
       ]
     )

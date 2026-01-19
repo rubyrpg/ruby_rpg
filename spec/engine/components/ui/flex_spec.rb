@@ -450,6 +450,120 @@ describe Engine::Components::UI::Flex do
           expect(rect2.width).to eq(800)
         end
       end
+
+      context "with flex_align" do
+        it "aligns at start by default" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :row, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_height: 100)]
+          )
+
+          rect = parent.children.first.components.first.computed_rect
+
+          # Aligned at top (start)
+          expect(rect.top).to eq(0)
+          expect(rect.bottom).to eq(100)
+        end
+
+        it "aligns at center in row direction" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :row, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_height: 100, flex_align: :center)]
+          )
+
+          rect = parent.children.first.components.first.computed_rect
+
+          # Centered vertically: (600 - 100) / 2 = 250
+          expect(rect.top).to eq(250)
+          expect(rect.bottom).to eq(350)
+          expect(rect.height).to eq(100)
+        end
+
+        it "aligns at end in row direction" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :row, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_height: 100, flex_align: :end)]
+          )
+
+          rect = parent.children.first.components.first.computed_rect
+
+          # Aligned at bottom
+          expect(rect.top).to eq(500)
+          expect(rect.bottom).to eq(600)
+        end
+
+        it "aligns at center in column direction" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :column, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_width: 200, flex_align: :center)]
+          )
+
+          rect = parent.children.first.components.first.computed_rect
+
+          # Centered horizontally: (800 - 200) / 2 = 300
+          expect(rect.left).to eq(300)
+          expect(rect.right).to eq(500)
+          expect(rect.width).to eq(200)
+        end
+
+        it "aligns at end in column direction" do
+          parent = Engine::GameObject.create(
+            name: "Parent",
+            components: [
+              Engine::Components::UI::Rect.create,
+              Engine::Components::UI::Flex.create(direction: :column, gap: 0)
+            ]
+          )
+
+          Engine::GameObject.create(
+            name: "Child",
+            parent: parent,
+            components: [Engine::Components::UI::Rect.create(flex_width: 200, flex_align: :end)]
+          )
+
+          rect = parent.children.first.components.first.computed_rect
+
+          # Aligned at right
+          expect(rect.left).to eq(600)
+          expect(rect.right).to eq(800)
+        end
+      end
     end
 
     context "with flex_weight in stretch mode" do

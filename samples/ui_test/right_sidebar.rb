@@ -71,13 +71,18 @@ def create_justify_example(parent, font, name, top_offset, justify, color)
     ]
   )
 
-  # Different flex_heights to demo cross-axis sizing (align at top)
-  [{width: 40, height: 20}, {width: 60, height: 35}, {width: 30, height: nil}].each_with_index do |dims, i|
+  # Different flex_heights and alignments to demo cross-axis sizing
+  items = [
+    {width: 40, height: 20, align: :start},
+    {width: 60, height: 35, align: :center},
+    {width: 30, height: 25, align: :end}
+  ]
+  items.each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "#{name}Btn#{i}",
       parent: row,
       components: [
-        Engine::Components::UI::Rect.create(flex_width: dims[:width], flex_height: dims[:height]),
+        Engine::Components::UI::Rect.create(flex_width: dims[:width], flex_height: dims[:height], flex_align: dims[:align]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(*color))
       ]
     )
@@ -116,13 +121,18 @@ def create_stretch_example(parent, font, top_offset)
     ]
   )
 
-  # Different flex_heights: 25px, stretch, 40px
-  [25, nil, 40].each_with_index do |height, i|
+  # Different flex_heights with alignments
+  items = [
+    {height: 25, align: :start},
+    {height: nil, align: nil},  # stretches
+    {height: 40, align: :end}
+  ]
+  items.each_with_index do |dims, i|
     Engine::GameObject.create(
       name: "StretchBtn#{i}",
       parent: row,
       components: [
-        Engine::Components::UI::Rect.create(flex_height: height),
+        Engine::Components::UI::Rect.create(flex_height: dims[:height], flex_align: dims[:align]),
         Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.7, 0.7, 0.4))
       ]
     )
