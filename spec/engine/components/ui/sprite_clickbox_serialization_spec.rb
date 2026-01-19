@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-describe Engine::Components::UISpriteClickbox do
+describe Engine::Components::UI::SpriteClickbox do
   describe ".create" do
     it "creates a clickbox with default values" do
-      clickbox = Engine::Components::UISpriteClickbox.create
+      clickbox = Engine::Components::UI::SpriteClickbox.create
 
       expect(clickbox.mouse_inside).to eq(false)
       expect(clickbox.clicked).to eq(false)
@@ -14,7 +14,7 @@ describe Engine::Components::UISpriteClickbox do
 
   describe "serialization round-trip" do
     it "serializes and deserializes correctly" do
-      original = Engine::Components::UISpriteClickbox.create
+      original = Engine::Components::UI::SpriteClickbox.create
 
       serialized = Engine::Serialization::ObjectSerializer.serialize(original)
       restored = Engine::Serialization::ObjectSerializer.deserialize(serialized)

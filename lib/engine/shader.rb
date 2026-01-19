@@ -3,6 +3,7 @@ module Engine
     include Serializable
 
     @cache = {}
+    @current_program = nil
 
     def self.from_file(vertex_path, fragment_path)
       key = [vertex_path, fragment_path]
@@ -132,7 +133,13 @@ module Engine
     end
 
     def use
+      return if self.class.current_program == @program
+      self.class.current_program = @program
       GL.UseProgram(@program)
+    end
+
+    class << self
+      attr_accessor :current_program
     end
 
     def set_vec2(name, vec)

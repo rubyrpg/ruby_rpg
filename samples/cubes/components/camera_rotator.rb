@@ -11,7 +11,7 @@ module Cubes
 
     def update(delta_time)
       mouse_delta = Engine::Input.mouse_delta
-      game_object.rotate_around(Vector[1, 0, 0], -mouse_delta[1] * ROTATION_SPEED * delta_time)
+      game_object.rotate_around(Vector[1, 0, 0], mouse_delta[1] * ROTATION_SPEED * delta_time)
       game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, mouse_delta[0], 0] * ROTATION_SPEED * delta_time)
 
       if Engine::Input.key?(GLFW::KEY_A)

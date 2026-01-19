@@ -121,7 +121,9 @@ module Rendering
     end
 
     def self.draw_ui
-      Engine::GameObject.ui_renderers.each(&:draw)
+      GL.Disable(GL::CULL_FACE)
+      Engine::Components::UI::Rect.draw_all
+      GL.Enable(GL::CULL_FACE)
     end
 
     def self.add_instance(mesh_renderer)

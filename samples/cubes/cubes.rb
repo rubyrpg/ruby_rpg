@@ -10,7 +10,7 @@ end
 
 Engine.start do
   include Cubes
-  
+
   # Post processing effects
   Rendering::PostProcessingEffect.add_all([
     Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0),
@@ -53,6 +53,39 @@ Engine.start do
     rotation: Vector[-70, 190, 0],
     components: [
       Engine::Components::DirectionLight.create(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
+    ]
+  )
+
+  # UI Example - a panel in the bottom-left corner with a nested child
+  ui_material = Engine::Material.create(shader: Engine::Shader.ui_sprite)
+  ui_material.set_vec4("spriteColor", [0.2, 0.2, 0.8, 0.8])  # semi-transparent blue
+  ui_material.set_runtime_texture("image", Engine::Material.default_white_texture)
+
+  child_material = Engine::Material.create(shader: Engine::Shader.ui_sprite)
+  child_material.set_vec4("spriteColor", [0.8, 0.2, 0.2, 1.0])  # red
+  child_material.set_runtime_texture("image", Engine::Material.default_white_texture)
+
+  panel = Engine::GameObject.create(
+    name: "UIPanel",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_ratio: 0.02, right_ratio: 0.75,
+        bottom_ratio: 0.02, top_ratio: 0.7
+      ),
+      Engine::Components::UI::SpriteRenderer.create(material: ui_material)
+    ]
+  )
+
+
+  Engine::GameObject.create(
+    name: "UIButton",
+    parent: panel,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 10, right_offset: 10,
+        bottom_offset: 10, top_offset: 10
+      ),
+      Engine::Components::UI::SpriteRenderer.create(material: child_material)
     ]
   )
 end

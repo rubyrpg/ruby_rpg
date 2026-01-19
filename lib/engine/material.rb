@@ -6,6 +6,31 @@ module Engine
 
     serialize :shader, :floats, :ints, :vec2s, :vec3s, :vec4s, :mat4s, :textures
 
+    # Cache texture slot constants to avoid const_get every frame
+    TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("GL::TEXTURE#{i}") }
+
+    # Class-level texture binding cache
+    @current_texture_slot = nil
+    @bound_textures = {}
+
+    class << self
+      attr_accessor :current_texture_slot, :bound_textures
+    end
+
+    def self.bind_texture(slot, target, texture_id)
+      # Activate slot only if different
+      unless @current_texture_slot == slot
+        GL.ActiveTexture(TEXTURE_SLOTS[slot])
+        @current_texture_slot = slot
+      end
+
+      # Bind texture only if different for this slot
+      unless @bound_textures[slot] == texture_id
+        GL.BindTexture(target, texture_id)
+        @bound_textures[slot] = texture_id
+      end
+    end
+
     attr_reader :shader
 
     def self.default_white_texture
@@ -103,14 +128,14 @@ module Engine
       expected = shader.expected_textures.each_with_object({}) { |name, h| h[name] = nil }
       all_textures = expected.merge(textures).merge(runtime_textures)
       all_textures.each.with_index do |(name, value), slot|
-        GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
-        if value.is_a?(Texture)
-          GL.BindTexture(GL::TEXTURE_2D, value.texture)
-        elsif value
-          GL.BindTexture(GL::TEXTURE_2D, value)
-        else
-          GL.BindTexture(GL::TEXTURE_2D, fallback_texture_for(name))
-        end
+        texture_id = if value.is_a?(Texture)
+                       value.texture
+                     elsif value
+                       value
+                     else
+                       fallback_texture_for(name)
+                     end
+        Material.bind_texture(slot, GL::TEXTURE_2D, texture_id)
         shader.set_int(name, slot)
       end
 
@@ -118,12 +143,8 @@ module Engine
       cubemap_start_slot = all_textures.size
       cubemaps.each.with_index do |(name, value), i|
         slot = cubemap_start_slot + i
-        GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
-        if value
-          GL.BindTexture(GL::TEXTURE_CUBE_MAP, value)
-        else
-          GL.BindTexture(GL::TEXTURE_CUBE_MAP, fallback_cubemap_for(name))
-        end
+        texture_id = value || fallback_cubemap_for(name)
+        Material.bind_texture(slot, GL::TEXTURE_CUBE_MAP, texture_id)
         shader.set_int(name, slot)
       end
 
@@ -131,12 +152,7 @@ module Engine
       texture_array_start_slot = cubemap_start_slot + cubemaps.size
       texture_arrays.each.with_index do |(name, value), i|
         slot = texture_array_start_slot + i
-        GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
-        if value
-          GL.BindTexture(GL::TEXTURE_2D_ARRAY, value)
-        else
-          GL.BindTexture(GL::TEXTURE_2D_ARRAY, 0)
-        end
+        Material.bind_texture(slot, GL::TEXTURE_2D_ARRAY, value || 0)
         shader.set_int(name, slot)
       end
 
@@ -144,12 +160,7 @@ module Engine
       cubemap_array_start_slot = texture_array_start_slot + texture_arrays.size
       cubemap_arrays.each.with_index do |(name, value), i|
         slot = cubemap_array_start_slot + i
-        GL.ActiveTexture(Object.const_get("GL::TEXTURE#{slot}"))
-        if value
-          GL.BindTexture(GL::TEXTURE_CUBE_MAP_ARRAY, value)
-        else
-          GL.BindTexture(GL::TEXTURE_CUBE_MAP_ARRAY, 0)
-        end
+        Material.bind_texture(slot, GL::TEXTURE_CUBE_MAP_ARRAY, value || 0)
         shader.set_int(name, slot)
       end
     end
