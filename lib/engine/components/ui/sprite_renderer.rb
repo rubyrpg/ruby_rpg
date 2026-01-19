@@ -98,6 +98,9 @@ module Engine::Components
       end
 
       def update_vertex_buffer(rect)
+        return if @cached_rect == rect
+        @cached_rect = rect
+
         # UV V=1 at screen bottom, V=0 at screen top (matches PNG top-to-bottom storage)
         vertices = [
           rect.left,  rect.bottom, 0, 0, 1,  # bottom-left
