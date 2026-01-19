@@ -36,7 +36,8 @@ def create_smiley_sprite
         right_ratio: 1.0,
         right_offset: -170,
         bottom_ratio: 1.0,
-        bottom_offset: -220
+        bottom_offset: -220,
+        z_layer: 30
       ),
       Engine::Components::UI::SpriteRenderer.create(
         material: create_sprite_material("assets/smiley.png")

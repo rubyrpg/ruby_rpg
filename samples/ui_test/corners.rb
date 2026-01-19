@@ -9,7 +9,8 @@ def create_corners
         left_offset: 10,
         right_ratio: 1.0, right_offset: -80,
         bottom_ratio: 1.0, bottom_offset: -80,
-        top_offset: 10
+        top_offset: 10,
+        z_layer: 25
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.8, 0.2, 0.2))
     ]
@@ -23,7 +24,8 @@ def create_corners
         left_ratio: 1.0, left_offset: -80,
         right_offset: 10,
         bottom_ratio: 1.0, bottom_offset: -80,
-        top_offset: 10
+        top_offset: 10,
+        z_layer: 25
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.8, 0.2))
     ]
@@ -37,7 +39,8 @@ def create_corners
         left_offset: 10,
         right_ratio: 1.0, right_offset: -80,
         bottom_offset: 10,
-        top_ratio: 1.0, top_offset: -80
+        top_ratio: 1.0, top_offset: -80,
+        z_layer: 25
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.8))
     ]
@@ -51,7 +54,8 @@ def create_corners
         left_ratio: 1.0, left_offset: -80,
         right_offset: 10,
         bottom_offset: 10,
-        top_ratio: 1.0, top_offset: -80
+        top_ratio: 1.0, top_offset: -80,
+        z_layer: 25
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.8, 0.8, 0.2))
     ]

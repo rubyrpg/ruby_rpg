@@ -5,11 +5,22 @@ module Engine::Components
     class Rect < Engine::Component
       serialize :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
                 :left_offset, :right_offset, :top_offset, :bottom_offset,
-                :flex_width, :flex_height, :flex_weight, :flex_align
+                :flex_width, :flex_height, :flex_weight, :flex_align,
+                :z_layer
 
       attr_reader :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
                   :left_offset, :right_offset, :top_offset, :bottom_offset,
                   :flex_width, :flex_height, :flex_weight, :flex_align
+
+      def self.rects
+        @rects ||= []
+      end
+
+      def self.draw_all
+        rects.each do |rect|
+          rect.game_object.ui_renderers.each(&:draw)
+        end
+      end
 
       def awake
         @left_ratio    ||= 0.0
@@ -21,6 +32,26 @@ module Engine::Components
         @bottom_offset ||= 0
         @top_offset    ||= 0
         @flex_weight   ||= 1
+      end
+
+      def start
+        insert_sorted
+      end
+
+      def destroy
+        Rect.rects.delete(self)
+      end
+
+      def z_layer=(value)
+        @z_layer = value
+        reposition
+      end
+
+      def z_layer
+        return @z_layer if @z_layer
+
+        parent_ui = game_object.parent&.components&.find { |c| c.is_a?(UI::Rect) }
+        parent_ui ? parent_ui.z_layer + 10 : 0
       end
 
       def parent_rect
@@ -52,6 +83,19 @@ module Engine::Components
           top:    pr.top    + (pr.height * @top_ratio)    + @top_offset,
           bottom: pr.bottom - (pr.height * @bottom_ratio) - @bottom_offset
         )
+      end
+
+      private
+
+      def insert_sorted
+        z = z_layer
+        index = Rect.rects.bsearch_index { |r| r.z_layer > z } || Rect.rects.length
+        Rect.rects.insert(index, self)
+      end
+
+      def reposition
+        Rect.rects.delete(self)
+        insert_sorted
       end
     end
   end

@@ -8,7 +8,8 @@ def create_right_sidebar(font)
         left_ratio: 1.0,
         left_offset: -200,
         top_offset: 50,
-        bottom_offset: 50
+        bottom_offset: 50,
+        z_layer: 10
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.25, 0.25, 0.3))
     ]

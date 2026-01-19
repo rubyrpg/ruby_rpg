@@ -6,7 +6,8 @@ def create_top_bar(font)
     components: [
       Engine::Components::UI::Rect.create(
         bottom_ratio: 1.0,
-        bottom_offset: -50
+        bottom_offset: -50,
+        z_layer: 20
       ),
       Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.2, 0.2))
     ]

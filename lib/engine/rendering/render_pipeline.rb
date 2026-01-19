@@ -122,7 +122,7 @@ module Rendering
 
     def self.draw_ui
       GL.Disable(GL::CULL_FACE)
-      Engine::GameObject.ui_renderers.each(&:draw)
+      Engine::Components::UI::Rect.draw_all
       GL.Enable(GL::CULL_FACE)
     end
 

@@ -4,6 +4,7 @@ describe Engine::Components::UI::Rect do
   before do
     allow(Engine::Window).to receive(:framebuffer_width).and_return(800)
     allow(Engine::Window).to receive(:framebuffer_height).and_return(600)
+    Engine::Components::UI::Rect.rects.clear
   end
 
   describe ".create" do
@@ -181,6 +182,179 @@ describe Engine::Components::UI::Rect do
       expect(serialized[:right_offset]).to eq({ _class: "Integer", value: -5 })
       expect(serialized[:bottom_offset]).to eq({ _class: "Integer", value: 10 })
       expect(serialized[:top_offset]).to eq({ _class: "Integer", value: -10 })
+    end
+  end
+
+  describe "#z_layer" do
+    context "with no parent" do
+      it "defaults to 0" do
+        game_object = Engine::GameObject.create(
+          name: "Test",
+          components: [Engine::Components::UI::Rect.create]
+        )
+        rect = game_object.components.first
+
+        expect(rect.z_layer).to eq(0)
+      end
+
+      it "can be explicitly set" do
+        game_object = Engine::GameObject.create(
+          name: "Test",
+          components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+        )
+        rect = game_object.components.first
+
+        expect(rect.z_layer).to eq(10)
+      end
+    end
+
+    context "with a parent" do
+      it "inherits parent z_layer + 10" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [Engine::Components::UI::Rect.create(z_layer: 5)]
+        )
+
+        child = Engine::GameObject.create(
+          name: "Child",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create]
+        )
+        child_rect = child.components.first
+
+        expect(child_rect.z_layer).to eq(15)
+      end
+
+      it "chains inheritance through multiple levels" do
+        grandparent = Engine::GameObject.create(
+          name: "Grandparent",
+          components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+        )
+
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          parent: grandparent,
+          components: [Engine::Components::UI::Rect.create]
+        )
+
+        child = Engine::GameObject.create(
+          name: "Child",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create]
+        )
+        child_rect = child.components.first
+
+        expect(child_rect.z_layer).to eq(30)
+      end
+
+      it "explicit z_layer overrides inheritance" do
+        parent = Engine::GameObject.create(
+          name: "Parent",
+          components: [Engine::Components::UI::Rect.create(z_layer: 100)]
+        )
+
+        child = Engine::GameObject.create(
+          name: "Child",
+          parent: parent,
+          components: [Engine::Components::UI::Rect.create(z_layer: 5)]
+        )
+        child_rect = child.components.first
+
+        expect(child_rect.z_layer).to eq(5)
+      end
+    end
+
+    describe "#z_layer=" do
+      it "updates the z_layer value" do
+        game_object = Engine::GameObject.create(
+          name: "Test",
+          components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+        )
+        rect = game_object.components.first
+
+        rect.z_layer = 20
+
+        expect(rect.z_layer).to eq(20)
+      end
+    end
+  end
+
+  describe ".rects" do
+    it "registers rects in z_layer sorted order" do
+      obj1 = Engine::GameObject.create(
+        name: "High",
+        components: [Engine::Components::UI::Rect.create(z_layer: 20)]
+      )
+      obj2 = Engine::GameObject.create(
+        name: "Low",
+        components: [Engine::Components::UI::Rect.create(z_layer: 5)]
+      )
+      obj3 = Engine::GameObject.create(
+        name: "Mid",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+
+      rects = Engine::Components::UI::Rect.rects
+      z_layers = rects.map(&:z_layer)
+
+      expect(z_layers).to eq([5, 10, 20])
+    end
+
+    it "maintains insertion order for same z_layer" do
+      obj1 = Engine::GameObject.create(
+        name: "First",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+      obj2 = Engine::GameObject.create(
+        name: "Second",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+      obj3 = Engine::GameObject.create(
+        name: "Third",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+
+      rects = Engine::Components::UI::Rect.rects
+      names = rects.map { |r| r.game_object.name }
+
+      expect(names).to eq(["First", "Second", "Third"])
+    end
+
+    it "repositions rect when z_layer changes" do
+      obj1 = Engine::GameObject.create(
+        name: "A",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+      obj2 = Engine::GameObject.create(
+        name: "B",
+        components: [Engine::Components::UI::Rect.create(z_layer: 20)]
+      )
+      obj3 = Engine::GameObject.create(
+        name: "C",
+        components: [Engine::Components::UI::Rect.create(z_layer: 30)]
+      )
+
+      rect_b = obj2.components.first
+      rect_b.z_layer = 5
+
+      rects = Engine::Components::UI::Rect.rects
+      names = rects.map { |r| r.game_object.name }
+
+      expect(names).to eq(["B", "A", "C"])
+    end
+
+    it "removes rect on destroy" do
+      obj = Engine::GameObject.create(
+        name: "Test",
+        components: [Engine::Components::UI::Rect.create(z_layer: 10)]
+      )
+      rect = obj.components.first
+
+      expect(Engine::Components::UI::Rect.rects).to include(rect)
+
+      rect.destroy
+
+      expect(Engine::Components::UI::Rect.rects).not_to include(rect)
     end
   end
 end
