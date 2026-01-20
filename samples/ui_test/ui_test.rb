@@ -85,6 +85,45 @@ def create_masked_smiley_demo
   )
 end
 
+def create_sprite_mask_demo
+  # Smiley as the mask - should clip children to its alpha shape
+  smiley_mask = Engine::GameObject.create(
+    name: "SmileyMask",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 250,
+        top_offset: 400,
+        right_ratio: 1.0,
+        right_offset: -400,
+        bottom_ratio: 1.0,
+        bottom_offset: -550,
+        z_layer: 400,
+        mask: true
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_sprite_material("assets/smiley.png")
+      )
+    ]
+  )
+
+  # Solid color child that fills the mask - should be clipped to smiley shape
+  Engine::GameObject.create(
+    name: "ColorFill",
+    parent: smiley_mask,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 0,
+        top_offset: 0,
+        right_offset: 0,
+        bottom_offset: 0
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_ui_material(1.0, 0.0, 0.5, 1.0)
+      )
+    ]
+  )
+end
+
 def create_nested_hierarchy_demo
   # Outer mask container (dark blue)
   outer_mask = Engine::GameObject.create(
@@ -168,4 +207,5 @@ Engine.start do
   create_smiley_sprite
   create_masked_smiley_demo
   create_nested_hierarchy_demo
+  create_sprite_mask_demo
 end
