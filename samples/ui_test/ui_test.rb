@@ -47,7 +47,7 @@ def create_smiley_sprite
 end
 
 def create_masked_smiley_demo
-  # Small mask container (red border to show bounds)
+  # Small mask container (dark red to show bounds)
   mask_container = Engine::GameObject.create(
     name: "MaskContainer",
     components: [
@@ -85,6 +85,63 @@ def create_masked_smiley_demo
   )
 end
 
+def create_nested_hierarchy_demo
+  # Outer mask container (dark blue)
+  outer_mask = Engine::GameObject.create(
+    name: "OuterMask",
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 600,
+        top_offset: 300,
+        right_ratio: 1.0,
+        right_offset: -750,
+        bottom_ratio: 1.0,
+        bottom_offset: -450,
+        z_layer: 300,
+        mask: true
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_ui_material(0.1, 0.1, 1, 1.0)
+      )
+    ]
+  )
+
+  # Middle child (green, not a mask, extends beyond parent)
+  middle_child = Engine::GameObject.create(
+    name: "MiddleChild",
+    parent: outer_mask,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: 20,
+        top_offset: 20,
+        right_offset: -40,
+        bottom_offset: -40,
+        mask: true
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_ui_material(0.1, 0.3, 0.1, 1.0)
+      )
+    ]
+  )
+
+  # Grandchild smiley (extends beyond middle child, but clipped by outer mask)
+  Engine::GameObject.create(
+    name: "GrandchildSmiley",
+    parent: middle_child,
+    components: [
+      Engine::Components::UI::Rect.create(
+        left_offset: -30,
+        top_offset: -30,
+        right_offset: -60,
+        bottom_offset: -60
+      ),
+      Engine::Components::UI::SpriteRenderer.create(
+        material: create_sprite_material("assets/smiley.png")
+      )
+    ]
+  )
+end
+
 Engine.start do
   Rendering::RenderPipeline.set_skybox_colors(
     ground: Vector[0, 0, 0],
@@ -110,4 +167,5 @@ Engine.start do
   create_corners
   create_smiley_sprite
   create_masked_smiley_demo
+  create_nested_hierarchy_demo
 end
