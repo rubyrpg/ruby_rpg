@@ -27,6 +27,7 @@ module Rendering
         def reset
           disable_stencil_test
           @current_chain = nil
+          @stencil_enabled = false
         end
 
         private
@@ -65,11 +66,15 @@ module Rendering
         end
 
         def enable_stencil_test
+          return if @stencil_enabled
           GL.Enable(GL::STENCIL_TEST)
+          @stencil_enabled = true
         end
 
         def disable_stencil_test
+          return unless @stencil_enabled
           GL.Disable(GL::STENCIL_TEST)
+          @stencil_enabled = false
         end
       end
     end
