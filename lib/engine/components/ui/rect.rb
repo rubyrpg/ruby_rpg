@@ -54,12 +54,12 @@ module Engine::Components
       def z_layer
         return @z_layer if @z_layer
 
-        parent_ui = game_object.parent&.components&.find { |c| c.is_a?(UI::Rect) }
+        parent_ui = game_object.parent&.component(UI::Rect)
         parent_ui ? parent_ui.z_layer + 10 : 0
       end
 
       def parent_rect
-        parent_ui = game_object.parent&.components&.find { |c| c.is_a?(UI::Rect) }
+        parent_ui = game_object.parent&.component(UI::Rect)
         parent_ui&.computed_rect || screen_rect
       end
 
@@ -75,7 +75,7 @@ module Engine::Components
 
       def computed_rect
         # Check if parent has a layout component
-        parent_flex = game_object.parent&.components&.find { |c| c.is_a?(UI::Flex) }
+        parent_flex = game_object.parent&.component(UI::Flex)
         return parent_flex.rect_for_child(self) if parent_flex
 
         pr = parent_rect
@@ -93,7 +93,7 @@ module Engine::Components
         masks = []
         current = game_object.parent
         while current
-          rect_component = current.components&.find { |c| c.is_a?(UI::Rect) }
+          rect_component = current.component(UI::Rect)
           masks.unshift(rect_component) if rect_component&.mask
           current = current.parent
         end

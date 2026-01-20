@@ -18,7 +18,7 @@ module Engine::Components
       end
 
       def start
-        @ui_rect = game_object.components.find { |c| c.is_a?(UI::Rect) }
+        @ui_rect = game_object.component(UI::Rect)
         raise "UI::Flex requires a UI::Rect component on the same GameObject" unless @ui_rect
       end
 
@@ -47,7 +47,7 @@ module Engine::Components
 
       def child_ui_rects
         @child_ui_rects_cache ||= game_object.children
-          .map { |child| child.components.find { |c| c.is_a?(UI::Rect) } }
+          .map { |child| child.component(UI::Rect) }
           .compact
       end
 

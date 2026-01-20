@@ -68,6 +68,19 @@ module Engine
       @children ||= Set.new
     end
 
+    def component(klass)
+      components_of_type(klass).first
+    end
+
+    def components_of_type(klass)
+      @components_cache ||= {}
+      @components_cache[klass] ||= all_components.select { |c| c.is_a?(klass) }
+    end
+
+    def all_components
+      @all_components ||= @components + @renderers + @ui_renderers
+    end
+
     def add_child(child)
       child.parent = self
       children << child

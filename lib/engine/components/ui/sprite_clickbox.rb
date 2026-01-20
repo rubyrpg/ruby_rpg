@@ -13,7 +13,7 @@ module Engine::Components
       end
 
       def start
-        @ui_rect = game_object.components.find { |c| c.is_a?(UI::Rect) }
+        @ui_rect = game_object.component(UI::Rect)
         raise "UI::SpriteClickbox requires a UI::Rect component" unless @ui_rect
       end
 

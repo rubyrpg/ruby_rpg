@@ -53,7 +53,7 @@ module Engine::Physics::Components
     end
 
     def rigidbody
-      game_object.components.find { |c| c.is_a?(Rigidbody) }
+      game_object.component(Rigidbody)
     end
 
     private
