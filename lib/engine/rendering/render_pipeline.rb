@@ -121,6 +121,7 @@ module Rendering
     end
 
     def self.draw_ui
+      GL.Clear(GL::STENCIL_BUFFER_BIT)
       GL.Disable(GL::CULL_FACE)
       Engine::Components::UI::Rect.draw_all
       GL.Enable(GL::CULL_FACE)

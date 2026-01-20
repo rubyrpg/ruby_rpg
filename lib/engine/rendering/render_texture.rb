@@ -2,7 +2,7 @@
 
 module Rendering
   class RenderTexture
-    attr_reader :width, :height, :framebuffer, :depth_texture, :color_textures
+    attr_reader :width, :height, :framebuffer, :depth_stencil_texture, :color_textures
 
     def initialize(width, height, num_color_attachments: 1)
       @width = width
@@ -11,7 +11,7 @@ module Rendering
       @color_textures = []
       create_framebuffer
       create_color_textures
-      create_depth_texture
+      create_depth_stencil_texture
       attach_to_framebuffer
       check_framebuffer_complete
       unbind
@@ -25,6 +25,9 @@ module Rendering
     def normal_texture
       @color_textures[1]
     end
+
+    # Alias for backward compatibility (depth can still be sampled from depth-stencil)
+    alias depth_texture depth_stencil_texture
 
     def bind
       GL.BindFramebuffer(GL::FRAMEBUFFER, @framebuffer)
@@ -46,8 +49,8 @@ module Rendering
         GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
       end
 
-      GL.BindTexture(GL::TEXTURE_2D, @depth_texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH_COMPONENT32F, @width, @height, 0, GL::DEPTH_COMPONENT, GL::FLOAT, nil)
+      GL.BindTexture(GL::TEXTURE_2D, @depth_stencil_texture)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH24_STENCIL8, @width, @height, 0, GL::DEPTH_STENCIL, GL::UNSIGNED_INT_24_8, nil)
     end
 
     private
@@ -75,13 +78,13 @@ module Rendering
       end
     end
 
-    def create_depth_texture
+    def create_depth_stencil_texture
       tex_buf = ' ' * 4
       GL.GenTextures(1, tex_buf)
-      @depth_texture = tex_buf.unpack1('L')
+      @depth_stencil_texture = tex_buf.unpack1('L')
 
-      GL.BindTexture(GL::TEXTURE_2D, @depth_texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH_COMPONENT32F, @width, @height, 0, GL::DEPTH_COMPONENT, GL::FLOAT, nil)
+      GL.BindTexture(GL::TEXTURE_2D, @depth_stencil_texture)
+      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH24_STENCIL8, @width, @height, 0, GL::DEPTH_STENCIL, GL::UNSIGNED_INT_24_8, nil)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
       GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
@@ -100,8 +103,8 @@ module Rendering
         GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0 + i, GL::TEXTURE_2D, tex, 0)
       end
 
-      # Attach depth texture
-      GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::DEPTH_ATTACHMENT, GL::TEXTURE_2D, @depth_texture, 0)
+      # Attach depth-stencil texture
+      GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::DEPTH_STENCIL_ATTACHMENT, GL::TEXTURE_2D, @depth_stencil_texture, 0)
 
       # Tell OpenGL which color attachments to draw to (MRT)
       if @num_color_attachments > 1
