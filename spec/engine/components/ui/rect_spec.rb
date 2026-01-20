@@ -20,6 +20,14 @@ describe Engine::Components::UI::Rect do
       expect(rect.right_offset).to eq(0)
       expect(rect.bottom_offset).to eq(0)
       expect(rect.top_offset).to eq(0)
+      expect(rect.mask).to eq(false)
+    end
+
+    it "creates a Rect with mask enabled" do
+      rect = Engine::Components::UI::Rect.create(mask: true)
+      rect.awake
+
+      expect(rect.mask).to eq(true)
     end
 
     it "creates a Rect with custom ratios" do
@@ -355,6 +363,88 @@ describe Engine::Components::UI::Rect do
       rect.destroy
 
       expect(Engine::Components::UI::Rect.rects).not_to include(rect)
+    end
+  end
+
+  describe "#ancestor_masks" do
+    it "returns empty array when no parent has mask" do
+      parent = Engine::GameObject.create(
+        name: "Parent",
+        components: [Engine::Components::UI::Rect.create]
+      )
+
+      child = Engine::GameObject.create(
+        name: "Child",
+        parent: parent,
+        components: [Engine::Components::UI::Rect.create]
+      )
+      child_rect = child.components.first
+
+      expect(child_rect.ancestor_masks).to eq([])
+    end
+
+    it "returns parent rect when parent has mask: true" do
+      parent = Engine::GameObject.create(
+        name: "Parent",
+        components: [Engine::Components::UI::Rect.create(mask: true)]
+      )
+      parent_rect = parent.components.first
+
+      child = Engine::GameObject.create(
+        name: "Child",
+        parent: parent,
+        components: [Engine::Components::UI::Rect.create]
+      )
+      child_rect = child.components.first
+
+      expect(child_rect.ancestor_masks).to eq([parent_rect])
+    end
+
+    it "returns multiple ancestor masks in order from outermost to innermost" do
+      grandparent = Engine::GameObject.create(
+        name: "Grandparent",
+        components: [Engine::Components::UI::Rect.create(mask: true)]
+      )
+      grandparent_rect = grandparent.components.first
+
+      parent = Engine::GameObject.create(
+        name: "Parent",
+        parent: grandparent,
+        components: [Engine::Components::UI::Rect.create(mask: true)]
+      )
+      parent_rect = parent.components.first
+
+      child = Engine::GameObject.create(
+        name: "Child",
+        parent: parent,
+        components: [Engine::Components::UI::Rect.create]
+      )
+      child_rect = child.components.first
+
+      expect(child_rect.ancestor_masks).to eq([grandparent_rect, parent_rect])
+    end
+
+    it "skips ancestors without mask: true" do
+      grandparent = Engine::GameObject.create(
+        name: "Grandparent",
+        components: [Engine::Components::UI::Rect.create(mask: true)]
+      )
+      grandparent_rect = grandparent.components.first
+
+      parent = Engine::GameObject.create(
+        name: "Parent",
+        parent: grandparent,
+        components: [Engine::Components::UI::Rect.create(mask: false)]
+      )
+
+      child = Engine::GameObject.create(
+        name: "Child",
+        parent: parent,
+        components: [Engine::Components::UI::Rect.create]
+      )
+      child_rect = child.components.first
+
+      expect(child_rect.ancestor_masks).to eq([grandparent_rect])
     end
   end
 end
