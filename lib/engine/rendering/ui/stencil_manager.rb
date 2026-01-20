@@ -18,9 +18,9 @@ module Rendering
             @current_chain = chain
           end
 
-          # Configure stencil test: only draw where stencil >= chain.length
+          # Configure stencil test: only draw where stencil == chain.length (intersection of all masks)
           enable_stencil_test
-          GL.StencilFunc(GL::LEQUAL, chain.length, 0xFF)
+          GL.StencilFunc(GL::EQUAL, chain.length, 0xFF)
           GL.StencilOp(GL::KEEP, GL::KEEP, GL::KEEP)
         end
 
@@ -47,9 +47,15 @@ module Rendering
           # Disable color writes - we only want to update stencil
           GL.ColorMask(GL::FALSE, GL::FALSE, GL::FALSE, GL::FALSE)
 
-          # Configure stencil to always write ref value
-          GL.StencilFunc(GL::ALWAYS, ref, 0xFF)
-          GL.StencilOp(GL::KEEP, GL::KEEP, GL::REPLACE)
+          if ref == 1
+            # First mask: write 1 everywhere it covers
+            GL.StencilFunc(GL::ALWAYS, ref, 0xFF)
+            GL.StencilOp(GL::KEEP, GL::KEEP, GL::REPLACE)
+          else
+            # Nested mask: only increment where previous masks passed (stencil == ref-1)
+            GL.StencilFunc(GL::EQUAL, ref - 1, 0xFF)
+            GL.StencilOp(GL::KEEP, GL::KEEP, GL::INCR)
+          end
 
           # Draw the mask shape
           mask_rect.game_object.ui_renderers.each(&:draw)
