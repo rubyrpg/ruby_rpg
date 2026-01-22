@@ -26,6 +26,13 @@ module Engine
       ::GL.UseProgram(program)
     end
 
+    def self.ActiveTexture(texture_unit)
+      return if @current_texture_unit == texture_unit
+
+      @current_texture_unit = texture_unit
+      ::GL.ActiveTexture(texture_unit)
+    end
+
     def self.method_missing(name, *args, &block)
       ::GL.send(name, *args, &block)
     end

@@ -10,19 +10,14 @@ module Engine
     TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("Engine::GL::TEXTURE#{i}") }
 
     # Class-level texture binding cache
-    @current_texture_slot = nil
     @bound_textures = {}
 
     class << self
-      attr_accessor :current_texture_slot, :bound_textures
+      attr_accessor :bound_textures
     end
 
     def self.bind_texture(slot, target, texture_id)
-      # Activate slot only if different
-      unless @current_texture_slot == slot
-        Engine::GL.ActiveTexture(TEXTURE_SLOTS[slot])
-        @current_texture_slot = slot
-      end
+      Engine::GL.ActiveTexture(TEXTURE_SLOTS[slot])
 
       # Bind texture only if different for this slot
       unless @bound_textures[slot] == texture_id
