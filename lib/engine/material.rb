@@ -9,21 +9,9 @@ module Engine
     # Cache texture slot constants to avoid const_get every frame
     TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("Engine::GL::TEXTURE#{i}") }
 
-    # Class-level texture binding cache
-    @bound_textures = {}
-
-    class << self
-      attr_accessor :bound_textures
-    end
-
     def self.bind_texture(slot, target, texture_id)
       Engine::GL.ActiveTexture(TEXTURE_SLOTS[slot])
-
-      # Bind texture only if different for this slot
-      unless @bound_textures[slot] == texture_id
-        Engine::GL.BindTexture(target, texture_id)
-        @bound_textures[slot] = texture_id
-      end
+      Engine::GL.BindTexture(target, texture_id)
     end
 
     attr_reader :shader

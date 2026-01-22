@@ -33,6 +33,18 @@ module Engine
       ::GL.ActiveTexture(texture_unit)
     end
 
+    def self.BindTexture(target, texture_id)
+      cache_key = [@current_texture_unit, target]
+      return if bound_textures[cache_key] == texture_id
+
+      bound_textures[cache_key] = texture_id
+      ::GL.BindTexture(target, texture_id)
+    end
+
+    def self.bound_textures
+      @bound_textures ||= {}
+    end
+
     def self.method_missing(name, *args, &block)
       ::GL.send(name, *args, &block)
     end
