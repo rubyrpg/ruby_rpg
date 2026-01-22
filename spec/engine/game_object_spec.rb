@@ -342,4 +342,64 @@ describe Engine::GameObject do
         .to eq((Engine::Quaternion.from_angle_axis(90, Vector[0, 1, 1]) * Engine::Quaternion.from_euler(Vector[1, 2, 3])))
     end
   end
+
+  describe "#component" do
+    it "returns the first component of the given type" do
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
+
+      expect(object.component(Engine::Component)).to eq(component)
+    end
+
+    it "returns nil when no component of the given type exists" do
+      object = Engine::GameObject.create
+
+      expect(object.component(Engine::Component)).to be_nil
+    end
+
+    it "caches the result" do
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
+
+      result1 = object.component(Engine::Component)
+      result2 = object.component(Engine::Component)
+
+      expect(result1).to equal(result2)
+    end
+  end
+
+  describe "#components_of_type" do
+    it "returns all components of the given type" do
+      component1 = Engine::Component.create
+      component2 = Engine::Component.create
+      object = Engine::GameObject.create(components: [component1, component2])
+
+      expect(object.components_of_type(Engine::Component)).to eq([component1, component2])
+    end
+
+    it "returns empty array when no components of the given type exist" do
+      object = Engine::GameObject.create
+
+      expect(object.components_of_type(Engine::Component)).to eq([])
+    end
+
+    it "caches the result" do
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
+
+      result1 = object.components_of_type(Engine::Component)
+      result2 = object.components_of_type(Engine::Component)
+
+      expect(result1).to equal(result2)
+    end
+  end
+
+  describe "#all_components" do
+    it "returns components, renderers, and ui_renderers combined" do
+      component = Engine::Component.create
+      object = Engine::GameObject.create(components: [component])
+
+      expect(object.all_components).to include(component)
+    end
+  end
 end

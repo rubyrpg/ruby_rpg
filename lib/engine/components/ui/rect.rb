@@ -6,11 +6,12 @@ module Engine::Components
       serialize :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
                 :left_offset, :right_offset, :top_offset, :bottom_offset,
                 :flex_width, :flex_height, :flex_weight, :flex_align,
-                :z_layer
+                :z_layer, :mask
 
       attr_reader :left_ratio, :right_ratio, :top_ratio, :bottom_ratio,
                   :left_offset, :right_offset, :top_offset, :bottom_offset,
-                  :flex_width, :flex_height, :flex_weight, :flex_align
+                  :flex_width, :flex_height, :flex_weight, :flex_align,
+                  :mask
 
       def self.rects
         @rects ||= []
@@ -18,8 +19,10 @@ module Engine::Components
 
       def self.draw_all
         rects.each do |rect|
+          Rendering::UI::StencilManager.setup_for_rect(rect)
           rect.game_object.ui_renderers.each(&:draw)
         end
+        Rendering::UI::StencilManager.reset
       end
 
       def awake
@@ -32,6 +35,7 @@ module Engine::Components
         @bottom_offset ||= 0
         @top_offset    ||= 0
         @flex_weight   ||= 1
+        @mask          ||= false
       end
 
       def start
@@ -50,12 +54,12 @@ module Engine::Components
       def z_layer
         return @z_layer if @z_layer
 
-        parent_ui = game_object.parent&.components&.find { |c| c.is_a?(UI::Rect) }
+        parent_ui = game_object.parent&.component(UI::Rect)
         parent_ui ? parent_ui.z_layer + 10 : 0
       end
 
       def parent_rect
-        parent_ui = game_object.parent&.components&.find { |c| c.is_a?(UI::Rect) }
+        parent_ui = game_object.parent&.component(UI::Rect)
         parent_ui&.computed_rect || screen_rect
       end
 
@@ -71,7 +75,7 @@ module Engine::Components
 
       def computed_rect
         # Check if parent has a layout component
-        parent_flex = game_object.parent&.components&.find { |c| c.is_a?(UI::Flex) }
+        parent_flex = game_object.parent&.component(UI::Flex)
         return parent_flex.rect_for_child(self) if parent_flex
 
         pr = parent_rect
@@ -83,6 +87,17 @@ module Engine::Components
           top:    pr.top    + (pr.height * @top_ratio)    + @top_offset,
           bottom: pr.bottom - (pr.height * @bottom_ratio) - @bottom_offset
         )
+      end
+
+      def ancestor_masks
+        masks = []
+        current = game_object.parent
+        while current
+          rect_component = current.component(UI::Rect)
+          masks.unshift(rect_component) if rect_component&.mask
+          current = current.parent
+        end
+        masks
       end
 
       private

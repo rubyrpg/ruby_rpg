@@ -6,6 +6,7 @@ require_relative "right_sidebar"
 require_relative "column_panel"
 require_relative "center_panel"
 require_relative "corners"
+require_relative "stencil_demos"
 
 def load_font
   Engine::Font.create(font_file_path: "assets/Arial.ttf")
@@ -70,4 +71,5 @@ Engine.start do
   create_center_panel(font)
   create_corners
   create_smiley_sprite
+  create_stencil_demos
 end
