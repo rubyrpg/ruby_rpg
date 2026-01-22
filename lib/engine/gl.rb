@@ -58,7 +58,14 @@ module Engine
     end
 
     def self.BindBuffer(target, buffer)
+      return if bound_buffers[target] == buffer
+
+      bound_buffers[target] = buffer
       ::GL.BindBuffer(target, buffer)
+    end
+
+    def self.bound_buffers
+      @bound_buffers ||= {}
     end
 
     def self.BindFramebuffer(target, framebuffer)
@@ -70,6 +77,9 @@ module Engine
     end
 
     def self.BindVertexArray(array)
+      return if @current_vertex_array == array
+
+      @current_vertex_array = array
       ::GL.BindVertexArray(array)
     end
 
@@ -306,6 +316,10 @@ module Engine
     end
 
     def self.Viewport(x, y, width, height)
+      viewport = [x, y, width, height]
+      return if @current_viewport == viewport
+
+      @current_viewport = viewport
       ::GL.Viewport(x, y, width, height)
     end
 
