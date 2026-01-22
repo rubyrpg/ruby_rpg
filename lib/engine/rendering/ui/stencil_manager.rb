@@ -8,7 +8,7 @@ module Rendering
           chain = rect.ancestor_masks
 
           if chain.empty?
-            disable_stencil_test
+            Engine::GL.Disable(Engine::GL::STENCIL_TEST)
             return
           end
 
@@ -19,15 +19,14 @@ module Rendering
           end
 
           # Configure stencil test: only draw where stencil == chain.length (intersection of all masks)
-          enable_stencil_test
+          Engine::GL.Enable(Engine::GL::STENCIL_TEST)
           Engine::GL.StencilFunc(Engine::GL::EQUAL, chain.length, 0xFF)
           Engine::GL.StencilOp(Engine::GL::KEEP, Engine::GL::KEEP, Engine::GL::KEEP)
         end
 
         def reset
-          disable_stencil_test
+          Engine::GL.Disable(Engine::GL::STENCIL_TEST)
           @current_chain = nil
-          @stencil_enabled = false
         end
 
         private
@@ -36,7 +35,7 @@ module Rendering
           # Clear stencil buffer
           Engine::GL.Clear(Engine::GL::STENCIL_BUFFER_BIT)
 
-          enable_stencil_test
+          Engine::GL.Enable(Engine::GL::STENCIL_TEST)
 
           # Draw each mask in the chain, incrementing stencil ref
           chain.each_with_index do |mask_rect, index|
@@ -63,18 +62,6 @@ module Rendering
 
           # Re-enable color writes
           Engine::GL.ColorMask(Engine::GL::TRUE, Engine::GL::TRUE, Engine::GL::TRUE, Engine::GL::TRUE)
-        end
-
-        def enable_stencil_test
-          return if @stencil_enabled
-          Engine::GL.Enable(Engine::GL::STENCIL_TEST)
-          @stencil_enabled = true
-        end
-
-        def disable_stencil_test
-          return unless @stencil_enabled
-          Engine::GL.Disable(Engine::GL::STENCIL_TEST)
-          @stencil_enabled = false
         end
       end
     end

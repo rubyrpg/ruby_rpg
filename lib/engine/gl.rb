@@ -1,5 +1,24 @@
 module Engine
   module GL
+
+    def self.Enable(flag)
+      return if enable_flag_cache[flag] == true
+
+      enable_flag_cache[flag] = true
+      ::GL.Enable(flag)
+    end
+
+    def self.Disable(flag)
+      return if enable_flag_cache[flag] == false
+
+      enable_flag_cache[flag] = false
+      ::GL.Disable(flag)
+    end
+
+    def self.enable_flag_cache
+      @enable_flag_cache ||= {}
+    end
+
     def self.method_missing(name, *args, &block)
       ::GL.send(name, *args, &block)
     end
