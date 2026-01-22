@@ -29,8 +29,8 @@ module Rendering
         output_rt = alternate_rt
 
         output_rt.bind
-        GL.Clear(GL::COLOR_BUFFER_BIT)
-        GL.Disable(GL::DEPTH_TEST)
+        Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
+        Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
         camera = Engine::Camera.instance
         unless camera

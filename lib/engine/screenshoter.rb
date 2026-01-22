@@ -13,7 +13,7 @@ module Engine
       width = Engine::Window.framebuffer_width
       height = Engine::Window.framebuffer_height
       pixels = ' ' * (width * height * 3)
-      GL.ReadPixels(0, 0, width, height, GL::RGB, GL::UNSIGNED_BYTE, pixels)
+      Engine::GL.ReadPixels(0, 0, width, height, Engine::GL::RGB, Engine::GL::UNSIGNED_BYTE, pixels)
       png = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
       pixels = pixels.bytes.map { |b| b.to_i }
       x = 0

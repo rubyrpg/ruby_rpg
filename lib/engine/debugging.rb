@@ -26,16 +26,16 @@ module Engine
 
     def self.debug_opengl_call
       errors = []
-      until GL.GetError == 0; end
+      until Engine::GL.GetError == 0; end
       yield
-      until (error = GL.GetError) == 0
+      until (error = Engine::GL.GetError) == 0
         errors += error.to_s(16)
       end
     end
 
     def self.print_opengl_version
-      puts "OpenGL Version: #{GL.GetString(GL::VERSION)}"
-      puts "GLSL Version: #{GL.GetString(GL::SHADING_LANGUAGE_VERSION)}"
+      puts "OpenGL Version: #{Engine::GL.GetString(Engine::GL::VERSION)}"
+      puts "GLSL Version: #{Engine::GL.GetString(Engine::GL::SHADING_LANGUAGE_VERSION)}"
     end
   end
 end

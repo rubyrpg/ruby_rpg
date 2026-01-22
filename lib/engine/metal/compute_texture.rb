@@ -34,18 +34,18 @@ module Engine
       end
 
       def sync
-        GL.BindFramebuffer(GL::READ_FRAMEBUFFER, @read_fbo)
-        GL.BindFramebuffer(GL::DRAW_FRAMEBUFFER, @draw_fbo)
+        Engine::GL.BindFramebuffer(Engine::GL::READ_FRAMEBUFFER, @read_fbo)
+        Engine::GL.BindFramebuffer(Engine::GL::DRAW_FRAMEBUFFER, @draw_fbo)
 
-        GL.BlitFramebuffer(
+        Engine::GL.BlitFramebuffer(
           0, 0, @width, @height,
           0, 0, @width, @height,
-          GL::COLOR_BUFFER_BIT,
-          GL::NEAREST
+          Engine::GL::COLOR_BUFFER_BIT,
+          Engine::GL::NEAREST
         )
 
-        GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
-        GL.Finish
+        Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
+        Engine::GL.Finish
       end
 
       private
@@ -111,65 +111,65 @@ module Engine
 
       def create_gl_rect_texture
         tex_buf = ' ' * 4
-        GL.GenTextures(1, tex_buf)
+        Engine::GL.GenTextures(1, tex_buf)
         @gl_texture_rect = tex_buf.unpack('L')[0]
 
-        GL.BindTexture(GL::TEXTURE_RECTANGLE, @gl_texture_rect)
-        GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
-        GL.TexParameteri(GL::TEXTURE_RECTANGLE, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_RECTANGLE, @gl_texture_rect)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_RECTANGLE, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_RECTANGLE, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_RECTANGLE, Engine::GL::TEXTURE_WRAP_S, Engine::GL::CLAMP_TO_EDGE)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_RECTANGLE, Engine::GL::TEXTURE_WRAP_T, Engine::GL::CLAMP_TO_EDGE)
 
         cgl_context = OpenGLBridge.CGLGetCurrentContext()
 
         result = OpenGLBridge.CGLTexImageIOSurface2D(
           cgl_context,
-          GL::TEXTURE_RECTANGLE,
-          GL::RGBA32F,
+          Engine::GL::TEXTURE_RECTANGLE,
+          Engine::GL::RGBA32F,
           @width,
           @height,
-          GL::RGBA,
-          GL::FLOAT,
+          Engine::GL::RGBA,
+          Engine::GL::FLOAT,
           @iosurface,
           0
         )
 
         raise "Failed to bind IOSurface to GL texture: #{result}" unless result == 0
 
-        GL.BindTexture(GL::TEXTURE_RECTANGLE, 0)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_RECTANGLE, 0)
       end
 
       def create_gl_2d_texture
         tex_buf = ' ' * 4
-        GL.GenTextures(1, tex_buf)
+        Engine::GL.GenTextures(1, tex_buf)
         @gl_texture = tex_buf.unpack('L')[0]
 
-        GL.BindTexture(GL::TEXTURE_2D, @gl_texture)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::REPEAT)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::REPEAT)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @gl_texture)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::REPEAT)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::REPEAT)
 
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA32F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
-        GL.BindTexture(GL::TEXTURE_2D, 0)
+        Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA32F, @width, @height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, 0)
       end
 
       def setup_blit_fbo
         read_fbo_buf = ' ' * 4
-        GL.GenFramebuffers(1, read_fbo_buf)
+        Engine::GL.GenFramebuffers(1, read_fbo_buf)
         @read_fbo = read_fbo_buf.unpack('L')[0]
 
-        GL.BindFramebuffer(GL::FRAMEBUFFER, @read_fbo)
-        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_RECTANGLE, @gl_texture_rect, 0)
+        Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @read_fbo)
+        Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0, Engine::GL::TEXTURE_RECTANGLE, @gl_texture_rect, 0)
 
         draw_fbo_buf = ' ' * 4
-        GL.GenFramebuffers(1, draw_fbo_buf)
+        Engine::GL.GenFramebuffers(1, draw_fbo_buf)
         @draw_fbo = draw_fbo_buf.unpack('L')[0]
 
-        GL.BindFramebuffer(GL::FRAMEBUFFER, @draw_fbo)
-        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, @gl_texture, 0)
+        Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @draw_fbo)
+        Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0, Engine::GL::TEXTURE_2D, @gl_texture, 0)
 
-        GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
+        Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
       end
     end
   end

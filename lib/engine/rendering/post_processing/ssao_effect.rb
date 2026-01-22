@@ -17,12 +17,12 @@ module Rendering
       ensure_textures(input_rt.width, input_rt.height)
 
       camera = Engine::Camera.instance
-      GL.Disable(GL::DEPTH_TEST)
+      Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
       # Pass 1: Generate SSAO
       @ssao_rt.bind
-      GL.ClearColor(1.0, 1.0, 1.0, 1.0)
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.ClearColor(1.0, 1.0, 1.0, 1.0)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
       ssao_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       ssao_material.set_runtime_texture("normalTexture", PostProcessingEffect.normal_texture)
@@ -42,7 +42,7 @@ module Rendering
 
       # Pass 2: Blur SSAO
       @blur_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
       blur_material.set_runtime_texture("ssaoTexture", @ssao_rt.color_texture)
       blur_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
@@ -52,7 +52,7 @@ module Rendering
 
       # Pass 3: Combine with scene
       output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
       combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
       combine_material.set_runtime_texture("ssaoTexture", @blur_rt.color_texture)
@@ -114,15 +114,15 @@ module Rendering
         end
 
         tex_buf = ' ' * 4
-        GL.GenTextures(1, tex_buf)
+        Engine::GL.GenTextures(1, tex_buf)
         texture = tex_buf.unpack1('L')
 
-        GL.BindTexture(GL::TEXTURE_2D, texture)
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGB16F, 4, 4, 0, GL::RGB, GL::FLOAT, noise_data.pack('f*'))
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::REPEAT)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::REPEAT)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, texture)
+        Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGB16F, 4, 4, 0, Engine::GL::RGB, Engine::GL::FLOAT, noise_data.pack('f*'))
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::NEAREST)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::NEAREST)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::REPEAT)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::REPEAT)
         texture
       end
     end

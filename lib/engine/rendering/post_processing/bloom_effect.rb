@@ -15,11 +15,11 @@ module Rendering
 
     def apply(input_rt, output_rt, screen_quad)
       ensure_textures(input_rt.width, input_rt.height)
-      GL.Disable(GL::DEPTH_TEST)
+      Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
       # Pass 1: Extract bright pixels
       @ping.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
       screen_quad.draw(@threshold_material, input_rt.color_texture)
       @ping.unbind
 
@@ -27,14 +27,14 @@ module Rendering
       @blur_passes.times do
         # Horizontal blur
         @pong.bind
-        GL.Clear(GL::COLOR_BUFFER_BIT)
+        Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
         @blur_material.set_vec2("direction", [1.0, 0.0])
         screen_quad.draw(@blur_material, @ping.color_texture)
         @pong.unbind
 
         # Vertical blur
         @ping.bind
-        GL.Clear(GL::COLOR_BUFFER_BIT)
+        Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
         @blur_material.set_vec2("direction", [0.0, 1.0])
         screen_quad.draw(@blur_material, @pong.color_texture)
         @ping.unbind
@@ -42,7 +42,7 @@ module Rendering
 
       # Pass 3: Combine original + bloom
       output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
       @combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
       @combine_material.set_runtime_texture("bloomTexture", @ping.color_texture)
       screen_quad.draw_with_material(@combine_material)

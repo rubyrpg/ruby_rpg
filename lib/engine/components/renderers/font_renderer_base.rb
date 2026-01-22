@@ -19,7 +19,7 @@ module Engine::Components
       setup_vertex_attribute_buffer
       setup_vertex_buffer
       setup_index_buffer
-      GL.BindVertexArray(0)
+      Engine::GL.BindVertexArray(0)
     end
 
     def update_string(string)
@@ -29,14 +29,14 @@ module Engine::Components
 
     def draw
       shader.use
-      GL.BindVertexArray(@vao)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BindVertexArray(@vao)
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
 
       set_shader_per_frame_data
 
-      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @string.length)
-      GL.BindVertexArray(0)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+      Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @string.length)
+      Engine::GL.BindVertexArray(0)
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     private
@@ -60,7 +60,7 @@ module Engine::Components
     end
 
     def set_shader_texture
-      Engine::Material.bind_texture(0, GL::TEXTURE_2D, texture)
+      Engine::Material.bind_texture(0, Engine::GL::TEXTURE_2D, texture)
       shader.set_int("fontTexture", 0)
     end
 
@@ -68,38 +68,38 @@ module Engine::Components
       indices = mesh.index_data
 
       ebo_buf = ' ' * 4
-      GL.GenBuffers(1, ebo_buf)
+      Engine::GL.GenBuffers(1, ebo_buf)
       @ebo = ebo_buf.unpack('L')[0]
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
-      GL.BufferData(
-        GL::ELEMENT_ARRAY_BUFFER, indices.length * Fiddle::SIZEOF_INT,
-        indices.pack('I*'), GL::STATIC_DRAW
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BufferData(
+        Engine::GL::ELEMENT_ARRAY_BUFFER, indices.length * Fiddle::SIZEOF_INT,
+        indices.pack('I*'), Engine::GL::STATIC_DRAW
       )
     end
 
     def setup_vertex_attribute_buffer
       vao_buf = ' ' * 4
-      GL.GenVertexArrays(1, vao_buf)
+      Engine::GL.GenVertexArrays(1, vao_buf)
       @vao = vao_buf.unpack('L')[0]
-      GL.BindVertexArray(@vao)
+      Engine::GL.BindVertexArray(@vao)
     end
 
     def setup_vertex_buffer
       vbo_buf = ' ' * 4
-      GL.GenBuffers(1, vbo_buf)
+      Engine::GL.GenBuffers(1, vbo_buf)
       vbo = vbo_buf.unpack('L')[0]
       points = mesh.vertex_data
 
-      GL.BindBuffer(GL::ARRAY_BUFFER, vbo)
-      GL.BufferData(
-        GL::ARRAY_BUFFER, @mesh.vertex_data.length * Fiddle::SIZEOF_FLOAT,
-        points.pack('F*'), GL::STATIC_DRAW
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, vbo)
+      Engine::GL.BufferData(
+        Engine::GL::ARRAY_BUFFER, @mesh.vertex_data.length * Fiddle::SIZEOF_FLOAT,
+        points.pack('F*'), Engine::GL::STATIC_DRAW
       )
 
-      GL.VertexAttribPointer(0, 3, GL::FLOAT, GL::FALSE, 5 * Fiddle::SIZEOF_FLOAT, 0)
-      GL.VertexAttribPointer(1, 2, GL::FLOAT, GL::FALSE, 5 * Fiddle::SIZEOF_FLOAT, 3 * Fiddle::SIZEOF_FLOAT)
-      GL.EnableVertexAttribArray(0)
-      GL.EnableVertexAttribArray(1)
+      Engine::GL.VertexAttribPointer(0, 3, Engine::GL::FLOAT, Engine::GL::FALSE, 5 * Fiddle::SIZEOF_FLOAT, 0)
+      Engine::GL.VertexAttribPointer(1, 2, Engine::GL::FLOAT, Engine::GL::FALSE, 5 * Fiddle::SIZEOF_FLOAT, 3 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.EnableVertexAttribArray(0)
+      Engine::GL.EnableVertexAttribArray(1)
 
       generate_instance_vbo_buf
     end
@@ -111,7 +111,7 @@ module Engine::Components
 
     def set_instance_vbo_buf
       instance_vbo_buf = ' ' * 4
-      GL.GenBuffers(1, instance_vbo_buf)
+      Engine::GL.GenBuffers(1, instance_vbo_buf)
       instance_vbo_buf.unpack('L')[0]
     end
 
@@ -119,18 +119,18 @@ module Engine::Components
       vertex_data = @font.vertex_data(@string)
       string_length = @string.chars.reject { |c| c == "\n" }.length
 
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
       vertex_size = Fiddle::SIZEOF_INT + (Fiddle::SIZEOF_FLOAT * 2)
-      GL.BufferData(
-        GL::ARRAY_BUFFER, string_length * vertex_size,
-        vertex_data.pack('IFF' * string_length), GL::STATIC_DRAW
+      Engine::GL.BufferData(
+        Engine::GL::ARRAY_BUFFER, string_length * vertex_size,
+        vertex_data.pack('IFF' * string_length), Engine::GL::STATIC_DRAW
       )
-      GL.VertexAttribIPointer(2, 1, GL::INT, vertex_size, 0)
-      GL.VertexAttribPointer(3, 2, GL::FLOAT, GL::FALSE, vertex_size, Fiddle::SIZEOF_INT)
-      GL.EnableVertexAttribArray(2)
-      GL.EnableVertexAttribArray(3)
-      GL.VertexAttribDivisor(2, 1)
-      GL.VertexAttribDivisor(3, 1)
+      Engine::GL.VertexAttribIPointer(2, 1, Engine::GL::INT, vertex_size, 0)
+      Engine::GL.VertexAttribPointer(3, 2, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_size, Fiddle::SIZEOF_INT)
+      Engine::GL.EnableVertexAttribArray(2)
+      Engine::GL.EnableVertexAttribArray(3)
+      Engine::GL.VertexAttribDivisor(2, 1)
+      Engine::GL.VertexAttribDivisor(3, 1)
     end
   end
 end

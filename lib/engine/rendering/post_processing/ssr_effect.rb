@@ -15,13 +15,13 @@ module Rendering
       ensure_textures(input_rt.width, input_rt.height)
 
       camera = Engine::Camera.instance
-      GL.Disable(GL::DEPTH_TEST)
+      Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
       # Pass 1: Render SSR at half resolution
       @ssr_rt.bind
-      GL.Disable(GL::BLEND)
-      GL.ClearColor(0.0, 0.0, 0.0, 0.0)
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Disable(Engine::GL::BLEND)
+      Engine::GL.ClearColor(0.0, 0.0, 0.0, 0.0)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
       ssr_material.set_runtime_texture("screenTexture", input_rt.color_texture)
       ssr_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
@@ -41,7 +41,7 @@ module Rendering
 
       # Pass 2: Combine with scene at full resolution
       output_rt.bind
-      GL.Clear(GL::COLOR_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
       combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
       combine_material.set_runtime_texture("ssrTexture", @ssr_rt.color_texture)

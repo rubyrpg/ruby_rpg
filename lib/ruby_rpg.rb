@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'opengl'
+require_relative 'engine/gl'
 require 'glfw'
 require 'concurrent'
 require 'os'
