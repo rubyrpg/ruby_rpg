@@ -19,6 +19,13 @@ module Engine
       @enable_flag_cache ||= {}
     end
 
+    def self.UseProgram(program)
+      return if @current_program == program
+
+      @current_program = program
+      ::GL.UseProgram(program)
+    end
+
     def self.method_missing(name, *args, &block)
       ::GL.send(name, *args, &block)
     end
