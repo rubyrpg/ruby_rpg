@@ -17,13 +17,11 @@ module Rendering
       material.update_shader
       Engine::GL.BindVertexArray(@vao)
       Engine::GL.DrawArrays(Engine::GL::TRIANGLES, 0, 6)
-      Engine::GL.BindVertexArray(0)
     end
 
     def draw_raw
       Engine::GL.BindVertexArray(@vao)
       Engine::GL.DrawArrays(Engine::GL::TRIANGLES, 0, 6)
-      Engine::GL.BindVertexArray(0)
     end
 
     private

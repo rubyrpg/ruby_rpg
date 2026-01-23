@@ -50,8 +50,6 @@ module Rendering
       Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
       Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      Engine::GL.BindVertexArray(0)
-      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     def draw_depth_only(light_space_matrix)
@@ -67,8 +65,6 @@ module Rendering
       Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
       Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      Engine::GL.BindVertexArray(0)
-      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     def draw_point_light_depth(light_space_matrix, light_pos, far_plane)
@@ -86,8 +82,6 @@ module Rendering
       Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
       Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      Engine::GL.BindVertexArray(0)
-      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     private

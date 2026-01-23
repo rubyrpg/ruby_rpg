@@ -35,8 +35,6 @@ module Engine::Components
       set_shader_per_frame_data
 
       Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @string.length)
-      Engine::GL.BindVertexArray(0)
-      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
     end
 
     private

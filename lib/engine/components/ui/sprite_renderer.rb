@@ -31,9 +31,6 @@ module Engine::Components
         set_material_per_frame_data
 
         Engine::GL.DrawElements(Engine::GL::TRIANGLES, 6, Engine::GL::UNSIGNED_INT, 0)
-
-        Engine::GL.BindVertexArray(0)
-        Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, 0)
       end
 
       private
