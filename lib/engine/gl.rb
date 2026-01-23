@@ -41,7 +41,7 @@ module Engine
       return if @current_texture_unit == texture_unit
 
       @current_texture_unit = texture_unit
-      ::GL.ActiveTexture(texture_unit)
+      NATIVE_AVAILABLE ? GLNative.active_texture(texture_unit) : ::GL.ActiveTexture(texture_unit)
     end
 
     def self.BindTexture(target, texture_id)
