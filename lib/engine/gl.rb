@@ -1,5 +1,14 @@
 module Engine
   module GL
+    # Try to load native extension for hot path
+    begin
+      require_relative '../../ext/gl_native/gl_native'
+      NATIVE_AVAILABLE = true
+      puts "GLNative extension loaded - using native calls"
+    rescue LoadError => e
+      NATIVE_AVAILABLE = false
+      puts "GLNative extension not available (#{e.message}) - using Fiddle"
+    end
 
     # Cached methods - avoid redundant GL state changes
 
@@ -40,7 +49,7 @@ module Engine
       return if bound_textures[cache_key] == texture_id
 
       bound_textures[cache_key] = texture_id
-      ::GL.BindTexture(target, texture_id)
+      NATIVE_AVAILABLE ? GLNative.bind_texture(target, texture_id) : ::GL.BindTexture(target, texture_id)
     end
 
     def self.bound_textures
@@ -80,7 +89,7 @@ module Engine
       return if @current_vertex_array == array
 
       @current_vertex_array = array
-      ::GL.BindVertexArray(array)
+      NATIVE_AVAILABLE ? GLNative.bind_vertex_array(array) : ::GL.BindVertexArray(array)
     end
 
     def self.BlendFunc(sfactor, dfactor)
