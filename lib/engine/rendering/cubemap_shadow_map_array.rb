@@ -10,7 +10,6 @@ module Rendering
       create_framebuffer
       create_depth_cubemap_array
       check_framebuffer_complete
-      unbind
     end
 
     def bind_face(layer_index, face_index)
@@ -23,10 +22,6 @@ module Rendering
       Engine::GL.FramebufferTextureLayer(Engine::GL::FRAMEBUFFER, Engine::GL::DEPTH_ATTACHMENT, @depth_texture, 0, array_layer)
       Engine::GL.Viewport(0, 0, @size, @size)
       Engine::GL.Clear(Engine::GL::DEPTH_BUFFER_BIT)
-    end
-
-    def unbind
-      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
     end
 
     private

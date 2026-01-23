@@ -14,7 +14,6 @@ module Rendering
       create_depth_stencil_texture
       attach_to_framebuffer
       check_framebuffer_complete
-      unbind
     end
 
     def color_texture
@@ -32,10 +31,6 @@ module Rendering
     def bind
       Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @framebuffer)
       Engine::GL.Viewport(0, 0, @width, @height)
-    end
-
-    def unbind
-      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
     end
 
     def resize(width, height)

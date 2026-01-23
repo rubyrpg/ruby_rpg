@@ -106,8 +106,6 @@ module Rendering
         shader.set_int("faceIndex", face_index)
         screen_quad.draw_raw
       end
-
-      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
     end
 
     def shader

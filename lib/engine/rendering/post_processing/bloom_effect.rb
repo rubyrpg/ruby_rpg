@@ -21,7 +21,6 @@ module Rendering
       @ping.bind
       Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
       screen_quad.draw(@threshold_material, input_rt.color_texture)
-      @ping.unbind
 
       # Pass 2+: Blur passes (ping-pong between internal textures)
       @blur_passes.times do
@@ -30,14 +29,12 @@ module Rendering
         Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
         @blur_material.set_vec2("direction", [1.0, 0.0])
         screen_quad.draw(@blur_material, @ping.color_texture)
-        @pong.unbind
 
         # Vertical blur
         @ping.bind
         Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
         @blur_material.set_vec2("direction", [0.0, 1.0])
         screen_quad.draw(@blur_material, @pong.color_texture)
-        @ping.unbind
       end
 
       # Pass 3: Combine original + bloom
@@ -46,7 +43,6 @@ module Rendering
       @combine_material.set_runtime_texture("screenTexture", input_rt.color_texture)
       @combine_material.set_runtime_texture("bloomTexture", @ping.color_texture)
       screen_quad.draw_with_material(@combine_material)
-      output_rt.unbind
       output_rt
     end
 

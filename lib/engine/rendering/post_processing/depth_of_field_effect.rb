@@ -27,7 +27,6 @@ module Rendering
       material.set_runtime_texture("screenTexture", source_rt.color_texture)
       material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       screen_quad.draw_with_material(material)
-      dest_rt.unbind
     end
 
     private

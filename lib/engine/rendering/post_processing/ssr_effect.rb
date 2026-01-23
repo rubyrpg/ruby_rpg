@@ -37,7 +37,6 @@ module Rendering
       ssr_material.set_cubemap("skyboxCubemap", cubemap&.texture)
 
       screen_quad.draw_with_material(ssr_material)
-      @ssr_rt.unbind
 
       # Pass 2: Combine with scene at full resolution
       output_rt.bind
@@ -47,8 +46,6 @@ module Rendering
       combine_material.set_runtime_texture("ssrTexture", @ssr_rt.color_texture)
 
       screen_quad.draw_with_material(combine_material)
-      output_rt.unbind
-
       output_rt
     end
 

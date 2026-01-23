@@ -19,7 +19,6 @@ module Rendering
         Engine::GL.Disable(Engine::GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
         draw_3d
         Engine::GL.Enable(Engine::GL::BLEND)   # Re-enable for UI and post-processing
-        render_texture_a.unbind
       end
 
       # Copy normal texture to separate buffer to avoid read/write hazard in SSR
@@ -35,7 +34,6 @@ module Rendering
         disable_depth_test
         current_texture.bind
         draw_ui
-        current_texture.unbind
       end
 
       GpuTimer.measure(:blit) do
@@ -93,7 +91,6 @@ module Rendering
       instance_renderers.values.each do |renderer|
         renderer.draw_depth_only(light_space_matrix)
       end
-      shadow_map_array.unbind
     end
 
     def self.render_point_shadow_to_layer(layer_index, light)
@@ -107,7 +104,6 @@ module Rendering
           renderer.draw_point_light_depth(matrices[face_index], light_pos, far_plane)
         end
       end
-      point_shadow_map_array.unbind
     end
 
     def self.sync_transforms
@@ -158,6 +154,7 @@ module Rendering
     end
 
     def self.blit_to_screen(texture)
+      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
       reset_viewport
       screen_quad.draw(blit_material, texture)
     end
@@ -235,9 +232,6 @@ module Rendering
 
       # Blit
       Engine::GL.BlitFramebuffer(0, 0, width, height, 0, 0, width, height, Engine::GL::COLOR_BUFFER_BIT, Engine::GL::NEAREST)
-
-      # Unbind
-      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
     end
 
     def self.copy_fbo

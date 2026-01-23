@@ -38,7 +38,6 @@ module Rendering
       ssao_material.set_vec2("noiseScale", noise_scale)
 
       screen_quad.draw_with_material(ssao_material)
-      @ssao_rt.unbind
 
       # Pass 2: Blur SSAO
       @blur_rt.bind
@@ -48,7 +47,6 @@ module Rendering
       blur_material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
 
       screen_quad.draw_with_material(blur_material)
-      @blur_rt.unbind
 
       # Pass 3: Combine with scene
       output_rt.bind
@@ -58,8 +56,6 @@ module Rendering
       combine_material.set_runtime_texture("ssaoTexture", @blur_rt.color_texture)
 
       screen_quad.draw_with_material(combine_material)
-      output_rt.unbind
-
       output_rt
     end
 

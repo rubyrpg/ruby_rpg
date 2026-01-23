@@ -11,7 +11,6 @@ module Rendering
       create_framebuffer
       create_depth_texture_array
       check_framebuffer_complete
-      unbind
     end
 
     def bind_layer(layer_index)
@@ -21,10 +20,6 @@ module Rendering
       Engine::GL.FramebufferTextureLayer(Engine::GL::FRAMEBUFFER, Engine::GL::DEPTH_ATTACHMENT, @depth_texture, 0, layer_index)
       Engine::GL.Viewport(0, 0, @width, @height)
       Engine::GL.Clear(Engine::GL::DEPTH_BUFFER_BIT)
-    end
-
-    def unbind
-      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
     end
 
     private
