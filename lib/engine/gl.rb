@@ -16,7 +16,7 @@ module Engine
       return if enable_flag_cache[flag] == true
 
       enable_flag_cache[flag] = true
-      ::GL.Enable(flag)
+      NATIVE_AVAILABLE ? GLNative.enable(flag) : ::GL.Enable(flag)
     end
 
     def self.Disable(flag)
@@ -70,7 +70,7 @@ module Engine
       return if bound_buffers[target] == buffer
 
       bound_buffers[target] = buffer
-      ::GL.BindBuffer(target, buffer)
+      NATIVE_AVAILABLE ? GLNative.bind_buffer(target, buffer) : ::GL.BindBuffer(target, buffer)
     end
 
     def self.bound_buffers
@@ -78,7 +78,7 @@ module Engine
     end
 
     def self.BindFramebuffer(target, framebuffer)
-      ::GL.BindFramebuffer(target, framebuffer)
+      NATIVE_AVAILABLE ? GLNative.bind_framebuffer(target, framebuffer) : ::GL.BindFramebuffer(target, framebuffer)
     end
 
     def self.BindImageTexture(unit, texture, level, layered, layer, access, format)
@@ -97,7 +97,7 @@ module Engine
     end
 
     def self.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
-      ::GL.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
+      NATIVE_AVAILABLE ? GLNative.blit_framebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter) : ::GL.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
     end
 
     def self.BufferData(target, size, data, usage)
@@ -301,7 +301,7 @@ module Engine
     end
 
     def self.Uniform3f(location, v0, v1, v2)
-      ::GL.Uniform3f(location, v0, v1, v2)
+      NATIVE_AVAILABLE ? GLNative.uniform3f(location, v0, v1, v2) : ::GL.Uniform3f(location, v0, v1, v2)
     end
 
     def self.Uniform4f(location, v0, v1, v2, v3)
