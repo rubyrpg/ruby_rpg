@@ -34,7 +34,7 @@ module Engine
       return if @current_program == program
 
       @current_program = program
-      ::GL.UseProgram(program)
+      NATIVE_AVAILABLE ? GLNative.use_program(program) : ::GL.UseProgram(program)
     end
 
     def self.ActiveTexture(texture_unit)
