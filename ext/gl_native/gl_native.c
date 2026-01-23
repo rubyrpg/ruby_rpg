@@ -122,7 +122,7 @@ static VALUE rb_gl_uniform_matrix4fv(VALUE self, VALUE location, VALUE count, VA
     /* value should be a String containing packed floats */
     Check_Type(value, T_STRING);
     const GLfloat *data = (const GLfloat *)RSTRING_PTR(value);
-    glUniformMatrix4fv((GLint)NUM2INT(location), (GLsizei)NUM2INT(count), (GLboolean)(RTEST(transpose) ? GL_TRUE : GL_FALSE), data);
+    glUniformMatrix4fv((GLint)NUM2INT(location), (GLsizei)NUM2INT(count), (GLboolean)NUM2INT(transpose), data);
     return Qnil;
 }
 

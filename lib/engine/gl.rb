@@ -23,7 +23,7 @@ module Engine
       return if enable_flag_cache[flag] == false
 
       enable_flag_cache[flag] = false
-      ::GL.Disable(flag)
+      NATIVE_AVAILABLE ? GLNative.disable(flag) : ::GL.Disable(flag)
     end
 
     def self.enable_flag_cache
@@ -113,7 +113,7 @@ module Engine
     end
 
     def self.Clear(mask)
-      ::GL.Clear(mask)
+      NATIVE_AVAILABLE ? GLNative.clear(mask) : ::GL.Clear(mask)
     end
 
     def self.ClearColor(red, green, blue, alpha)
@@ -149,7 +149,7 @@ module Engine
     end
 
     def self.DrawArrays(mode, first, count)
-      ::GL.DrawArrays(mode, first, count)
+      NATIVE_AVAILABLE ? GLNative.draw_arrays(mode, first, count) : ::GL.DrawArrays(mode, first, count)
     end
 
     def self.DrawBuffer(mode)
@@ -161,11 +161,11 @@ module Engine
     end
 
     def self.DrawElements(mode, count, type, indices)
-      ::GL.DrawElements(mode, count, type, indices)
+      NATIVE_AVAILABLE ? GLNative.draw_elements(mode, count, type, indices) : ::GL.DrawElements(mode, count, type, indices)
     end
 
     def self.DrawElementsInstanced(mode, count, type, indices, instance_count)
-      ::GL.DrawElementsInstanced(mode, count, type, indices, instance_count)
+      NATIVE_AVAILABLE ? GLNative.draw_elements_instanced(mode, count, type, indices, instance_count) : ::GL.DrawElementsInstanced(mode, count, type, indices, instance_count)
     end
 
     def self.EnableVertexAttribArray(index)
@@ -289,15 +289,15 @@ module Engine
     end
 
     def self.Uniform1f(location, v0)
-      ::GL.Uniform1f(location, v0)
+      NATIVE_AVAILABLE ? GLNative.uniform1f(location, v0) : ::GL.Uniform1f(location, v0)
     end
 
     def self.Uniform1i(location, v0)
-      ::GL.Uniform1i(location, v0)
+      NATIVE_AVAILABLE ? GLNative.uniform1i(location, v0) : ::GL.Uniform1i(location, v0)
     end
 
     def self.Uniform2f(location, v0, v1)
-      ::GL.Uniform2f(location, v0, v1)
+      NATIVE_AVAILABLE ? GLNative.uniform2f(location, v0, v1) : ::GL.Uniform2f(location, v0, v1)
     end
 
     def self.Uniform3f(location, v0, v1, v2)
@@ -305,11 +305,11 @@ module Engine
     end
 
     def self.Uniform4f(location, v0, v1, v2, v3)
-      ::GL.Uniform4f(location, v0, v1, v2, v3)
+      NATIVE_AVAILABLE ? GLNative.uniform4f(location, v0, v1, v2, v3) : ::GL.Uniform4f(location, v0, v1, v2, v3)
     end
 
     def self.UniformMatrix4fv(location, count, transpose, value)
-      ::GL.UniformMatrix4fv(location, count, transpose, value)
+      NATIVE_AVAILABLE ? GLNative.uniform_matrix4fv(location, count, transpose, value) : ::GL.UniformMatrix4fv(location, count, transpose, value)
     end
 
     def self.VertexAttribDivisor(index, divisor)
@@ -329,7 +329,7 @@ module Engine
       return if @current_viewport == viewport
 
       @current_viewport = viewport
-      ::GL.Viewport(x, y, width, height)
+      NATIVE_AVAILABLE ? GLNative.viewport(x, y, width, height) : ::GL.Viewport(x, y, width, height)
     end
 
     def self.load_lib
