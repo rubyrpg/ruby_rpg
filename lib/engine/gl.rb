@@ -59,7 +59,7 @@ module Engine
     # Pass-through methods
 
     def self.AttachShader(program, shader)
-      ::GL.AttachShader(program, shader)
+      NATIVE_AVAILABLE ? GLNative.attach_shader(program, shader) : ::GL.AttachShader(program, shader)
     end
 
     def self.BeginQuery(target, id)

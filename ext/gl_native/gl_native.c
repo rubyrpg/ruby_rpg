@@ -138,6 +138,12 @@ static VALUE rb_gl_blit_framebuffer(VALUE self, VALUE src_x0, VALUE src_y0, VALU
     return Qnil;
 }
 
+/* AttachShader(program, shader) */
+static VALUE rb_gl_attach_shader(VALUE self, VALUE program, VALUE shader) {
+    glAttachShader((GLuint)NUM2UINT(program), (GLuint)NUM2UINT(shader));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -162,4 +168,5 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "uniform1i", rb_gl_uniform1i, 2);
     rb_define_module_function(mGLNative, "uniform_matrix4fv", rb_gl_uniform_matrix4fv, 4);
     rb_define_module_function(mGLNative, "blit_framebuffer", rb_gl_blit_framebuffer, 10);
+    rb_define_module_function(mGLNative, "attach_shader", rb_gl_attach_shader, 2);
 }
