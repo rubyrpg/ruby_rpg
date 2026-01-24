@@ -101,7 +101,7 @@ module Engine
     end
 
     def self.BufferData(target, size, data, usage)
-      ::GL.BufferData(target, size, data, usage)
+      NATIVE_AVAILABLE ? GLNative.buffer_data(target, size, data, usage) : ::GL.BufferData(target, size, data, usage)
     end
 
     def self.BufferSubData(target, offset, size, data)
