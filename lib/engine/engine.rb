@@ -25,15 +25,14 @@ module Engine
     GLFW.MakeContextCurrent(Window.window)
 
     Input.init
-    GL.load_lib
     Rendering::GpuTimer.enable if ENV['GPU_PROFILE']
 
     set_opengl_blend_mode
     @engine_started = true
-    GL.ClearColor(0.0, 0.0, 0.0, 1.0)
+    Engine::GL.ClearColor(0.0, 0.0, 0.0, 1.0)
 
-    GL.Enable(GL::CULL_FACE)
-    GL.CullFace(GL::BACK)
+    Engine::GL.Enable(Engine::GL::CULL_FACE)
+    Engine::GL.CullFace(Engine::GL::BACK)
 
     GLFW.SwapInterval(0)
   end
@@ -44,7 +43,7 @@ module Engine
     @time = Time.now
     @fps = 0
     Window.get_framebuffer_size
-    GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
+    Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT | Engine::GL::DEPTH_BUFFER_BIT)
 
     until GLFW.WindowShouldClose(Window.window) == GLFW::TRUE || @game_stopped
       if first_frame_block
@@ -122,7 +121,7 @@ module Engine
   end
 
   def self.set_opengl_blend_mode
-    GL.Enable(GL::BLEND)
-    GL.BlendFunc(GL::SRC_ALPHA, GL::ONE_MINUS_SRC_ALPHA)
+    Engine::GL.Enable(Engine::GL::BLEND)
+    Engine::GL.BlendFunc(Engine::GL::SRC_ALPHA, Engine::GL::ONE_MINUS_SRC_ALPHA)
   end
 end

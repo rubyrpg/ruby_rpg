@@ -6,3 +6,11 @@
 
 # rspec examples
 spec/examples.txt
+
+# Native extension build artifacts
+ext/**/*.o
+ext/**/*.bundle
+ext/**/*.so
+ext/**/*.dll
+ext/**/*.dSYM
+ext/**/Makefile

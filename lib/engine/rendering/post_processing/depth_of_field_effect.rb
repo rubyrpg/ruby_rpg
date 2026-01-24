@@ -13,7 +13,7 @@ module Rendering
     end
 
     def apply(rt_a, rt_b, screen_quad)
-      GL.Disable(GL::DEPTH_TEST)
+      Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
       blur_pass(rt_a, rt_b, [1.0, 0.0], screen_quad)  # horizontal
       blur_pass(rt_b, rt_a, [0.0, 1.0], screen_quad)  # vertical
@@ -27,7 +27,6 @@ module Rendering
       material.set_runtime_texture("screenTexture", source_rt.color_texture)
       material.set_runtime_texture("depthTexture", PostProcessingEffect.depth_texture)
       screen_quad.draw_with_material(material)
-      dest_rt.unbind
     end
 
     private

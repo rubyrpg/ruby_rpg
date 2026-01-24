@@ -29,14 +29,11 @@ module Rendering
         output_rt = alternate_rt
 
         output_rt.bind
-        GL.Clear(GL::COLOR_BUFFER_BIT)
-        GL.Disable(GL::DEPTH_TEST)
+        Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
+        Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
         camera = Engine::Camera.instance
-        unless camera
-          output_rt.unbind
-          return input_rt
-        end
+        return input_rt unless camera
 
         material.set_mat4("inverseVP", camera.inverse_vp_matrix)
         material.set_vec3("cameraPos", camera.position)
@@ -44,8 +41,6 @@ module Rendering
         material.set_runtime_texture("depthTexture", input_rt.depth_texture)
 
         screen_quad.draw(material, input_rt.color_texture)
-        output_rt.unbind
-
         output_rt
       end
 

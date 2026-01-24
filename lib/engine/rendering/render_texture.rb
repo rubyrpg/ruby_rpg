@@ -14,7 +14,6 @@ module Rendering
       create_depth_stencil_texture
       attach_to_framebuffer
       check_framebuffer_complete
-      unbind
     end
 
     def color_texture
@@ -30,12 +29,8 @@ module Rendering
     alias depth_texture depth_stencil_texture
 
     def bind
-      GL.BindFramebuffer(GL::FRAMEBUFFER, @framebuffer)
-      GL.Viewport(0, 0, @width, @height)
-    end
-
-    def unbind
-      GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
+      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @framebuffer)
+      Engine::GL.Viewport(0, 0, @width, @height)
     end
 
     def resize(width, height)
@@ -45,34 +40,34 @@ module Rendering
       @height = height
 
       @color_textures.each do |tex|
-        GL.BindTexture(GL::TEXTURE_2D, tex)
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, tex)
+        Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA16F, @width, @height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
       end
 
-      GL.BindTexture(GL::TEXTURE_2D, @depth_stencil_texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH24_STENCIL8, @width, @height, 0, GL::DEPTH_STENCIL, GL::UNSIGNED_INT_24_8, nil)
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @depth_stencil_texture)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::DEPTH24_STENCIL8, @width, @height, 0, Engine::GL::DEPTH_STENCIL, Engine::GL::UNSIGNED_INT_24_8, nil)
     end
 
     private
 
     def create_framebuffer
       fbo_buf = ' ' * 4
-      GL.GenFramebuffers(1, fbo_buf)
+      Engine::GL.GenFramebuffers(1, fbo_buf)
       @framebuffer = fbo_buf.unpack1('L')
     end
 
     def create_color_textures
       @num_color_attachments.times do
         tex_buf = ' ' * 4
-        GL.GenTextures(1, tex_buf)
+        Engine::GL.GenTextures(1, tex_buf)
         texture = tex_buf.unpack1('L')
 
-        GL.BindTexture(GL::TEXTURE_2D, texture)
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, texture)
+        Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA16F, @width, @height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::CLAMP_TO_EDGE)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::CLAMP_TO_EDGE)
 
         @color_textures << texture
       end
@@ -80,42 +75,42 @@ module Rendering
 
     def create_depth_stencil_texture
       tex_buf = ' ' * 4
-      GL.GenTextures(1, tex_buf)
+      Engine::GL.GenTextures(1, tex_buf)
       @depth_stencil_texture = tex_buf.unpack1('L')
 
-      GL.BindTexture(GL::TEXTURE_2D, @depth_stencil_texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::DEPTH24_STENCIL8, @width, @height, 0, GL::DEPTH_STENCIL, GL::UNSIGNED_INT_24_8, nil)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @depth_stencil_texture)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::DEPTH24_STENCIL8, @width, @height, 0, Engine::GL::DEPTH_STENCIL, Engine::GL::UNSIGNED_INT_24_8, nil)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::NEAREST)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::NEAREST)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::CLAMP_TO_EDGE)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::CLAMP_TO_EDGE)
       # Disable depth comparison for direct sampling
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_COMPARE_MODE, GL::NONE)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_COMPARE_MODE, Engine::GL::NONE)
       # Specify we want to read depth component (not stencil)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::DEPTH_STENCIL_TEXTURE_MODE, GL::DEPTH_COMPONENT)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::DEPTH_STENCIL_TEXTURE_MODE, Engine::GL::DEPTH_COMPONENT)
     end
 
     def attach_to_framebuffer
-      GL.BindFramebuffer(GL::FRAMEBUFFER, @framebuffer)
+      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @framebuffer)
 
       # Attach all color textures
       @color_textures.each_with_index do |tex, i|
-        GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::COLOR_ATTACHMENT0 + i, GL::TEXTURE_2D, tex, 0)
+        Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0 + i, Engine::GL::TEXTURE_2D, tex, 0)
       end
 
       # Attach depth-stencil texture
-      GL.FramebufferTexture2D(GL::FRAMEBUFFER, GL::DEPTH_STENCIL_ATTACHMENT, GL::TEXTURE_2D, @depth_stencil_texture, 0)
+      Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::DEPTH_STENCIL_ATTACHMENT, Engine::GL::TEXTURE_2D, @depth_stencil_texture, 0)
 
       # Tell OpenGL which color attachments to draw to (MRT)
       if @num_color_attachments > 1
-        attachments = (0...@num_color_attachments).map { |i| GL::COLOR_ATTACHMENT0 + i }
-        GL.DrawBuffers(@num_color_attachments, attachments.pack('L*'))
+        attachments = (0...@num_color_attachments).map { |i| Engine::GL::COLOR_ATTACHMENT0 + i }
+        Engine::GL.DrawBuffers(@num_color_attachments, attachments.pack('L*'))
       end
     end
 
     def check_framebuffer_complete
-      status = GL.CheckFramebufferStatus(GL::FRAMEBUFFER)
-      unless status == GL::FRAMEBUFFER_COMPLETE
+      status = Engine::GL.CheckFramebufferStatus(Engine::GL::FRAMEBUFFER)
+      unless status == Engine::GL::FRAMEBUFFER_COMPLETE
         raise "Framebuffer not complete: #{status}"
       end
     end

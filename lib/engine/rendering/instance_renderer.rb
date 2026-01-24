@@ -17,7 +17,7 @@ module Rendering
       setup_vertex_buffer
       setup_index_buffer
       generate_instance_vbo_buf
-      GL.BindVertexArray(0)
+      Engine::GL.BindVertexArray(0)
     end
 
     def add_instance(mesh_renderer)
@@ -44,14 +44,12 @@ module Rendering
     def draw_all
       set_material_per_frame_data
 
-      GL.BindVertexArray(@vao)
+      Engine::GL.BindVertexArray(@vao)
       update_vbo_buf
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
-      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      GL.BindVertexArray(0)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+      Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
     end
 
     def draw_depth_only(light_space_matrix)
@@ -61,14 +59,12 @@ module Rendering
       shadow_shader.use
       shadow_shader.set_mat4("lightSpaceMatrix", light_space_matrix)
 
-      GL.BindVertexArray(@vao)
+      Engine::GL.BindVertexArray(@vao)
       update_vbo_buf
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
-      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      GL.BindVertexArray(0)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+      Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
     end
 
     def draw_point_light_depth(light_space_matrix, light_pos, far_plane)
@@ -80,14 +76,12 @@ module Rendering
       shader.set_vec3("lightPos", light_pos)
       shader.set_float("farPlane", far_plane)
 
-      GL.BindVertexArray(@vao)
+      Engine::GL.BindVertexArray(@vao)
       update_vbo_buf
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
-      GL.DrawElementsInstanced(GL::TRIANGLES, mesh.index_data.length, GL::UNSIGNED_INT, 0, @mesh_renderers.count)
-      GL.BindVertexArray(0)
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, 0)
+      Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
     end
 
     private
@@ -156,82 +150,82 @@ module Rendering
       indices = mesh.index_data
 
       ebo_buf = ' ' * 4
-      GL.GenBuffers(1, ebo_buf)
+      Engine::GL.GenBuffers(1, ebo_buf)
       @ebo = ebo_buf.unpack('L')[0]
-      GL.BindBuffer(GL::ELEMENT_ARRAY_BUFFER, @ebo)
-      GL.BufferData(
-        GL::ELEMENT_ARRAY_BUFFER, indices.length * Fiddle::SIZEOF_INT,
-        indices.pack('I*'), GL::STATIC_DRAW
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BufferData(
+        Engine::GL::ELEMENT_ARRAY_BUFFER, indices.length * Fiddle::SIZEOF_INT,
+        indices.pack('I*'), Engine::GL::STATIC_DRAW
       )
     end
 
     def setup_vertex_attribute_buffer
       vao_buf = ' ' * 4
-      GL.GenVertexArrays(1, vao_buf)
+      Engine::GL.GenVertexArrays(1, vao_buf)
       @vao = vao_buf.unpack('L')[0]
-      GL.BindVertexArray(@vao)
+      Engine::GL.BindVertexArray(@vao)
     end
 
     def setup_vertex_buffer
       vbo_buf = ' ' * 4
-      GL.GenBuffers(1, vbo_buf)
+      Engine::GL.GenBuffers(1, vbo_buf)
       vbo = vbo_buf.unpack('L')[0]
       points = mesh.vertex_data
 
-      GL.BindBuffer(GL::ARRAY_BUFFER, vbo)
-      GL.BufferData(
-        GL::ARRAY_BUFFER, @mesh.vertex_data.length * Fiddle::SIZEOF_FLOAT,
-        points.pack('F*'), GL::STATIC_DRAW
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, vbo)
+      Engine::GL.BufferData(
+        Engine::GL::ARRAY_BUFFER, @mesh.vertex_data.length * Fiddle::SIZEOF_FLOAT,
+        points.pack('F*'), Engine::GL::STATIC_DRAW
       )
       vertex_data_size = 20 * Fiddle::SIZEOF_FLOAT
 
-      GL.VertexAttribPointer(0, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 0)
-      GL.VertexAttribPointer(1, 2, GL::FLOAT, GL::FALSE, vertex_data_size, 3 * Fiddle::SIZEOF_FLOAT)
-      GL.VertexAttribPointer(2, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 5 * Fiddle::SIZEOF_FLOAT)
-      GL.VertexAttribPointer(3, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 8 * Fiddle::SIZEOF_FLOAT)
-      GL.VertexAttribPointer(4, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 11 * Fiddle::SIZEOF_FLOAT)
-      GL.VertexAttribPointer(5, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 14 * Fiddle::SIZEOF_FLOAT)
-      GL.VertexAttribPointer(6, 3, GL::FLOAT, GL::FALSE, vertex_data_size, 17 * Fiddle::SIZEOF_FLOAT)
-      GL.EnableVertexAttribArray(0)
-      GL.EnableVertexAttribArray(1)
-      GL.EnableVertexAttribArray(2)
-      GL.EnableVertexAttribArray(3)
-      GL.EnableVertexAttribArray(4)
-      GL.EnableVertexAttribArray(5)
-      GL.EnableVertexAttribArray(6)
+      Engine::GL.VertexAttribPointer(0, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 0)
+      Engine::GL.VertexAttribPointer(1, 2, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 3 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.VertexAttribPointer(2, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 5 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.VertexAttribPointer(3, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 8 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.VertexAttribPointer(4, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 11 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.VertexAttribPointer(5, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 14 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.VertexAttribPointer(6, 3, Engine::GL::FLOAT, Engine::GL::FALSE, vertex_data_size, 17 * Fiddle::SIZEOF_FLOAT)
+      Engine::GL.EnableVertexAttribArray(0)
+      Engine::GL.EnableVertexAttribArray(1)
+      Engine::GL.EnableVertexAttribArray(2)
+      Engine::GL.EnableVertexAttribArray(3)
+      Engine::GL.EnableVertexAttribArray(4)
+      Engine::GL.EnableVertexAttribArray(5)
+      Engine::GL.EnableVertexAttribArray(6)
     end
 
     def generate_instance_vbo_buf
       instance_vbo_buf = ' ' * 4
-      GL.GenBuffers(1, instance_vbo_buf)
+      Engine::GL.GenBuffers(1, instance_vbo_buf)
       @instance_vbo = instance_vbo_buf.unpack('L')[0]
 
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
 
       # Set up vertex attributes once (stored in VAO)
       vec4_size = Fiddle::SIZEOF_FLOAT * 4
 
-      GL.EnableVertexAttribArray(7)
-      GL.EnableVertexAttribArray(8)
-      GL.EnableVertexAttribArray(9)
-      GL.EnableVertexAttribArray(10)
+      Engine::GL.EnableVertexAttribArray(7)
+      Engine::GL.EnableVertexAttribArray(8)
+      Engine::GL.EnableVertexAttribArray(9)
+      Engine::GL.EnableVertexAttribArray(10)
 
-      GL.VertexAttribPointer(7, 4, GL::FLOAT, GL::FALSE, 4 * vec4_size, 0)
-      GL.VertexAttribPointer(8, 4, GL::FLOAT, GL::FALSE, 4 * vec4_size, 1 * vec4_size)
-      GL.VertexAttribPointer(9, 4, GL::FLOAT, GL::FALSE, 4 * vec4_size, 2 * vec4_size)
-      GL.VertexAttribPointer(10, 4, GL::FLOAT, GL::FALSE, 4 * vec4_size, 3 * vec4_size)
+      Engine::GL.VertexAttribPointer(7, 4, Engine::GL::FLOAT, Engine::GL::FALSE, 4 * vec4_size, 0)
+      Engine::GL.VertexAttribPointer(8, 4, Engine::GL::FLOAT, Engine::GL::FALSE, 4 * vec4_size, 1 * vec4_size)
+      Engine::GL.VertexAttribPointer(9, 4, Engine::GL::FLOAT, Engine::GL::FALSE, 4 * vec4_size, 2 * vec4_size)
+      Engine::GL.VertexAttribPointer(10, 4, Engine::GL::FLOAT, Engine::GL::FALSE, 4 * vec4_size, 3 * vec4_size)
 
-      GL.VertexAttribDivisor(7, 1)
-      GL.VertexAttribDivisor(8, 1)
-      GL.VertexAttribDivisor(9, 1)
-      GL.VertexAttribDivisor(10, 1)
+      Engine::GL.VertexAttribDivisor(7, 1)
+      Engine::GL.VertexAttribDivisor(8, 1)
+      Engine::GL.VertexAttribDivisor(9, 1)
+      Engine::GL.VertexAttribDivisor(10, 1)
     end
 
     def update_vbo_buf
-      GL.BindBuffer(GL::ARRAY_BUFFER, @instance_vbo)
-      GL.BufferData(
-        GL::ARRAY_BUFFER, @packed_data.bytesize,
-        @packed_data, GL::DYNAMIC_DRAW
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
+      Engine::GL.BufferData(
+        Engine::GL::ARRAY_BUFFER, @packed_data.bytesize,
+        @packed_data, Engine::GL::DYNAMIC_DRAW
       )
     end
   end

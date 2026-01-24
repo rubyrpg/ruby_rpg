@@ -15,16 +15,16 @@ module Engine
 
       def create_texture
         tex_buf = ' ' * 4
-        GL.GenTextures(1, tex_buf)
+        Engine::GL.GenTextures(1, tex_buf)
         @gl_texture = tex_buf.unpack('L')[0]
 
-        GL.BindTexture(GL::TEXTURE_2D, @gl_texture)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::REPEAT)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::REPEAT)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-        GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-        GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA32F, @width, @height, 0, GL::RGBA, GL::FLOAT, nil)
-        GL.BindTexture(GL::TEXTURE_2D, 0)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @gl_texture)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::REPEAT)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::REPEAT)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::LINEAR)
+        Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA32F, @width, @height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
+        Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, 0)
       end
     end
   end

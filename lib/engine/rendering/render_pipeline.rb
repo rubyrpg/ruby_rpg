@@ -16,10 +16,9 @@ module Rendering
       GpuTimer.measure(:main_3d) do
         render_texture_a.bind
         clear_buffer
-        GL.Disable(GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
+        Engine::GL.Disable(Engine::GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
         draw_3d
-        GL.Enable(GL::BLEND)   # Re-enable for UI and post-processing
-        render_texture_a.unbind
+        Engine::GL.Enable(Engine::GL::BLEND)   # Re-enable for UI and post-processing
       end
 
       # Copy normal texture to separate buffer to avoid read/write hazard in SSR
@@ -35,7 +34,6 @@ module Rendering
         disable_depth_test
         current_texture.bind
         draw_ui
-        current_texture.unbind
       end
 
       GpuTimer.measure(:blit) do
@@ -93,7 +91,6 @@ module Rendering
       instance_renderers.values.each do |renderer|
         renderer.draw_depth_only(light_space_matrix)
       end
-      shadow_map_array.unbind
     end
 
     def self.render_point_shadow_to_layer(layer_index, light)
@@ -107,7 +104,6 @@ module Rendering
           renderer.draw_point_light_depth(matrices[face_index], light_pos, far_plane)
         end
       end
-      point_shadow_map_array.unbind
     end
 
     def self.sync_transforms
@@ -121,10 +117,10 @@ module Rendering
     end
 
     def self.draw_ui
-      GL.Clear(GL::STENCIL_BUFFER_BIT)
-      GL.Disable(GL::CULL_FACE)
+      Engine::GL.Clear(Engine::GL::STENCIL_BUFFER_BIT)
+      Engine::GL.Disable(Engine::GL::CULL_FACE)
       Engine::Components::UI::Rect.draw_all
-      GL.Enable(GL::CULL_FACE)
+      Engine::GL.Enable(Engine::GL::CULL_FACE)
     end
 
     def self.add_instance(mesh_renderer)
@@ -154,25 +150,26 @@ module Rendering
     end
 
     def self.clear_buffer
-      GL.Clear(GL::COLOR_BUFFER_BIT | GL::DEPTH_BUFFER_BIT)
+      Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT | Engine::GL::DEPTH_BUFFER_BIT)
     end
 
     def self.blit_to_screen(texture)
+      Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, 0)
       reset_viewport
       screen_quad.draw(blit_material, texture)
     end
 
     def self.enable_depth_test
-      GL.Enable(GL::DEPTH_TEST)
-      GL.DepthFunc(GL::LESS)
+      Engine::GL.Enable(Engine::GL::DEPTH_TEST)
+      Engine::GL.DepthFunc(Engine::GL::LESS)
     end
 
     def self.disable_depth_test
-      GL.Disable(GL::DEPTH_TEST)
+      Engine::GL.Disable(Engine::GL::DEPTH_TEST)
     end
 
     def self.reset_viewport
-      GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
+      Engine::GL.Viewport(0, 0, Engine::Window.framebuffer_width, Engine::Window.framebuffer_height)
     end
 
     def self.blit_material
@@ -196,15 +193,15 @@ module Rendering
       height = Engine::Window.framebuffer_height
 
       tex_buf = ' ' * 4
-      GL.GenTextures(1, tex_buf)
+      Engine::GL.GenTextures(1, tex_buf)
       texture = tex_buf.unpack1('L')
 
-      GL.BindTexture(GL::TEXTURE_2D, texture)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, width, height, 0, GL::RGBA, GL::FLOAT, nil)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::LINEAR)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::LINEAR)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_S, GL::CLAMP_TO_EDGE)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_WRAP_T, GL::CLAMP_TO_EDGE)
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, texture)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA16F, width, height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::LINEAR)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::LINEAR)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_S, Engine::GL::CLAMP_TO_EDGE)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_WRAP_T, Engine::GL::CLAMP_TO_EDGE)
 
       @normal_buffer_width = width
       @normal_buffer_height = height
@@ -215,8 +212,8 @@ module Rendering
       return if @normal_buffer_width == width && @normal_buffer_height == height
       return unless @normal_buffer
 
-      GL.BindTexture(GL::TEXTURE_2D, @normal_buffer)
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA16F, width, height, 0, GL::RGBA, GL::FLOAT, nil)
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @normal_buffer)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA16F, width, height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
       @normal_buffer_width = width
       @normal_buffer_height = height
     end
@@ -226,25 +223,22 @@ module Rendering
       height = Engine::Window.framebuffer_height
 
       # Bind source (render_texture_a's normal attachment) as read framebuffer
-      GL.BindFramebuffer(GL::READ_FRAMEBUFFER, render_texture_a.framebuffer)
-      GL.ReadBuffer(GL::COLOR_ATTACHMENT1)  # Normal is second attachment
+      Engine::GL.BindFramebuffer(Engine::GL::READ_FRAMEBUFFER, render_texture_a.framebuffer)
+      Engine::GL.ReadBuffer(Engine::GL::COLOR_ATTACHMENT1)  # Normal is second attachment
 
       # Bind destination texture to a temp framebuffer for writing
-      GL.BindFramebuffer(GL::DRAW_FRAMEBUFFER, copy_fbo)
-      GL.FramebufferTexture2D(GL::DRAW_FRAMEBUFFER, GL::COLOR_ATTACHMENT0, GL::TEXTURE_2D, normal_buffer, 0)
+      Engine::GL.BindFramebuffer(Engine::GL::DRAW_FRAMEBUFFER, copy_fbo)
+      Engine::GL.FramebufferTexture2D(Engine::GL::DRAW_FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0, Engine::GL::TEXTURE_2D, normal_buffer, 0)
 
       # Blit
-      GL.BlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL::COLOR_BUFFER_BIT, GL::NEAREST)
-
-      # Unbind
-      GL.BindFramebuffer(GL::FRAMEBUFFER, 0)
+      Engine::GL.BlitFramebuffer(0, 0, width, height, 0, 0, width, height, Engine::GL::COLOR_BUFFER_BIT, Engine::GL::NEAREST)
     end
 
     def self.copy_fbo
       return @copy_fbo if @copy_fbo
 
       fbo_buf = ' ' * 4
-      GL.GenFramebuffers(1, fbo_buf)
+      Engine::GL.GenFramebuffers(1, fbo_buf)
       @copy_fbo = fbo_buf.unpack1('L')
     end
 

@@ -5,14 +5,18 @@ Gem::Specification.new do |s|
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
   s.description = "A Ruby game engine using OpenGL and GLFW"
-  s.files = Dir.glob("{lib,glfw-3.3.9.bin.MACOS,glfw-3.4.bin.WIN64,bin}/**/*") + ["README.md"]
+  s.files = Dir.glob("{lib,bin}/**/*") +
+            Dir.glob("ext/**/*.{rb,c,h}") +
+            Dir.glob("vendor/glfw-*/lib-*/*.{dylib,dll}") +
+            Dir.glob("vendor/glfw-*/LICENSE.md") +
+            ["README.md"]
   s.require_paths = ["lib"]
+  s.extensions = Dir.glob("ext/*/extconf.rb")
   s.homepage = "https://github.com/rubyrpg/ruby_rpg"
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
   s.add_runtime_dependency "native_audio"
-  s.add_runtime_dependency 'opengl-bindings2', '~> 2.0'
   s.add_runtime_dependency 'concurrent-ruby'
   s.add_runtime_dependency 'os'
   s.add_runtime_dependency 'matrix', '~> 0.3'

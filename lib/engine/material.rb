@@ -7,28 +7,11 @@ module Engine
     serialize :shader, :floats, :ints, :vec2s, :vec3s, :vec4s, :mat4s, :textures
 
     # Cache texture slot constants to avoid const_get every frame
-    TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("GL::TEXTURE#{i}") }
-
-    # Class-level texture binding cache
-    @current_texture_slot = nil
-    @bound_textures = {}
-
-    class << self
-      attr_accessor :current_texture_slot, :bound_textures
-    end
+    TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("Engine::GL::TEXTURE#{i}") }
 
     def self.bind_texture(slot, target, texture_id)
-      # Activate slot only if different
-      unless @current_texture_slot == slot
-        GL.ActiveTexture(TEXTURE_SLOTS[slot])
-        @current_texture_slot = slot
-      end
-
-      # Bind texture only if different for this slot
-      unless @bound_textures[slot] == texture_id
-        GL.BindTexture(target, texture_id)
-        @bound_textures[slot] = texture_id
-      end
+      Engine::GL.ActiveTexture(TEXTURE_SLOTS[slot])
+      Engine::GL.BindTexture(target, texture_id)
     end
 
     attr_reader :shader
@@ -47,13 +30,13 @@ module Engine
 
     def self.create_1x1_texture(r, g, b, a)
       tex = ' ' * 4
-      GL.GenTextures(1, tex)
+      Engine::GL.GenTextures(1, tex)
       texture_id = tex.unpack('L')[0]
-      GL.BindTexture(GL::TEXTURE_2D, texture_id)
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, texture_id)
       pixel = [r, g, b, a].pack('C*')
-      GL.TexImage2D(GL::TEXTURE_2D, 0, GL::RGBA, 1, 1, 0, GL::RGBA, GL::UNSIGNED_BYTE, pixel)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MIN_FILTER, GL::NEAREST)
-      GL.TexParameteri(GL::TEXTURE_2D, GL::TEXTURE_MAG_FILTER, GL::NEAREST)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA, 1, 1, 0, Engine::GL::RGBA, Engine::GL::UNSIGNED_BYTE, pixel)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MIN_FILTER, Engine::GL::NEAREST)
+      Engine::GL.TexParameteri(Engine::GL::TEXTURE_2D, Engine::GL::TEXTURE_MAG_FILTER, Engine::GL::NEAREST)
       texture_id
     end
 
@@ -135,7 +118,7 @@ module Engine
                      else
                        fallback_texture_for(name)
                      end
-        Material.bind_texture(slot, GL::TEXTURE_2D, texture_id)
+        Material.bind_texture(slot, Engine::GL::TEXTURE_2D, texture_id)
         shader.set_int(name, slot)
       end
 
@@ -144,7 +127,7 @@ module Engine
       cubemaps.each.with_index do |(name, value), i|
         slot = cubemap_start_slot + i
         texture_id = value || fallback_cubemap_for(name)
-        Material.bind_texture(slot, GL::TEXTURE_CUBE_MAP, texture_id)
+        Material.bind_texture(slot, Engine::GL::TEXTURE_CUBE_MAP, texture_id)
         shader.set_int(name, slot)
       end
 
@@ -152,7 +135,7 @@ module Engine
       texture_array_start_slot = cubemap_start_slot + cubemaps.size
       texture_arrays.each.with_index do |(name, value), i|
         slot = texture_array_start_slot + i
-        Material.bind_texture(slot, GL::TEXTURE_2D_ARRAY, value || 0)
+        Material.bind_texture(slot, Engine::GL::TEXTURE_2D_ARRAY, value || 0)
         shader.set_int(name, slot)
       end
 
@@ -160,7 +143,7 @@ module Engine
       cubemap_array_start_slot = texture_array_start_slot + texture_arrays.size
       cubemap_arrays.each.with_index do |(name, value), i|
         slot = cubemap_array_start_slot + i
-        Material.bind_texture(slot, GL::TEXTURE_CUBE_MAP_ARRAY, value || 0)
+        Material.bind_texture(slot, Engine::GL::TEXTURE_CUBE_MAP_ARRAY, value || 0)
         shader.set_int(name, slot)
       end
     end

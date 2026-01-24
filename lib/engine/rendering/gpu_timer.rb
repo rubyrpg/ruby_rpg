@@ -21,9 +21,9 @@ module Rendering
         end
 
         query_id = query_for(stage)
-        GL.BeginQuery(GL::TIME_ELAPSED, query_id)
+        Engine::GL.BeginQuery(Engine::GL::TIME_ELAPSED, query_id)
         result = yield
-        GL.EndQuery(GL::TIME_ELAPSED)
+        Engine::GL.EndQuery(Engine::GL::TIME_ELAPSED)
         result
       end
 
@@ -36,7 +36,7 @@ module Rendering
         results = {}
         @stages.each do |stage|
           buf = ' ' * 8
-          GL.GetQueryObjectui64v(@queries[stage], GL::QUERY_RESULT, buf)
+          Engine::GL.GetQueryObjectui64v(@queries[stage], Engine::GL::QUERY_RESULT, buf)
           results[stage] = buf.unpack1('Q') / 1_000_000.0
         end
 
@@ -58,7 +58,7 @@ module Rendering
         return @queries[stage] if @queries[stage]
 
         buf = ' ' * 4
-        GL.GenQueries(1, buf)
+        Engine::GL.GenQueries(1, buf)
         @queries[stage] = buf.unpack1('L')
         @stages << stage
         @queries[stage]
