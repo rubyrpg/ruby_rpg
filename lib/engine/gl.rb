@@ -93,7 +93,7 @@ module Engine
     end
 
     def self.BlendFunc(sfactor, dfactor)
-      ::GL.BlendFunc(sfactor, dfactor)
+      NATIVE_AVAILABLE ? GLNative.blend_func(sfactor, dfactor) : ::GL.BlendFunc(sfactor, dfactor)
     end
 
     def self.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)

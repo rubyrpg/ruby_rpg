@@ -150,6 +150,12 @@ static VALUE rb_gl_begin_query(VALUE self, VALUE target, VALUE id) {
     return Qnil;
 }
 
+/* BlendFunc(sfactor, dfactor) */
+static VALUE rb_gl_blend_func(VALUE self, VALUE sfactor, VALUE dfactor) {
+    glBlendFunc((GLenum)NUM2INT(sfactor), (GLenum)NUM2INT(dfactor));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -176,4 +182,5 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "blit_framebuffer", rb_gl_blit_framebuffer, 10);
     rb_define_module_function(mGLNative, "attach_shader", rb_gl_attach_shader, 2);
     rb_define_module_function(mGLNative, "begin_query", rb_gl_begin_query, 2);
+    rb_define_module_function(mGLNative, "blend_func", rb_gl_blend_func, 2);
 }
