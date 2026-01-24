@@ -82,7 +82,7 @@ module Engine
     end
 
     def self.BindImageTexture(unit, texture, level, layered, layer, access, format)
-      ::GL.BindImageTexture(unit, texture, level, layered, layer, access, format)
+      NATIVE_AVAILABLE ? GLNative.bind_image_texture(unit, texture, level, layered, layer, access, format) : ::GL.BindImageTexture(unit, texture, level, layered, layer, access, format)
     end
 
     def self.BindVertexArray(array)
@@ -145,7 +145,7 @@ module Engine
     end
 
     def self.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
-      ::GL.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
+      NATIVE_AVAILABLE ? GLNative.dispatch_compute(num_groups_x, num_groups_y, num_groups_z) : ::GL.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
     end
 
     def self.DrawArrays(mode, first, count)
@@ -245,7 +245,7 @@ module Engine
     end
 
     def self.MemoryBarrier(barriers)
-      ::GL.MemoryBarrier(barriers)
+      NATIVE_AVAILABLE ? GLNative.memory_barrier(barriers) : ::GL.MemoryBarrier(barriers)
     end
 
     def self.ReadBuffer(mode)

@@ -2,6 +2,10 @@
 
 #ifdef __APPLE__
 #include <OpenGL/gl3.h>
+/* Compute shader functions not in macOS gl3.h - declare for API completeness */
+extern void glBindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format);
+extern void glDispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z);
+extern void glMemoryBarrier(GLbitfield barriers);
 #else
 #include <GL/gl.h>
 #endif
@@ -455,6 +459,29 @@ static VALUE rb_gl_vertex_attrib_pointer(VALUE self, VALUE index, VALUE size, VA
     return Qnil;
 }
 
+/* Compute shader functions - OpenGL 4.3+ */
+
+/* BindImageTexture(unit, texture, level, layered, layer, access, format) */
+static VALUE rb_gl_bind_image_texture(VALUE self, VALUE unit, VALUE texture, VALUE level,
+                                       VALUE layered, VALUE layer, VALUE access, VALUE format) {
+    glBindImageTexture((GLuint)NUM2UINT(unit), (GLuint)NUM2UINT(texture), (GLint)NUM2INT(level),
+                       (GLboolean)NUM2INT(layered), (GLint)NUM2INT(layer),
+                       (GLenum)NUM2INT(access), (GLenum)NUM2INT(format));
+    return Qnil;
+}
+
+/* DispatchCompute(num_groups_x, num_groups_y, num_groups_z) */
+static VALUE rb_gl_dispatch_compute(VALUE self, VALUE num_groups_x, VALUE num_groups_y, VALUE num_groups_z) {
+    glDispatchCompute((GLuint)NUM2UINT(num_groups_x), (GLuint)NUM2UINT(num_groups_y), (GLuint)NUM2UINT(num_groups_z));
+    return Qnil;
+}
+
+/* MemoryBarrier(barriers) */
+static VALUE rb_gl_memory_barrier(VALUE self, VALUE barriers) {
+    glMemoryBarrier((GLbitfield)NUM2UINT(barriers));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -526,4 +553,9 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "vertex_attrib_divisor", rb_gl_vertex_attrib_divisor, 2);
     rb_define_module_function(mGLNative, "vertex_attrib_ipointer", rb_gl_vertex_attrib_ipointer, 5);
     rb_define_module_function(mGLNative, "vertex_attrib_pointer", rb_gl_vertex_attrib_pointer, 6);
+
+    /* Compute shader functions - OpenGL 4.3+ */
+    rb_define_module_function(mGLNative, "bind_image_texture", rb_gl_bind_image_texture, 7);
+    rb_define_module_function(mGLNative, "dispatch_compute", rb_gl_dispatch_compute, 3);
+    rb_define_module_function(mGLNative, "memory_barrier", rb_gl_memory_barrier, 1);
 }
