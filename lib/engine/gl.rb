@@ -253,7 +253,7 @@ module Engine
     end
 
     def self.ReadPixels(x, y, width, height, format, type, data)
-      ::GL.ReadPixels(x, y, width, height, format, type, data)
+      NATIVE_AVAILABLE ? GLNative.read_pixels(x, y, width, height, format, type, data) : ::GL.ReadPixels(x, y, width, height, format, type, data)
     end
 
     def self.ShaderSource(shader, count, string, length)
