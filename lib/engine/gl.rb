@@ -261,31 +261,31 @@ module Engine
     end
 
     def self.StencilFunc(func, ref, mask)
-      ::GL.StencilFunc(func, ref, mask)
+      NATIVE_AVAILABLE ? GLNative.stencil_func(func, ref, mask) : ::GL.StencilFunc(func, ref, mask)
     end
 
     def self.StencilMask(mask)
-      ::GL.StencilMask(mask)
+      NATIVE_AVAILABLE ? GLNative.stencil_mask(mask) : ::GL.StencilMask(mask)
     end
 
     def self.StencilOp(sfail, dpfail, dppass)
-      ::GL.StencilOp(sfail, dpfail, dppass)
+      NATIVE_AVAILABLE ? GLNative.stencil_op(sfail, dpfail, dppass) : ::GL.StencilOp(sfail, dpfail, dppass)
     end
 
     def self.TexImage2D(target, level, internalformat, width, height, border, format, type, data)
-      ::GL.TexImage2D(target, level, internalformat, width, height, border, format, type, data)
+      NATIVE_AVAILABLE ? GLNative.tex_image_2d(target, level, internalformat, width, height, border, format, type, data) : ::GL.TexImage2D(target, level, internalformat, width, height, border, format, type, data)
     end
 
     def self.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data)
-      ::GL.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data)
+      NATIVE_AVAILABLE ? GLNative.tex_image_3d(target, level, internalformat, width, height, depth, border, format, type, data) : ::GL.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data)
     end
 
     def self.TexParameterfv(target, pname, params)
-      ::GL.TexParameterfv(target, pname, params)
+      NATIVE_AVAILABLE ? GLNative.tex_parameterfv(target, pname, params) : ::GL.TexParameterfv(target, pname, params)
     end
 
     def self.TexParameteri(target, pname, param)
-      ::GL.TexParameteri(target, pname, param)
+      NATIVE_AVAILABLE ? GLNative.tex_parameteri(target, pname, param) : ::GL.TexParameteri(target, pname, param)
     end
 
     def self.Uniform1f(location, v0)
@@ -313,15 +313,15 @@ module Engine
     end
 
     def self.VertexAttribDivisor(index, divisor)
-      ::GL.VertexAttribDivisor(index, divisor)
+      NATIVE_AVAILABLE ? GLNative.vertex_attrib_divisor(index, divisor) : ::GL.VertexAttribDivisor(index, divisor)
     end
 
     def self.VertexAttribIPointer(index, size, type, stride, pointer)
-      ::GL.VertexAttribIPointer(index, size, type, stride, pointer)
+      NATIVE_AVAILABLE ? GLNative.vertex_attrib_ipointer(index, size, type, stride, pointer) : ::GL.VertexAttribIPointer(index, size, type, stride, pointer)
     end
 
     def self.VertexAttribPointer(index, size, type, normalized, stride, pointer)
-      ::GL.VertexAttribPointer(index, size, type, normalized, stride, pointer)
+      NATIVE_AVAILABLE ? GLNative.vertex_attrib_pointer(index, size, type, normalized, stride, pointer) : ::GL.VertexAttribPointer(index, size, type, normalized, stride, pointer)
     end
 
     def self.Viewport(x, y, width, height)

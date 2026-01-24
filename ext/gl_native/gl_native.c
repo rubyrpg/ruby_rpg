@@ -393,6 +393,68 @@ static VALUE rb_gl_stencil_mask(VALUE self, VALUE mask) {
     return Qnil;
 }
 
+/* StencilOp(sfail, dpfail, dppass) */
+static VALUE rb_gl_stencil_op(VALUE self, VALUE sfail, VALUE dpfail, VALUE dppass) {
+    glStencilOp((GLenum)NUM2INT(sfail), (GLenum)NUM2INT(dpfail), (GLenum)NUM2INT(dppass));
+    return Qnil;
+}
+
+/* TexImage2D(target, level, internalformat, width, height, border, format, type, data) */
+static VALUE rb_gl_tex_image_2d(VALUE self, VALUE target, VALUE level, VALUE internalformat,
+                                 VALUE width, VALUE height, VALUE border, VALUE format,
+                                 VALUE type, VALUE data) {
+    const void *ptr = NIL_P(data) ? NULL : (const void *)RSTRING_PTR(data);
+    glTexImage2D((GLenum)NUM2INT(target), (GLint)NUM2INT(level), (GLint)NUM2INT(internalformat),
+                 (GLsizei)NUM2INT(width), (GLsizei)NUM2INT(height), (GLint)NUM2INT(border),
+                 (GLenum)NUM2INT(format), (GLenum)NUM2INT(type), ptr);
+    return Qnil;
+}
+
+/* TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data) */
+static VALUE rb_gl_tex_image_3d(VALUE self, VALUE target, VALUE level, VALUE internalformat,
+                                 VALUE width, VALUE height, VALUE depth, VALUE border,
+                                 VALUE format, VALUE type, VALUE data) {
+    const void *ptr = NIL_P(data) ? NULL : (const void *)RSTRING_PTR(data);
+    glTexImage3D((GLenum)NUM2INT(target), (GLint)NUM2INT(level), (GLint)NUM2INT(internalformat),
+                 (GLsizei)NUM2INT(width), (GLsizei)NUM2INT(height), (GLsizei)NUM2INT(depth),
+                 (GLint)NUM2INT(border), (GLenum)NUM2INT(format), (GLenum)NUM2INT(type), ptr);
+    return Qnil;
+}
+
+/* TexParameterfv(target, pname, params) */
+static VALUE rb_gl_tex_parameterfv(VALUE self, VALUE target, VALUE pname, VALUE params) {
+    const GLfloat *ptr = (const GLfloat *)RSTRING_PTR(params);
+    glTexParameterfv((GLenum)NUM2INT(target), (GLenum)NUM2INT(pname), ptr);
+    return Qnil;
+}
+
+/* TexParameteri(target, pname, param) */
+static VALUE rb_gl_tex_parameteri(VALUE self, VALUE target, VALUE pname, VALUE param) {
+    glTexParameteri((GLenum)NUM2INT(target), (GLenum)NUM2INT(pname), (GLint)NUM2INT(param));
+    return Qnil;
+}
+
+/* VertexAttribDivisor(index, divisor) */
+static VALUE rb_gl_vertex_attrib_divisor(VALUE self, VALUE index, VALUE divisor) {
+    glVertexAttribDivisor((GLuint)NUM2UINT(index), (GLuint)NUM2UINT(divisor));
+    return Qnil;
+}
+
+/* VertexAttribIPointer(index, size, type, stride, pointer) */
+static VALUE rb_gl_vertex_attrib_ipointer(VALUE self, VALUE index, VALUE size, VALUE type, VALUE stride, VALUE pointer) {
+    glVertexAttribIPointer((GLuint)NUM2UINT(index), (GLint)NUM2INT(size), (GLenum)NUM2INT(type),
+                           (GLsizei)NUM2INT(stride), (const void *)(uintptr_t)NUM2ULL(pointer));
+    return Qnil;
+}
+
+/* VertexAttribPointer(index, size, type, normalized, stride, pointer) */
+static VALUE rb_gl_vertex_attrib_pointer(VALUE self, VALUE index, VALUE size, VALUE type, VALUE normalized, VALUE stride, VALUE pointer) {
+    glVertexAttribPointer((GLuint)NUM2UINT(index), (GLint)NUM2INT(size), (GLenum)NUM2INT(type),
+                          (GLboolean)NUM2INT(normalized), (GLsizei)NUM2INT(stride),
+                          (const void *)(uintptr_t)NUM2ULL(pointer));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -456,4 +518,12 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "shader_source", rb_gl_shader_source, 4);
     rb_define_module_function(mGLNative, "stencil_func", rb_gl_stencil_func, 3);
     rb_define_module_function(mGLNative, "stencil_mask", rb_gl_stencil_mask, 1);
+    rb_define_module_function(mGLNative, "stencil_op", rb_gl_stencil_op, 3);
+    rb_define_module_function(mGLNative, "tex_image_2d", rb_gl_tex_image_2d, 9);
+    rb_define_module_function(mGLNative, "tex_image_3d", rb_gl_tex_image_3d, 10);
+    rb_define_module_function(mGLNative, "tex_parameterfv", rb_gl_tex_parameterfv, 3);
+    rb_define_module_function(mGLNative, "tex_parameteri", rb_gl_tex_parameteri, 3);
+    rb_define_module_function(mGLNative, "vertex_attrib_divisor", rb_gl_vertex_attrib_divisor, 2);
+    rb_define_module_function(mGLNative, "vertex_attrib_ipointer", rb_gl_vertex_attrib_ipointer, 5);
+    rb_define_module_function(mGLNative, "vertex_attrib_pointer", rb_gl_vertex_attrib_pointer, 6);
 }
