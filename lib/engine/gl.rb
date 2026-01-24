@@ -205,23 +205,23 @@ module Engine
     end
 
     def self.GenTextures(n, textures)
-      ::GL.GenTextures(n, textures)
+      NATIVE_AVAILABLE ? GLNative.gen_textures(n, textures) : ::GL.GenTextures(n, textures)
     end
 
     def self.GenVertexArrays(n, arrays)
-      ::GL.GenVertexArrays(n, arrays)
+      NATIVE_AVAILABLE ? GLNative.gen_vertex_arrays(n, arrays) : ::GL.GenVertexArrays(n, arrays)
     end
 
     def self.GetError
-      ::GL.GetError
+      NATIVE_AVAILABLE ? GLNative.get_error : ::GL.GetError
     end
 
     def self.GetProgramInfoLog(program, max_length, length, info_log)
-      ::GL.GetProgramInfoLog(program, max_length, length, info_log)
+      NATIVE_AVAILABLE ? GLNative.get_program_info_log(program, max_length, length, info_log) : ::GL.GetProgramInfoLog(program, max_length, length, info_log)
     end
 
     def self.GetProgramiv(program, pname, params)
-      ::GL.GetProgramiv(program, pname, params)
+      NATIVE_AVAILABLE ? GLNative.get_programiv(program, pname, params) : ::GL.GetProgramiv(program, pname, params)
     end
 
     def self.GetQueryObjectui64v(id, pname, params)

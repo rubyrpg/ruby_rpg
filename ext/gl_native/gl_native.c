@@ -288,6 +288,41 @@ static VALUE rb_gl_gen_queries(VALUE self, VALUE n, VALUE ids) {
     return Qnil;
 }
 
+/* GenTextures(n, textures) */
+static VALUE rb_gl_gen_textures(VALUE self, VALUE n, VALUE textures) {
+    GLuint *ptr = (GLuint *)RSTRING_PTR(textures);
+    glGenTextures((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
+/* GenVertexArrays(n, arrays) */
+static VALUE rb_gl_gen_vertex_arrays(VALUE self, VALUE n, VALUE arrays) {
+    GLuint *ptr = (GLuint *)RSTRING_PTR(arrays);
+    glGenVertexArrays((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
+/* GetError() */
+static VALUE rb_gl_get_error(VALUE self) {
+    GLenum error = glGetError();
+    return INT2NUM(error);
+}
+
+/* GetProgramInfoLog(program, max_length, length, info_log) */
+static VALUE rb_gl_get_program_info_log(VALUE self, VALUE program, VALUE max_length, VALUE length, VALUE info_log) {
+    GLsizei *len_ptr = (GLsizei *)RSTRING_PTR(length);
+    GLchar *log_ptr = (GLchar *)RSTRING_PTR(info_log);
+    glGetProgramInfoLog((GLuint)NUM2UINT(program), (GLsizei)NUM2INT(max_length), len_ptr, log_ptr);
+    return Qnil;
+}
+
+/* GetProgramiv(program, pname, params) */
+static VALUE rb_gl_get_programiv(VALUE self, VALUE program, VALUE pname, VALUE params) {
+    GLint *ptr = (GLint *)RSTRING_PTR(params);
+    glGetProgramiv((GLuint)NUM2UINT(program), (GLenum)NUM2INT(pname), ptr);
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -336,4 +371,9 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "generate_mipmap", rb_gl_generate_mipmap, 1);
     rb_define_module_function(mGLNative, "gen_framebuffers", rb_gl_gen_framebuffers, 2);
     rb_define_module_function(mGLNative, "gen_queries", rb_gl_gen_queries, 2);
+    rb_define_module_function(mGLNative, "gen_textures", rb_gl_gen_textures, 2);
+    rb_define_module_function(mGLNative, "gen_vertex_arrays", rb_gl_gen_vertex_arrays, 2);
+    rb_define_module_function(mGLNative, "get_error", rb_gl_get_error, 0);
+    rb_define_module_function(mGLNative, "get_program_info_log", rb_gl_get_program_info_log, 4);
+    rb_define_module_function(mGLNative, "get_programiv", rb_gl_get_programiv, 3);
 }
