@@ -323,6 +323,74 @@ static VALUE rb_gl_get_programiv(VALUE self, VALUE program, VALUE pname, VALUE p
     return Qnil;
 }
 
+/* GetQueryObjectui64v(id, pname, params) */
+static VALUE rb_gl_get_query_objectui64v(VALUE self, VALUE id, VALUE pname, VALUE params) {
+    GLuint64 *ptr = (GLuint64 *)RSTRING_PTR(params);
+    glGetQueryObjectui64v((GLuint)NUM2UINT(id), (GLenum)NUM2INT(pname), ptr);
+    return Qnil;
+}
+
+/* GetShaderInfoLog(shader, max_length, length, info_log) */
+static VALUE rb_gl_get_shader_info_log(VALUE self, VALUE shader, VALUE max_length, VALUE length, VALUE info_log) {
+    GLsizei *len_ptr = (GLsizei *)RSTRING_PTR(length);
+    GLchar *log_ptr = (GLchar *)RSTRING_PTR(info_log);
+    glGetShaderInfoLog((GLuint)NUM2UINT(shader), (GLsizei)NUM2INT(max_length), len_ptr, log_ptr);
+    return Qnil;
+}
+
+/* GetString(name) */
+static VALUE rb_gl_get_string(VALUE self, VALUE name) {
+    const GLubyte *str = glGetString((GLenum)NUM2INT(name));
+    if (str == NULL) return Qnil;
+    return rb_str_new2((const char *)str);
+}
+
+/* GetUniformLocation(program, name) */
+static VALUE rb_gl_get_uniform_location(VALUE self, VALUE program, VALUE name) {
+    const char *name_str = StringValueCStr(name);
+    GLint location = glGetUniformLocation((GLuint)NUM2UINT(program), name_str);
+    return INT2NUM(location);
+}
+
+/* LinkProgram(program) */
+static VALUE rb_gl_link_program(VALUE self, VALUE program) {
+    glLinkProgram((GLuint)NUM2UINT(program));
+    return Qnil;
+}
+
+/* ReadBuffer(mode) */
+static VALUE rb_gl_read_buffer(VALUE self, VALUE mode) {
+    glReadBuffer((GLenum)NUM2INT(mode));
+    return Qnil;
+}
+
+/* ReadPixels(x, y, width, height, format, type, data) */
+static VALUE rb_gl_read_pixels(VALUE self, VALUE x, VALUE y, VALUE width, VALUE height, VALUE format, VALUE type, VALUE data) {
+    void *ptr = (void *)RSTRING_PTR(data);
+    glReadPixels((GLint)NUM2INT(x), (GLint)NUM2INT(y), (GLsizei)NUM2INT(width), (GLsizei)NUM2INT(height), (GLenum)NUM2INT(format), (GLenum)NUM2INT(type), ptr);
+    return Qnil;
+}
+
+/* ShaderSource(shader, count, string, length) */
+static VALUE rb_gl_shader_source(VALUE self, VALUE shader, VALUE count, VALUE string, VALUE length) {
+    const GLchar *src = (const GLchar *)RSTRING_PTR(string);
+    GLint len = (GLint)RSTRING_LEN(string);
+    glShaderSource((GLuint)NUM2UINT(shader), 1, &src, &len);
+    return Qnil;
+}
+
+/* StencilFunc(func, ref, mask) */
+static VALUE rb_gl_stencil_func(VALUE self, VALUE func, VALUE ref, VALUE mask) {
+    glStencilFunc((GLenum)NUM2INT(func), (GLint)NUM2INT(ref), (GLuint)NUM2UINT(mask));
+    return Qnil;
+}
+
+/* StencilMask(mask) */
+static VALUE rb_gl_stencil_mask(VALUE self, VALUE mask) {
+    glStencilMask((GLuint)NUM2UINT(mask));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -376,4 +444,14 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "get_error", rb_gl_get_error, 0);
     rb_define_module_function(mGLNative, "get_program_info_log", rb_gl_get_program_info_log, 4);
     rb_define_module_function(mGLNative, "get_programiv", rb_gl_get_programiv, 3);
+    rb_define_module_function(mGLNative, "get_query_objectui64v", rb_gl_get_query_objectui64v, 3);
+    rb_define_module_function(mGLNative, "get_shader_info_log", rb_gl_get_shader_info_log, 4);
+    rb_define_module_function(mGLNative, "get_string", rb_gl_get_string, 1);
+    rb_define_module_function(mGLNative, "get_uniform_location", rb_gl_get_uniform_location, 2);
+    rb_define_module_function(mGLNative, "link_program", rb_gl_link_program, 1);
+    rb_define_module_function(mGLNative, "read_buffer", rb_gl_read_buffer, 1);
+    rb_define_module_function(mGLNative, "read_pixels", rb_gl_read_pixels, 7);
+    rb_define_module_function(mGLNative, "shader_source", rb_gl_shader_source, 4);
+    rb_define_module_function(mGLNative, "stencil_func", rb_gl_stencil_func, 3);
+    rb_define_module_function(mGLNative, "stencil_mask", rb_gl_stencil_mask, 1);
 }

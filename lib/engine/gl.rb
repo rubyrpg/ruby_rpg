@@ -225,23 +225,23 @@ module Engine
     end
 
     def self.GetQueryObjectui64v(id, pname, params)
-      ::GL.GetQueryObjectui64v(id, pname, params)
+      NATIVE_AVAILABLE ? GLNative.get_query_objectui64v(id, pname, params) : ::GL.GetQueryObjectui64v(id, pname, params)
     end
 
     def self.GetShaderInfoLog(shader, max_length, length, info_log)
-      ::GL.GetShaderInfoLog(shader, max_length, length, info_log)
+      NATIVE_AVAILABLE ? GLNative.get_shader_info_log(shader, max_length, length, info_log) : ::GL.GetShaderInfoLog(shader, max_length, length, info_log)
     end
 
     def self.GetString(name)
-      ::GL.GetString(name)
+      NATIVE_AVAILABLE ? GLNative.get_string(name) : ::GL.GetString(name)
     end
 
     def self.GetUniformLocation(program, name)
-      ::GL.GetUniformLocation(program, name)
+      NATIVE_AVAILABLE ? GLNative.get_uniform_location(program, name) : ::GL.GetUniformLocation(program, name)
     end
 
     def self.LinkProgram(program)
-      ::GL.LinkProgram(program)
+      NATIVE_AVAILABLE ? GLNative.link_program(program) : ::GL.LinkProgram(program)
     end
 
     def self.MemoryBarrier(barriers)
@@ -249,7 +249,7 @@ module Engine
     end
 
     def self.ReadBuffer(mode)
-      ::GL.ReadBuffer(mode)
+      NATIVE_AVAILABLE ? GLNative.read_buffer(mode) : ::GL.ReadBuffer(mode)
     end
 
     def self.ReadPixels(x, y, width, height, format, type, data)
