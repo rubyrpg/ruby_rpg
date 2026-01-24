@@ -109,7 +109,7 @@ module Engine
     end
 
     def self.CheckFramebufferStatus(target)
-      ::GL.CheckFramebufferStatus(target)
+      NATIVE_AVAILABLE ? GLNative.check_framebuffer_status(target) : ::GL.CheckFramebufferStatus(target)
     end
 
     def self.Clear(mask)
@@ -117,31 +117,31 @@ module Engine
     end
 
     def self.ClearColor(red, green, blue, alpha)
-      ::GL.ClearColor(red, green, blue, alpha)
+      NATIVE_AVAILABLE ? GLNative.clear_color(red, green, blue, alpha) : ::GL.ClearColor(red, green, blue, alpha)
     end
 
     def self.ColorMask(red, green, blue, alpha)
-      ::GL.ColorMask(red, green, blue, alpha)
+      NATIVE_AVAILABLE ? GLNative.color_mask(red, green, blue, alpha) : ::GL.ColorMask(red, green, blue, alpha)
     end
 
     def self.CompileShader(shader)
-      ::GL.CompileShader(shader)
+      NATIVE_AVAILABLE ? GLNative.compile_shader(shader) : ::GL.CompileShader(shader)
     end
 
     def self.CreateProgram
-      ::GL.CreateProgram
+      NATIVE_AVAILABLE ? GLNative.create_program : ::GL.CreateProgram
     end
 
     def self.CreateShader(type)
-      ::GL.CreateShader(type)
+      NATIVE_AVAILABLE ? GLNative.create_shader(type) : ::GL.CreateShader(type)
     end
 
     def self.CullFace(mode)
-      ::GL.CullFace(mode)
+      NATIVE_AVAILABLE ? GLNative.cull_face(mode) : ::GL.CullFace(mode)
     end
 
     def self.DepthFunc(func)
-      ::GL.DepthFunc(func)
+      NATIVE_AVAILABLE ? GLNative.depth_func(func) : ::GL.DepthFunc(func)
     end
 
     def self.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
@@ -153,7 +153,7 @@ module Engine
     end
 
     def self.DrawBuffer(mode)
-      ::GL.DrawBuffer(mode)
+      NATIVE_AVAILABLE ? GLNative.draw_buffer(mode) : ::GL.DrawBuffer(mode)
     end
 
     def self.DrawBuffers(n, bufs)

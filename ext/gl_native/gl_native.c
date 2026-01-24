@@ -170,6 +170,60 @@ static VALUE rb_gl_buffer_sub_data(VALUE self, VALUE target, VALUE offset, VALUE
     return Qnil;
 }
 
+/* CheckFramebufferStatus(target) */
+static VALUE rb_gl_check_framebuffer_status(VALUE self, VALUE target) {
+    GLenum result = glCheckFramebufferStatus((GLenum)NUM2INT(target));
+    return INT2NUM(result);
+}
+
+/* ClearColor(red, green, blue, alpha) */
+static VALUE rb_gl_clear_color(VALUE self, VALUE red, VALUE green, VALUE blue, VALUE alpha) {
+    glClearColor((GLfloat)NUM2DBL(red), (GLfloat)NUM2DBL(green), (GLfloat)NUM2DBL(blue), (GLfloat)NUM2DBL(alpha));
+    return Qnil;
+}
+
+/* ColorMask(red, green, blue, alpha) */
+static VALUE rb_gl_color_mask(VALUE self, VALUE red, VALUE green, VALUE blue, VALUE alpha) {
+    glColorMask((GLboolean)NUM2INT(red), (GLboolean)NUM2INT(green), (GLboolean)NUM2INT(blue), (GLboolean)NUM2INT(alpha));
+    return Qnil;
+}
+
+/* CompileShader(shader) */
+static VALUE rb_gl_compile_shader(VALUE self, VALUE shader) {
+    glCompileShader((GLuint)NUM2UINT(shader));
+    return Qnil;
+}
+
+/* CreateProgram() */
+static VALUE rb_gl_create_program(VALUE self) {
+    GLuint program = glCreateProgram();
+    return UINT2NUM(program);
+}
+
+/* CreateShader(type) */
+static VALUE rb_gl_create_shader(VALUE self, VALUE type) {
+    GLuint shader = glCreateShader((GLenum)NUM2INT(type));
+    return UINT2NUM(shader);
+}
+
+/* CullFace(mode) */
+static VALUE rb_gl_cull_face(VALUE self, VALUE mode) {
+    glCullFace((GLenum)NUM2INT(mode));
+    return Qnil;
+}
+
+/* DepthFunc(func) */
+static VALUE rb_gl_depth_func(VALUE self, VALUE func) {
+    glDepthFunc((GLenum)NUM2INT(func));
+    return Qnil;
+}
+
+/* DrawBuffer(mode) */
+static VALUE rb_gl_draw_buffer(VALUE self, VALUE mode) {
+    glDrawBuffer((GLenum)NUM2INT(mode));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -199,4 +253,13 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "blend_func", rb_gl_blend_func, 2);
     rb_define_module_function(mGLNative, "buffer_data", rb_gl_buffer_data, 4);
     rb_define_module_function(mGLNative, "buffer_sub_data", rb_gl_buffer_sub_data, 4);
+    rb_define_module_function(mGLNative, "check_framebuffer_status", rb_gl_check_framebuffer_status, 1);
+    rb_define_module_function(mGLNative, "clear_color", rb_gl_clear_color, 4);
+    rb_define_module_function(mGLNative, "color_mask", rb_gl_color_mask, 4);
+    rb_define_module_function(mGLNative, "compile_shader", rb_gl_compile_shader, 1);
+    rb_define_module_function(mGLNative, "create_program", rb_gl_create_program, 0);
+    rb_define_module_function(mGLNative, "create_shader", rb_gl_create_shader, 1);
+    rb_define_module_function(mGLNative, "cull_face", rb_gl_cull_face, 1);
+    rb_define_module_function(mGLNative, "depth_func", rb_gl_depth_func, 1);
+    rb_define_module_function(mGLNative, "draw_buffer", rb_gl_draw_buffer, 1);
 }
