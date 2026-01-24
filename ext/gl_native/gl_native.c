@@ -144,6 +144,12 @@ static VALUE rb_gl_attach_shader(VALUE self, VALUE program, VALUE shader) {
     return Qnil;
 }
 
+/* BeginQuery(target, id) */
+static VALUE rb_gl_begin_query(VALUE self, VALUE target, VALUE id) {
+    glBeginQuery((GLenum)NUM2INT(target), (GLuint)NUM2UINT(id));
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -169,4 +175,5 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "uniform_matrix4fv", rb_gl_uniform_matrix4fv, 4);
     rb_define_module_function(mGLNative, "blit_framebuffer", rb_gl_blit_framebuffer, 10);
     rb_define_module_function(mGLNative, "attach_shader", rb_gl_attach_shader, 2);
+    rb_define_module_function(mGLNative, "begin_query", rb_gl_begin_query, 2);
 }

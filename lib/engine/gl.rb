@@ -63,7 +63,7 @@ module Engine
     end
 
     def self.BeginQuery(target, id)
-      ::GL.BeginQuery(target, id)
+      NATIVE_AVAILABLE ? GLNative.begin_query(target, id) : ::GL.BeginQuery(target, id)
     end
 
     def self.BindBuffer(target, buffer)
