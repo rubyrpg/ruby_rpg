@@ -1,29 +1,21 @@
+require_relative '../../ext/gl_native/gl_native'
+
 module Engine
   module GL
-    # Try to load native extension for hot path
-    begin
-      require_relative '../../ext/gl_native/gl_native'
-      NATIVE_AVAILABLE = true
-      puts "GLNative extension loaded - using native calls"
-    rescue LoadError => e
-      NATIVE_AVAILABLE = false
-      puts "GLNative extension not available (#{e.message}) - using Fiddle"
-    end
-
     # Cached methods - avoid redundant GL state changes
 
     def self.Enable(flag)
       return if enable_flag_cache[flag] == true
 
       enable_flag_cache[flag] = true
-      NATIVE_AVAILABLE ? GLNative.enable(flag) : ::GL.Enable(flag)
+      GLNative.enable(flag)
     end
 
     def self.Disable(flag)
       return if enable_flag_cache[flag] == false
 
       enable_flag_cache[flag] = false
-      NATIVE_AVAILABLE ? GLNative.disable(flag) : ::GL.Disable(flag)
+      GLNative.disable(flag)
     end
 
     def self.enable_flag_cache
@@ -34,14 +26,14 @@ module Engine
       return if @current_program == program
 
       @current_program = program
-      NATIVE_AVAILABLE ? GLNative.use_program(program) : ::GL.UseProgram(program)
+      GLNative.use_program(program)
     end
 
     def self.ActiveTexture(texture_unit)
       return if @current_texture_unit == texture_unit
 
       @current_texture_unit = texture_unit
-      NATIVE_AVAILABLE ? GLNative.active_texture(texture_unit) : ::GL.ActiveTexture(texture_unit)
+      GLNative.active_texture(texture_unit)
     end
 
     def self.BindTexture(target, texture_id)
@@ -49,7 +41,7 @@ module Engine
       return if bound_textures[cache_key] == texture_id
 
       bound_textures[cache_key] = texture_id
-      NATIVE_AVAILABLE ? GLNative.bind_texture(target, texture_id) : ::GL.BindTexture(target, texture_id)
+      GLNative.bind_texture(target, texture_id)
     end
 
     def self.bound_textures
@@ -59,18 +51,18 @@ module Engine
     # Pass-through methods
 
     def self.AttachShader(program, shader)
-      NATIVE_AVAILABLE ? GLNative.attach_shader(program, shader) : ::GL.AttachShader(program, shader)
+      GLNative.attach_shader(program, shader)
     end
 
     def self.BeginQuery(target, id)
-      NATIVE_AVAILABLE ? GLNative.begin_query(target, id) : ::GL.BeginQuery(target, id)
+      GLNative.begin_query(target, id)
     end
 
     def self.BindBuffer(target, buffer)
       return if bound_buffers[target] == buffer
 
       bound_buffers[target] = buffer
-      NATIVE_AVAILABLE ? GLNative.bind_buffer(target, buffer) : ::GL.BindBuffer(target, buffer)
+      GLNative.bind_buffer(target, buffer)
     end
 
     def self.bound_buffers
@@ -78,250 +70,250 @@ module Engine
     end
 
     def self.BindFramebuffer(target, framebuffer)
-      NATIVE_AVAILABLE ? GLNative.bind_framebuffer(target, framebuffer) : ::GL.BindFramebuffer(target, framebuffer)
+      GLNative.bind_framebuffer(target, framebuffer)
     end
 
     def self.BindImageTexture(unit, texture, level, layered, layer, access, format)
-      NATIVE_AVAILABLE ? GLNative.bind_image_texture(unit, texture, level, layered, layer, access, format) : ::GL.BindImageTexture(unit, texture, level, layered, layer, access, format)
+      GLNative.bind_image_texture(unit, texture, level, layered, layer, access, format)
     end
 
     def self.BindVertexArray(array)
       return if @current_vertex_array == array
 
       @current_vertex_array = array
-      NATIVE_AVAILABLE ? GLNative.bind_vertex_array(array) : ::GL.BindVertexArray(array)
+      GLNative.bind_vertex_array(array)
     end
 
     def self.BlendFunc(sfactor, dfactor)
-      NATIVE_AVAILABLE ? GLNative.blend_func(sfactor, dfactor) : ::GL.BlendFunc(sfactor, dfactor)
+      GLNative.blend_func(sfactor, dfactor)
     end
 
     def self.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
-      NATIVE_AVAILABLE ? GLNative.blit_framebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter) : ::GL.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
+      GLNative.blit_framebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
     end
 
     def self.BufferData(target, size, data, usage)
-      NATIVE_AVAILABLE ? GLNative.buffer_data(target, size, data, usage) : ::GL.BufferData(target, size, data, usage)
+      GLNative.buffer_data(target, size, data, usage)
     end
 
     def self.BufferSubData(target, offset, size, data)
-      NATIVE_AVAILABLE ? GLNative.buffer_sub_data(target, offset, size, data) : ::GL.BufferSubData(target, offset, size, data)
+      GLNative.buffer_sub_data(target, offset, size, data)
     end
 
     def self.CheckFramebufferStatus(target)
-      NATIVE_AVAILABLE ? GLNative.check_framebuffer_status(target) : ::GL.CheckFramebufferStatus(target)
+      GLNative.check_framebuffer_status(target)
     end
 
     def self.Clear(mask)
-      NATIVE_AVAILABLE ? GLNative.clear(mask) : ::GL.Clear(mask)
+      GLNative.clear(mask)
     end
 
     def self.ClearColor(red, green, blue, alpha)
-      NATIVE_AVAILABLE ? GLNative.clear_color(red, green, blue, alpha) : ::GL.ClearColor(red, green, blue, alpha)
+      GLNative.clear_color(red, green, blue, alpha)
     end
 
     def self.ColorMask(red, green, blue, alpha)
-      NATIVE_AVAILABLE ? GLNative.color_mask(red, green, blue, alpha) : ::GL.ColorMask(red, green, blue, alpha)
+      GLNative.color_mask(red, green, blue, alpha)
     end
 
     def self.CompileShader(shader)
-      NATIVE_AVAILABLE ? GLNative.compile_shader(shader) : ::GL.CompileShader(shader)
+      GLNative.compile_shader(shader)
     end
 
     def self.CreateProgram
-      NATIVE_AVAILABLE ? GLNative.create_program : ::GL.CreateProgram
+      GLNative.create_program
     end
 
     def self.CreateShader(type)
-      NATIVE_AVAILABLE ? GLNative.create_shader(type) : ::GL.CreateShader(type)
+      GLNative.create_shader(type)
     end
 
     def self.CullFace(mode)
-      NATIVE_AVAILABLE ? GLNative.cull_face(mode) : ::GL.CullFace(mode)
+      GLNative.cull_face(mode)
     end
 
     def self.DepthFunc(func)
-      NATIVE_AVAILABLE ? GLNative.depth_func(func) : ::GL.DepthFunc(func)
+      GLNative.depth_func(func)
     end
 
     def self.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
-      NATIVE_AVAILABLE ? GLNative.dispatch_compute(num_groups_x, num_groups_y, num_groups_z) : ::GL.DispatchCompute(num_groups_x, num_groups_y, num_groups_z)
+      GLNative.dispatch_compute(num_groups_x, num_groups_y, num_groups_z)
     end
 
     def self.DrawArrays(mode, first, count)
-      NATIVE_AVAILABLE ? GLNative.draw_arrays(mode, first, count) : ::GL.DrawArrays(mode, first, count)
+      GLNative.draw_arrays(mode, first, count)
     end
 
     def self.DrawBuffer(mode)
-      NATIVE_AVAILABLE ? GLNative.draw_buffer(mode) : ::GL.DrawBuffer(mode)
+      GLNative.draw_buffer(mode)
     end
 
     def self.DrawBuffers(n, bufs)
-      NATIVE_AVAILABLE ? GLNative.draw_buffers(n, bufs) : ::GL.DrawBuffers(n, bufs)
+      GLNative.draw_buffers(n, bufs)
     end
 
     def self.DrawElements(mode, count, type, indices)
-      NATIVE_AVAILABLE ? GLNative.draw_elements(mode, count, type, indices) : ::GL.DrawElements(mode, count, type, indices)
+      GLNative.draw_elements(mode, count, type, indices)
     end
 
     def self.DrawElementsInstanced(mode, count, type, indices, instance_count)
-      NATIVE_AVAILABLE ? GLNative.draw_elements_instanced(mode, count, type, indices, instance_count) : ::GL.DrawElementsInstanced(mode, count, type, indices, instance_count)
+      GLNative.draw_elements_instanced(mode, count, type, indices, instance_count)
     end
 
     def self.EnableVertexAttribArray(index)
-      NATIVE_AVAILABLE ? GLNative.enable_vertex_attrib_array(index) : ::GL.EnableVertexAttribArray(index)
+      GLNative.enable_vertex_attrib_array(index)
     end
 
     def self.EndQuery(target)
-      NATIVE_AVAILABLE ? GLNative.end_query(target) : ::GL.EndQuery(target)
+      GLNative.end_query(target)
     end
 
     def self.Finish
-      NATIVE_AVAILABLE ? GLNative.finish : ::GL.Finish
+      GLNative.finish
     end
 
     def self.FramebufferTexture2D(target, attachment, textarget, texture, level)
-      NATIVE_AVAILABLE ? GLNative.framebuffer_texture_2d(target, attachment, textarget, texture, level) : ::GL.FramebufferTexture2D(target, attachment, textarget, texture, level)
+      GLNative.framebuffer_texture_2d(target, attachment, textarget, texture, level)
     end
 
     def self.FramebufferTextureLayer(target, attachment, texture, level, layer)
-      NATIVE_AVAILABLE ? GLNative.framebuffer_texture_layer(target, attachment, texture, level, layer) : ::GL.FramebufferTextureLayer(target, attachment, texture, level, layer)
+      GLNative.framebuffer_texture_layer(target, attachment, texture, level, layer)
     end
 
     def self.GenBuffers(n, buffers)
-      NATIVE_AVAILABLE ? GLNative.gen_buffers(n, buffers) : ::GL.GenBuffers(n, buffers)
+      GLNative.gen_buffers(n, buffers)
     end
 
     def self.GenerateMipmap(target)
-      NATIVE_AVAILABLE ? GLNative.generate_mipmap(target) : ::GL.GenerateMipmap(target)
+      GLNative.generate_mipmap(target)
     end
 
     def self.GenFramebuffers(n, framebuffers)
-      NATIVE_AVAILABLE ? GLNative.gen_framebuffers(n, framebuffers) : ::GL.GenFramebuffers(n, framebuffers)
+      GLNative.gen_framebuffers(n, framebuffers)
     end
 
     def self.GenQueries(n, ids)
-      NATIVE_AVAILABLE ? GLNative.gen_queries(n, ids) : ::GL.GenQueries(n, ids)
+      GLNative.gen_queries(n, ids)
     end
 
     def self.GenTextures(n, textures)
-      NATIVE_AVAILABLE ? GLNative.gen_textures(n, textures) : ::GL.GenTextures(n, textures)
+      GLNative.gen_textures(n, textures)
     end
 
     def self.GenVertexArrays(n, arrays)
-      NATIVE_AVAILABLE ? GLNative.gen_vertex_arrays(n, arrays) : ::GL.GenVertexArrays(n, arrays)
+      GLNative.gen_vertex_arrays(n, arrays)
     end
 
     def self.GetError
-      NATIVE_AVAILABLE ? GLNative.get_error : ::GL.GetError
+      GLNative.get_error
     end
 
     def self.GetProgramInfoLog(program, max_length, length, info_log)
-      NATIVE_AVAILABLE ? GLNative.get_program_info_log(program, max_length, length, info_log) : ::GL.GetProgramInfoLog(program, max_length, length, info_log)
+      GLNative.get_program_info_log(program, max_length, length, info_log)
     end
 
     def self.GetProgramiv(program, pname, params)
-      NATIVE_AVAILABLE ? GLNative.get_programiv(program, pname, params) : ::GL.GetProgramiv(program, pname, params)
+      GLNative.get_programiv(program, pname, params)
     end
 
     def self.GetQueryObjectui64v(id, pname, params)
-      NATIVE_AVAILABLE ? GLNative.get_query_objectui64v(id, pname, params) : ::GL.GetQueryObjectui64v(id, pname, params)
+      GLNative.get_query_objectui64v(id, pname, params)
     end
 
     def self.GetShaderInfoLog(shader, max_length, length, info_log)
-      NATIVE_AVAILABLE ? GLNative.get_shader_info_log(shader, max_length, length, info_log) : ::GL.GetShaderInfoLog(shader, max_length, length, info_log)
+      GLNative.get_shader_info_log(shader, max_length, length, info_log)
     end
 
     def self.GetString(name)
-      NATIVE_AVAILABLE ? GLNative.get_string(name) : ::GL.GetString(name)
+      GLNative.get_string(name)
     end
 
     def self.GetUniformLocation(program, name)
-      NATIVE_AVAILABLE ? GLNative.get_uniform_location(program, name) : ::GL.GetUniformLocation(program, name)
+      GLNative.get_uniform_location(program, name)
     end
 
     def self.LinkProgram(program)
-      NATIVE_AVAILABLE ? GLNative.link_program(program) : ::GL.LinkProgram(program)
+      GLNative.link_program(program)
     end
 
     def self.MemoryBarrier(barriers)
-      NATIVE_AVAILABLE ? GLNative.memory_barrier(barriers) : ::GL.MemoryBarrier(barriers)
+      GLNative.memory_barrier(barriers)
     end
 
     def self.ReadBuffer(mode)
-      NATIVE_AVAILABLE ? GLNative.read_buffer(mode) : ::GL.ReadBuffer(mode)
+      GLNative.read_buffer(mode)
     end
 
     def self.ReadPixels(x, y, width, height, format, type, data)
-      NATIVE_AVAILABLE ? GLNative.read_pixels(x, y, width, height, format, type, data) : ::GL.ReadPixels(x, y, width, height, format, type, data)
+      GLNative.read_pixels(x, y, width, height, format, type, data)
     end
 
     def self.ShaderSource(shader, count, string, length)
-      NATIVE_AVAILABLE ? GLNative.shader_source(shader, count, string, length) : ::GL.ShaderSource(shader, count, string, length)
+      GLNative.shader_source(shader, count, string, length)
     end
 
     def self.StencilFunc(func, ref, mask)
-      NATIVE_AVAILABLE ? GLNative.stencil_func(func, ref, mask) : ::GL.StencilFunc(func, ref, mask)
+      GLNative.stencil_func(func, ref, mask)
     end
 
     def self.StencilMask(mask)
-      NATIVE_AVAILABLE ? GLNative.stencil_mask(mask) : ::GL.StencilMask(mask)
+      GLNative.stencil_mask(mask)
     end
 
     def self.StencilOp(sfail, dpfail, dppass)
-      NATIVE_AVAILABLE ? GLNative.stencil_op(sfail, dpfail, dppass) : ::GL.StencilOp(sfail, dpfail, dppass)
+      GLNative.stencil_op(sfail, dpfail, dppass)
     end
 
     def self.TexImage2D(target, level, internalformat, width, height, border, format, type, data)
-      NATIVE_AVAILABLE ? GLNative.tex_image_2d(target, level, internalformat, width, height, border, format, type, data) : ::GL.TexImage2D(target, level, internalformat, width, height, border, format, type, data)
+      GLNative.tex_image_2d(target, level, internalformat, width, height, border, format, type, data)
     end
 
     def self.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data)
-      NATIVE_AVAILABLE ? GLNative.tex_image_3d(target, level, internalformat, width, height, depth, border, format, type, data) : ::GL.TexImage3D(target, level, internalformat, width, height, depth, border, format, type, data)
+      GLNative.tex_image_3d(target, level, internalformat, width, height, depth, border, format, type, data)
     end
 
     def self.TexParameterfv(target, pname, params)
-      NATIVE_AVAILABLE ? GLNative.tex_parameterfv(target, pname, params) : ::GL.TexParameterfv(target, pname, params)
+      GLNative.tex_parameterfv(target, pname, params)
     end
 
     def self.TexParameteri(target, pname, param)
-      NATIVE_AVAILABLE ? GLNative.tex_parameteri(target, pname, param) : ::GL.TexParameteri(target, pname, param)
+      GLNative.tex_parameteri(target, pname, param)
     end
 
     def self.Uniform1f(location, v0)
-      NATIVE_AVAILABLE ? GLNative.uniform1f(location, v0) : ::GL.Uniform1f(location, v0)
+      GLNative.uniform1f(location, v0)
     end
 
     def self.Uniform1i(location, v0)
-      NATIVE_AVAILABLE ? GLNative.uniform1i(location, v0) : ::GL.Uniform1i(location, v0)
+      GLNative.uniform1i(location, v0)
     end
 
     def self.Uniform2f(location, v0, v1)
-      NATIVE_AVAILABLE ? GLNative.uniform2f(location, v0, v1) : ::GL.Uniform2f(location, v0, v1)
+      GLNative.uniform2f(location, v0, v1)
     end
 
     def self.Uniform3f(location, v0, v1, v2)
-      NATIVE_AVAILABLE ? GLNative.uniform3f(location, v0, v1, v2) : ::GL.Uniform3f(location, v0, v1, v2)
+      GLNative.uniform3f(location, v0, v1, v2)
     end
 
     def self.Uniform4f(location, v0, v1, v2, v3)
-      NATIVE_AVAILABLE ? GLNative.uniform4f(location, v0, v1, v2, v3) : ::GL.Uniform4f(location, v0, v1, v2, v3)
+      GLNative.uniform4f(location, v0, v1, v2, v3)
     end
 
     def self.UniformMatrix4fv(location, count, transpose, value)
-      NATIVE_AVAILABLE ? GLNative.uniform_matrix4fv(location, count, transpose, value) : ::GL.UniformMatrix4fv(location, count, transpose, value)
+      GLNative.uniform_matrix4fv(location, count, transpose, value)
     end
 
     def self.VertexAttribDivisor(index, divisor)
-      NATIVE_AVAILABLE ? GLNative.vertex_attrib_divisor(index, divisor) : ::GL.VertexAttribDivisor(index, divisor)
+      GLNative.vertex_attrib_divisor(index, divisor)
     end
 
     def self.VertexAttribIPointer(index, size, type, stride, pointer)
-      NATIVE_AVAILABLE ? GLNative.vertex_attrib_ipointer(index, size, type, stride, pointer) : ::GL.VertexAttribIPointer(index, size, type, stride, pointer)
+      GLNative.vertex_attrib_ipointer(index, size, type, stride, pointer)
     end
 
     def self.VertexAttribPointer(index, size, type, normalized, stride, pointer)
-      NATIVE_AVAILABLE ? GLNative.vertex_attrib_pointer(index, size, type, normalized, stride, pointer) : ::GL.VertexAttribPointer(index, size, type, normalized, stride, pointer)
+      GLNative.vertex_attrib_pointer(index, size, type, normalized, stride, pointer)
     end
 
     def self.Viewport(x, y, width, height)
@@ -329,11 +321,7 @@ module Engine
       return if @current_viewport == viewport
 
       @current_viewport = viewport
-      NATIVE_AVAILABLE ? GLNative.viewport(x, y, width, height) : ::GL.Viewport(x, y, width, height)
-    end
-
-    def self.load_lib
-      ::GL.load_lib
+      GLNative.viewport(x, y, width, height)
     end
 
     # Constants (hardcoded OpenGL values)
