@@ -373,9 +373,11 @@ static VALUE rb_gl_read_pixels(VALUE self, VALUE x, VALUE y, VALUE width, VALUE 
 
 /* ShaderSource(shader, count, string, length) */
 static VALUE rb_gl_shader_source(VALUE self, VALUE shader, VALUE count, VALUE string, VALUE length) {
-    const GLchar *src = (const GLchar *)RSTRING_PTR(string);
-    GLint len = (GLint)RSTRING_LEN(string);
-    glShaderSource((GLuint)NUM2UINT(shader), 1, &src, &len);
+    /* string is a packed pointer array (from Ruby's pack('p')) */
+    /* length is a packed int array (from Ruby's pack('I')) */
+    const GLchar **src_ptr = (const GLchar **)RSTRING_PTR(string);
+    const GLint *len_ptr = NIL_P(length) ? NULL : (const GLint *)RSTRING_PTR(length);
+    glShaderSource((GLuint)NUM2UINT(shader), (GLsizei)NUM2INT(count), src_ptr, len_ptr);
     return Qnil;
 }
 

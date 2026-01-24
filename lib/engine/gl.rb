@@ -257,7 +257,7 @@ module Engine
     end
 
     def self.ShaderSource(shader, count, string, length)
-      ::GL.ShaderSource(shader, count, string, length)
+      NATIVE_AVAILABLE ? GLNative.shader_source(shader, count, string, length) : ::GL.ShaderSource(shader, count, string, length)
     end
 
     def self.StencilFunc(func, ref, mask)
