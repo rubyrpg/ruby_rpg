@@ -157,7 +157,7 @@ module Engine
     end
 
     def self.DrawBuffers(n, bufs)
-      ::GL.DrawBuffers(n, bufs)
+      NATIVE_AVAILABLE ? GLNative.draw_buffers(n, bufs) : ::GL.DrawBuffers(n, bufs)
     end
 
     def self.DrawElements(mode, count, type, indices)
@@ -169,39 +169,39 @@ module Engine
     end
 
     def self.EnableVertexAttribArray(index)
-      ::GL.EnableVertexAttribArray(index)
+      NATIVE_AVAILABLE ? GLNative.enable_vertex_attrib_array(index) : ::GL.EnableVertexAttribArray(index)
     end
 
     def self.EndQuery(target)
-      ::GL.EndQuery(target)
+      NATIVE_AVAILABLE ? GLNative.end_query(target) : ::GL.EndQuery(target)
     end
 
     def self.Finish
-      ::GL.Finish
+      NATIVE_AVAILABLE ? GLNative.finish : ::GL.Finish
     end
 
     def self.FramebufferTexture2D(target, attachment, textarget, texture, level)
-      ::GL.FramebufferTexture2D(target, attachment, textarget, texture, level)
+      NATIVE_AVAILABLE ? GLNative.framebuffer_texture_2d(target, attachment, textarget, texture, level) : ::GL.FramebufferTexture2D(target, attachment, textarget, texture, level)
     end
 
     def self.FramebufferTextureLayer(target, attachment, texture, level, layer)
-      ::GL.FramebufferTextureLayer(target, attachment, texture, level, layer)
+      NATIVE_AVAILABLE ? GLNative.framebuffer_texture_layer(target, attachment, texture, level, layer) : ::GL.FramebufferTextureLayer(target, attachment, texture, level, layer)
     end
 
     def self.GenBuffers(n, buffers)
-      ::GL.GenBuffers(n, buffers)
+      NATIVE_AVAILABLE ? GLNative.gen_buffers(n, buffers) : ::GL.GenBuffers(n, buffers)
     end
 
     def self.GenerateMipmap(target)
-      ::GL.GenerateMipmap(target)
+      NATIVE_AVAILABLE ? GLNative.generate_mipmap(target) : ::GL.GenerateMipmap(target)
     end
 
     def self.GenFramebuffers(n, framebuffers)
-      ::GL.GenFramebuffers(n, framebuffers)
+      NATIVE_AVAILABLE ? GLNative.gen_framebuffers(n, framebuffers) : ::GL.GenFramebuffers(n, framebuffers)
     end
 
     def self.GenQueries(n, ids)
-      ::GL.GenQueries(n, ids)
+      NATIVE_AVAILABLE ? GLNative.gen_queries(n, ids) : ::GL.GenQueries(n, ids)
     end
 
     def self.GenTextures(n, textures)

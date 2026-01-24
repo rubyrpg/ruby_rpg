@@ -224,6 +224,70 @@ static VALUE rb_gl_draw_buffer(VALUE self, VALUE mode) {
     return Qnil;
 }
 
+/* DrawBuffers(n, bufs) */
+static VALUE rb_gl_draw_buffers(VALUE self, VALUE n, VALUE bufs) {
+    const GLenum *ptr = (const GLenum *)RSTRING_PTR(bufs);
+    glDrawBuffers((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
+/* EnableVertexAttribArray(index) */
+static VALUE rb_gl_enable_vertex_attrib_array(VALUE self, VALUE index) {
+    glEnableVertexAttribArray((GLuint)NUM2UINT(index));
+    return Qnil;
+}
+
+/* EndQuery(target) */
+static VALUE rb_gl_end_query(VALUE self, VALUE target) {
+    glEndQuery((GLenum)NUM2INT(target));
+    return Qnil;
+}
+
+/* Finish() */
+static VALUE rb_gl_finish(VALUE self) {
+    glFinish();
+    return Qnil;
+}
+
+/* FramebufferTexture2D(target, attachment, textarget, texture, level) */
+static VALUE rb_gl_framebuffer_texture_2d(VALUE self, VALUE target, VALUE attachment, VALUE textarget, VALUE texture, VALUE level) {
+    glFramebufferTexture2D((GLenum)NUM2INT(target), (GLenum)NUM2INT(attachment), (GLenum)NUM2INT(textarget), (GLuint)NUM2UINT(texture), (GLint)NUM2INT(level));
+    return Qnil;
+}
+
+/* FramebufferTextureLayer(target, attachment, texture, level, layer) */
+static VALUE rb_gl_framebuffer_texture_layer(VALUE self, VALUE target, VALUE attachment, VALUE texture, VALUE level, VALUE layer) {
+    glFramebufferTextureLayer((GLenum)NUM2INT(target), (GLenum)NUM2INT(attachment), (GLuint)NUM2UINT(texture), (GLint)NUM2INT(level), (GLint)NUM2INT(layer));
+    return Qnil;
+}
+
+/* GenBuffers(n, buffers) */
+static VALUE rb_gl_gen_buffers(VALUE self, VALUE n, VALUE buffers) {
+    GLuint *ptr = (GLuint *)RSTRING_PTR(buffers);
+    glGenBuffers((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
+/* GenerateMipmap(target) */
+static VALUE rb_gl_generate_mipmap(VALUE self, VALUE target) {
+    glGenerateMipmap((GLenum)NUM2INT(target));
+    return Qnil;
+}
+
+/* GenFramebuffers(n, framebuffers) */
+static VALUE rb_gl_gen_framebuffers(VALUE self, VALUE n, VALUE framebuffers) {
+    GLuint *ptr = (GLuint *)RSTRING_PTR(framebuffers);
+    glGenFramebuffers((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
+/* GenQueries(n, ids) */
+static VALUE rb_gl_gen_queries(VALUE self, VALUE n, VALUE ids) {
+    GLuint *ptr = (GLuint *)RSTRING_PTR(ids);
+    glGenQueries((GLsizei)NUM2INT(n), ptr);
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -262,4 +326,14 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "cull_face", rb_gl_cull_face, 1);
     rb_define_module_function(mGLNative, "depth_func", rb_gl_depth_func, 1);
     rb_define_module_function(mGLNative, "draw_buffer", rb_gl_draw_buffer, 1);
+    rb_define_module_function(mGLNative, "draw_buffers", rb_gl_draw_buffers, 2);
+    rb_define_module_function(mGLNative, "enable_vertex_attrib_array", rb_gl_enable_vertex_attrib_array, 1);
+    rb_define_module_function(mGLNative, "end_query", rb_gl_end_query, 1);
+    rb_define_module_function(mGLNative, "finish", rb_gl_finish, 0);
+    rb_define_module_function(mGLNative, "framebuffer_texture_2d", rb_gl_framebuffer_texture_2d, 5);
+    rb_define_module_function(mGLNative, "framebuffer_texture_layer", rb_gl_framebuffer_texture_layer, 5);
+    rb_define_module_function(mGLNative, "gen_buffers", rb_gl_gen_buffers, 2);
+    rb_define_module_function(mGLNative, "generate_mipmap", rb_gl_generate_mipmap, 1);
+    rb_define_module_function(mGLNative, "gen_framebuffers", rb_gl_gen_framebuffers, 2);
+    rb_define_module_function(mGLNative, "gen_queries", rb_gl_gen_queries, 2);
 }
