@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require 'opengl'
 require_relative 'engine/gl'
-require 'glfw'
+require_relative 'engine/glfw'
 require 'concurrent'
 require 'os'
 require 'native_audio'

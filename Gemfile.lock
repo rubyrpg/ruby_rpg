@@ -8,7 +8,6 @@ PATH
       logger
       matrix (~> 0.3)
       native_audio
-      opengl-bindings2 (~> 2.0)
       os
       rmagick (~> 6.0, >= 6.0.1)
 
@@ -26,7 +25,6 @@ GEM
     method_source (1.1.0)
     native_audio (0.1.0)
     observer (0.1.2)
-    opengl-bindings2 (2.0.2)
     os (1.1.4)
     ostruct (0.6.3)
     pkg-config (1.5.6)
