@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../ext/glfw_native/glfw_native'
+require 'glfw_native'
 require 'fiddle'
 require 'fiddle/import'
 

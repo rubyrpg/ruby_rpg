@@ -1,8 +1,9 @@
 .idea
 .DS_Store
 
-# /temp/ folders
+# /temp/ and /tmp/ folders
 **/temp/
+tmp/
 
 # rspec examples
 spec/examples.txt
@@ -14,3 +15,8 @@ ext/**/*.so
 ext/**/*.dll
 ext/**/*.dSYM
 ext/**/Makefile
+
+# Compiled native extensions in lib/
+lib/*.bundle
+lib/*.so
+lib/*.dll

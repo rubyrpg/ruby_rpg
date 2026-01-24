@@ -12,6 +12,19 @@ You can find docs and guides on the [wiki](https://github.com/rubyrpg/ruby_rpg/w
 For a basic example to get you up off the ground take a look at [hello_ruby_rpg](https://github.com/rubyrpg/hello_ruby_rpg).
 For some more complex examples you can take a look in the samples folder of this repo.
 
+## Development Setup
+If you're working on the engine itself, you'll need to compile the native extensions:
+
+```bash
+bundle install
+bundle exec rake compile
+```
+
+Then you can run the samples:
+```bash
+bundle exec ruby samples/cubes/cubes.rb
+```
+
 ## Contributing
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)

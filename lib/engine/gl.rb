@@ -1,4 +1,4 @@
-require_relative '../../ext/gl_native/gl_native'
+require 'gl_native'
 
 module Engine
   module GL
