@@ -163,6 +163,13 @@ static VALUE rb_gl_buffer_data(VALUE self, VALUE target, VALUE size, VALUE data,
     return Qnil;
 }
 
+/* BufferSubData(target, offset, size, data) */
+static VALUE rb_gl_buffer_sub_data(VALUE self, VALUE target, VALUE offset, VALUE size, VALUE data) {
+    const void *ptr = (const void *)RSTRING_PTR(data);
+    glBufferSubData((GLenum)NUM2INT(target), (GLintptr)NUM2LONG(offset), (GLsizeiptr)NUM2LONG(size), ptr);
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -191,4 +198,5 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "begin_query", rb_gl_begin_query, 2);
     rb_define_module_function(mGLNative, "blend_func", rb_gl_blend_func, 2);
     rb_define_module_function(mGLNative, "buffer_data", rb_gl_buffer_data, 4);
+    rb_define_module_function(mGLNative, "buffer_sub_data", rb_gl_buffer_sub_data, 4);
 }

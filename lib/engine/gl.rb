@@ -105,7 +105,7 @@ module Engine
     end
 
     def self.BufferSubData(target, offset, size, data)
-      ::GL.BufferSubData(target, offset, size, data)
+      NATIVE_AVAILABLE ? GLNative.buffer_sub_data(target, offset, size, data) : ::GL.BufferSubData(target, offset, size, data)
     end
 
     def self.CheckFramebufferStatus(target)
