@@ -29,9 +29,9 @@ module ShrinkRacer
       update_debugger
 
       if @current_time - @last_collision_time > 0.5
-        if Engine::Input.key?(GLFW::KEY_W)
+        if Engine::Input.key?(Engine::Input::KEY_W)
           @acceleration += delta_time * max_acceleration / WIND_UP_TIME
-        elsif Engine::Input.key?(GLFW::KEY_S)
+        elsif Engine::Input.key?(Engine::Input::KEY_S)
           @acceleration -= delta_time * max_acceleration / WIND_UP_TIME
         else
           @acceleration = 0
@@ -51,10 +51,10 @@ module ShrinkRacer
       game_object.pos += @speed * delta_time
 
       torque = 0
-      if Engine::Input.key?(GLFW::KEY_A)
+      if Engine::Input.key?(Engine::Input::KEY_A)
         torque = -60
       end
-      if Engine::Input.key?(GLFW::KEY_D)
+      if Engine::Input.key?(Engine::Input::KEY_D)
         torque += 60
       end
 
@@ -71,7 +71,7 @@ module ShrinkRacer
         "Max Acceleration: #{max_acceleration.round(3)}"
       ].join("\n")
 
-      toggle_debugger_visibility if Engine::Input.key?(GLFW::KEY_SLASH)
+      toggle_debugger_visibility if Engine::Input.key?(Engine::Input::KEY_SLASH)
       @car_debugger.update_string( @visible_debugger ? onscreen_text : '' )
     end
 

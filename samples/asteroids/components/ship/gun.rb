@@ -5,7 +5,7 @@ module Asteroids
     COOLDOWN = 0.3
 
     def update(delta_time)
-      fire if Engine::Input.key?(GLFW::KEY_SPACE)
+      fire if Engine::Input.key?(Engine::Input::KEY_SPACE)
     end
 
     def fire

@@ -5,22 +5,22 @@ module Cubes
     MOVE_SPEED = 30
 
     def update(delta_time)
-      if Engine::Input.key?(GLFW::KEY_LEFT)
+      if Engine::Input.key?(Engine::Input::KEY_LEFT)
         game_object.pos -= Vector[1, 0, 0] * MOVE_SPEED * delta_time
       end
-      if Engine::Input.key?(GLFW::KEY_RIGHT)
+      if Engine::Input.key?(Engine::Input::KEY_RIGHT)
         game_object.pos += Vector[1, 0, 0] * MOVE_SPEED * delta_time
       end
-      if Engine::Input.key?(GLFW::KEY_UP)
+      if Engine::Input.key?(Engine::Input::KEY_UP)
         game_object.pos -= Vector[0, 0, 1] * MOVE_SPEED * delta_time
       end
-      if Engine::Input.key?(GLFW::KEY_DOWN)
+      if Engine::Input.key?(Engine::Input::KEY_DOWN)
         game_object.pos += Vector[0, 0, 1] * MOVE_SPEED * delta_time
       end
-      if Engine::Input.key?(GLFW::KEY_PAGE_UP)
+      if Engine::Input.key?(Engine::Input::KEY_PAGE_UP)
         game_object.pos += Vector[0, 1, 0] * MOVE_SPEED * delta_time
       end
-      if Engine::Input.key?(GLFW::KEY_PAGE_DOWN)
+      if Engine::Input.key?(Engine::Input::KEY_PAGE_DOWN)
         game_object.pos -= Vector[0, 1, 0] * MOVE_SPEED * delta_time
       end
     end

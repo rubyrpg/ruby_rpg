@@ -24,7 +24,7 @@ module Engine::Components
         if point_inside?(mouse_pos)
           @mouse_entered = !@mouse_inside
           @mouse_inside = true
-          @clicked = Engine::Input.key_down?(GLFW::MOUSE_BUTTON_LEFT)
+          @clicked = Engine::Input.key_down?(Engine::Input::MOUSE_BUTTON_LEFT)
         else
           @mouse_exited = @mouse_inside
           @mouse_inside = false

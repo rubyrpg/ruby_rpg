@@ -27,8 +27,8 @@ RSpec.describe "MyFeature" do
         # Setup scene on first frame
         MyObject.create(Vector[100, 100])
       end
-      at(1) { press(GLFW::KEY_SPACE) }
-      till(5) { press(GLFW::KEY_LEFT) }  # hold key for frames 2-5
+      at(1) { press(Engine::Input::KEY_SPACE) }
+      till(5) { press(Engine::Input::KEY_LEFT) }  # hold key for frames 2-5
       at(10) { check_screenshot(__dir__ + "/expected.png") }
       at(15) { Engine.stop_game }
     end

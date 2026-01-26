@@ -26,11 +26,11 @@ describe Asteroids::Ship do
         end
         at(1) { check_screenshot(__dir__ + "/ship_1.png") }
         at(2) { check_screenshot(__dir__ + "/ship_2.png") }
-        till(5) { press(GLFW::KEY_LEFT) }
+        till(5) { press(Engine::Input::KEY_LEFT) }
         at(6) { check_screenshot(__dir__ + "/ship_3.png") }
-        till(10) { press(GLFW::KEY_RIGHT) }
+        till(10) { press(Engine::Input::KEY_RIGHT) }
         at(11) { check_screenshot(__dir__ + "/ship_4.png") }
-        till(15) { press(GLFW::KEY_UP) }
+        till(15) { press(Engine::Input::KEY_UP) }
         at(16) { check_screenshot(__dir__ + "/ship_5.png") }
         at(20) do
           check_screenshot(__dir__ + "/ship_6.png")

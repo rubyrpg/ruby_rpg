@@ -61,7 +61,7 @@ describe Engine::Components::UI::SpriteClickbox do
 
       # Click while inside
       Engine::Input.mouse_callback(200, 450)
-      Engine::Input.mouse_button_callback(GLFW::MOUSE_BUTTON_LEFT, GLFW::PRESS)
+      Engine::Input.mouse_button_callback(Engine::Input::MOUSE_BUTTON_LEFT, Engine::Input::PRESS)
       clickbox.update(0)
       expect(clickbox.clicked).to be true
       expect(clickbox.mouse_inside).to be true
@@ -70,7 +70,7 @@ describe Engine::Components::UI::SpriteClickbox do
 
       # Release click
       Engine::Input.mouse_callback(200, 450)
-      Engine::Input.mouse_button_callback(GLFW::MOUSE_BUTTON_LEFT, GLFW::RELEASE)
+      Engine::Input.mouse_button_callback(Engine::Input::MOUSE_BUTTON_LEFT, Engine::Input::RELEASE)
       clickbox.update(0)
       expect(clickbox.clicked).to be false
       expect(clickbox.mouse_inside).to be true
