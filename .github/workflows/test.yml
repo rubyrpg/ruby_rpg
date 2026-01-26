@@ -13,14 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y libmagickwand-dev
-
-      - name: Install SDL2
-        run: sudo apt-get install -y libsdl2-dev libsdl2-mixer-dev
-
-      - name: Install GLFW and OpenGL dependencies
-        run: sudo apt-get install -y libglfw3-dev libgl1-mesa-dev
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libmagickwand-dev \
+            libsdl2-dev \
+            libsdl2-mixer-dev \
+            libglfw3-dev \
+            libgl1-mesa-dev
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
