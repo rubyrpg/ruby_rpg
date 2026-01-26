@@ -16,6 +16,9 @@ jobs:
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y libmagickwand-dev
 
+      - name: Install SDL2
+        run: sudo apt-get install -y libsdl2-dev libsdl2-mixer-dev
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -27,3 +30,5 @@ jobs:
 
       - name: Run tests
         run: bundle exec rspec --tag '~system'
+        env:
+          SDL_AUDIODRIVER: dummy
