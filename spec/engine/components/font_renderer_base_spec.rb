@@ -6,6 +6,7 @@ describe Engine::Components::FontRendererBase do
     font = Engine::Font.allocate
     font.instance_variable_set(:@uuid, "test-font-uuid")
     font.instance_variable_set(:@font_file_path, "assets/arial.ttf")
+    font.instance_variable_set(:@source, :game)
     allow(font).to receive(:texture).and_return(mock_texture)
     font
   end
@@ -32,7 +33,10 @@ describe Engine::Components::FontRendererBase do
       serialized = Engine::Serialization::ObjectSerializer.serialize(original)
 
       expect(serialized[:string]).to eq({ _class: "String", value: "Hello World" })
-      expect(serialized[:font][:_ref]).to eq("test-font-uuid")
+      # Font is now serialized inline with its data (like Mesh, Texture, Shader)
+      expect(serialized[:font][:_class]).to eq("Engine::Font")
+      expect(serialized[:font][:font_file_path]).to eq("assets/arial.ttf")
+      expect(serialized[:font][:source]).to eq(:game)
     end
   end
 end

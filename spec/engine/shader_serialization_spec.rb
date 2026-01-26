@@ -4,16 +4,18 @@ describe "Shader serialization" do
   let(:mock_shader) do
     # Create a shader-like object without OpenGL
     shader = Engine::Shader.allocate
-    shader.instance_variable_set(:@vertex_path, "./shaders/test_vertex.glsl")
-    shader.instance_variable_set(:@fragment_path, "./shaders/test_frag.glsl")
+    shader.instance_variable_set(:@vertex_path, "test_vertex.glsl")
+    shader.instance_variable_set(:@fragment_path, "test_frag.glsl")
+    shader.instance_variable_set(:@source, :game)
     shader
   end
 
   describe "#serializable_data" do
-    it "returns the shader paths" do
+    it "returns the shader paths and source" do
       expect(mock_shader.serializable_data).to eq({
-        vertex_path: "./shaders/test_vertex.glsl",
-        fragment_path: "./shaders/test_frag.glsl"
+        vertex_path: "test_vertex.glsl",
+        fragment_path: "test_frag.glsl",
+        source: :game
       })
     end
   end
@@ -30,8 +32,9 @@ describe "Shader serialization" do
       result = Engine::Serialization::ObjectSerializer.serialize(wrapper)
 
       expect(result[:shader][:_class]).to eq("Engine::Shader")
-      expect(result[:shader][:vertex_path]).to eq("./shaders/test_vertex.glsl")
-      expect(result[:shader][:fragment_path]).to eq("./shaders/test_frag.glsl")
+      expect(result[:shader][:vertex_path]).to eq("test_vertex.glsl")
+      expect(result[:shader][:fragment_path]).to eq("test_frag.glsl")
+      expect(result[:shader][:source]).to eq(:game)
       expect(result[:shader]).not_to have_key(:_ref)
     end
   end

@@ -6,14 +6,16 @@ describe "Texture serialization" do
     texture = Engine::Texture.allocate
     texture.instance_variable_set(:@relative_path, "textures/wood.png")
     texture.instance_variable_set(:@flip, true)
+    texture.instance_variable_set(:@source, :game)
     texture
   end
 
   describe "#serializable_data" do
-    it "returns the relative path and flip flag" do
+    it "returns the relative path, flip flag and source" do
       expect(mock_texture.serializable_data).to eq({
         path: "textures/wood.png",
-        flip: true
+        flip: true,
+        source: :game
       })
     end
   end
@@ -32,6 +34,7 @@ describe "Texture serialization" do
       expect(result[:texture][:_class]).to eq("Engine::Texture")
       expect(result[:texture][:path]).to eq("textures/wood.png")
       expect(result[:texture][:flip]).to eq(true)
+      expect(result[:texture][:source]).to eq(:game)
       expect(result[:texture]).not_to have_key(:_ref)
     end
   end

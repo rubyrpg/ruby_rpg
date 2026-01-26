@@ -11,7 +11,7 @@ module Engine
           scale: scale,
           components: [
             Engine::Components::MeshRenderer.create(
-              mesh: Engine::Mesh.from_engine("plane"),
+              mesh: Engine::Mesh.for("plane", source: :engine),
               material: material || StandardObjects.default_material
             ),
             *components

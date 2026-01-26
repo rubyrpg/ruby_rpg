@@ -3,8 +3,9 @@
 :uuid: cube-magenta-material-001
 :shader:
   :_class: Engine::Shader
-  :vertex_path: "./shaders/mesh_vertex.glsl"
-  :fragment_path: "./shaders/mesh_frag.glsl"
+  :vertex_path: mesh_vertex.glsl
+  :fragment_path: mesh_frag.glsl
+  :source: :engine
 :floats:
   :_class: Hash
   :value:

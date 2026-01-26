@@ -4,14 +4,14 @@ module Engine
   class Texture
     include Serializable
 
-    attr_reader :texture
+    attr_reader :texture, :source
 
     def self.from_serializable_data(data)
-      self.for(data[:path], flip: data[:flip] || false)
+      self.for(data[:path], flip: data[:flip] || false, source: (data[:source] || :game).to_sym)
     end
 
     def serializable_data
-      { path: @relative_path, flip: @flip }
+      { path: @relative_path, flip: @flip, source: @source }
     end
 
     def awake
@@ -19,9 +19,13 @@ module Engine
       load_texture
     end
 
-    def self.for(path, flip: false)
-      full_path = File.expand_path(File.join(GAME_DIR, path))
-      texture_cache[[path, flip]] ||= create(relative_path: path, file_path: full_path, flip: flip)
+    def self.for(path, flip: false, source: :game)
+      full_path = if source == :engine
+        File.expand_path(File.join(ENGINE_DIR, "assets", path))
+      else
+        File.expand_path(File.join(GAME_DIR, path))
+      end
+      texture_cache[[path, flip, source]] ||= create(relative_path: path, file_path: full_path, flip: flip, source: source)
     end
 
     def self.texture_cache

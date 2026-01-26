@@ -6,17 +6,34 @@ module Engine
   class Font
     include Serializable
 
-    serialize :font_file_path
+    attr_reader :font_file_path, :source
 
     TEXTURE_SIZE = 1024
     GLYPH_COUNT = 16
     CELL_SIZE = TEXTURE_SIZE / GLYPH_COUNT
 
+    def self.for(font_file_path, source: :game)
+      cache_key = [font_file_path, source]
+      font_cache[cache_key] ||= create(font_file_path: font_file_path, source: source)
+    end
+
+    def self.font_cache
+      @font_cache ||= {}
+    end
+
+    def self.from_serializable_data(data)
+      self.for(data[:font_file_path], source: (data[:source] || :game).to_sym)
+    end
+
+    def serializable_data
+      { font_file_path: @font_file_path, source: @source }
+    end
+
     def texture
       @texture ||=
         begin
           path = File.join("_imported", @font_file_path.gsub(".ttf", ".png"))
-          Engine::Texture.for(path)
+          Engine::Texture.for(path, source: @source)
         end
     end
 
@@ -35,7 +52,7 @@ module Engine
       scale_factor = 1 / (1024.0 * 2)
       horizontal_offset = 0.0
       vertical_offset = 0.0
-      font_path = File.expand_path(File.join(GAME_DIR, "_imported", @font_file_path.gsub(".ttf", ".json")))
+      font_path = resolve_font_json_path
       font_metrics = JSON.parse File.read(font_path)
       string.chars.each do |char|
         if char == "\n"
@@ -47,6 +64,14 @@ module Engine
         horizontal_offset += 30 * scale_factor * font_metrics[index_table[char].to_s]["width"]
       end
       offsets
+    end
+
+    def resolve_font_json_path
+      if @source == :engine
+        File.expand_path(File.join(ENGINE_DIR, "assets", "_imported", @font_file_path.gsub(".ttf", ".json")))
+      else
+        File.expand_path(File.join(GAME_DIR, "_imported", @font_file_path.gsub(".ttf", ".json")))
+      end
     end
 
     private

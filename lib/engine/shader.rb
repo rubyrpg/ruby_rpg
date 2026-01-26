@@ -2,67 +2,73 @@ module Engine
   class Shader
     include Serializable
 
+    attr_reader :source
+
     @cache = {}
 
-    def self.from_file(vertex_path, fragment_path)
-      key = [vertex_path, fragment_path]
-      @cache[key] ||= create(vertex_path: vertex_path, fragment_path: fragment_path)
+    def self.for(vertex_path, fragment_path, source: :game)
+      key = [vertex_path, fragment_path, source]
+      @cache[key] ||= create(vertex_path: vertex_path, fragment_path: fragment_path, source: source)
+    end
+
+    def self.from_file(vertex_path, fragment_path, source: :game)
+      self.for(vertex_path, fragment_path, source: source)
     end
 
     def self.from_serializable_data(data)
-      from_file(data[:vertex_path], data[:fragment_path])
+      self.for(data[:vertex_path], data[:fragment_path], source: (data[:source] || :game).to_sym)
     end
 
     def serializable_data
-      { vertex_path: @vertex_path, fragment_path: @fragment_path }
+      { vertex_path: @vertex_path, fragment_path: @fragment_path, source: @source }
     end
 
     def self.default
-      @default ||= Shader.create(vertex_path: './shaders/mesh_vertex.glsl', fragment_path: './shaders/mesh_frag.glsl')
+      @default ||= Shader.for('mesh_vertex.glsl', 'mesh_frag.glsl', source: :engine)
     end
 
     def self.vertex_lit
-      @vertex_lit ||= Engine::Shader.create(vertex_path: './shaders/vertex_lit_vertex.glsl', fragment_path: './shaders/vertex_lit_frag.glsl')
+      @vertex_lit ||= Engine::Shader.for('vertex_lit_vertex.glsl', 'vertex_lit_frag.glsl', source: :engine)
     end
 
     def self.skybox_cubemap
-      @skybox_cubemap ||= Shader.create(vertex_path: './shaders/fullscreen_vertex.glsl', fragment_path: './shaders/skybox_cubemap_frag.glsl')
+      @skybox_cubemap ||= Shader.for('fullscreen_vertex.glsl', 'skybox_cubemap_frag.glsl', source: :engine)
     end
 
     def self.sprite
-      @sprite ||= Engine::Shader.create(vertex_path: './shaders/sprite_vertex.glsl', fragment_path: './shaders/sprite_frag.glsl')
+      @sprite ||= Engine::Shader.for('sprite_vertex.glsl', 'sprite_frag.glsl', source: :engine)
     end
 
     def self.instanced_sprite
-      @instanced_sprite ||= Engine::Shader.create(vertex_path: './shaders/instanced_sprite_vertex.glsl', fragment_path: './shaders/instanced_sprite_frag.glsl')
+      @instanced_sprite ||= Engine::Shader.for('instanced_sprite_vertex.glsl', 'instanced_sprite_frag.glsl', source: :engine)
     end
 
     def self.text
-      @text ||= Engine::Shader.create(vertex_path: './shaders/text_vertex.glsl', fragment_path: './shaders/text_frag.glsl')
+      @text ||= Engine::Shader.for('text_vertex.glsl', 'text_frag.glsl', source: :engine)
     end
 
     def self.ui_text
-      @ui_text ||= Engine::Shader.create(vertex_path: './shaders/text_vertex.glsl', fragment_path: './shaders/text_frag.glsl')
+      @ui_text ||= Engine::Shader.for('text_vertex.glsl', 'text_frag.glsl', source: :engine)
     end
 
     def self.ui_sprite
-      @ui_sprite ||= Engine::Shader.create(vertex_path: './shaders/ui_sprite_vertex.glsl', fragment_path: './shaders/ui_sprite_frag.glsl')
+      @ui_sprite ||= Engine::Shader.for('ui_sprite_vertex.glsl', 'ui_sprite_frag.glsl', source: :engine)
     end
 
     def self.fullscreen
-      @fullscreen ||= Engine::Shader.create(vertex_path: './shaders/fullscreen_vertex.glsl', fragment_path: './shaders/fullscreen_frag.glsl')
+      @fullscreen ||= Engine::Shader.for('fullscreen_vertex.glsl', 'fullscreen_frag.glsl', source: :engine)
     end
 
     def self.colour
-      @colour ||= Engine::Shader.create(vertex_path: './shaders/colour_vertex.glsl', fragment_path: './shaders/colour_frag.glsl')
+      @colour ||= Engine::Shader.for('colour_vertex.glsl', 'colour_frag.glsl', source: :engine)
     end
 
     def self.shadow
-      @shadow ||= Engine::Shader.create(vertex_path: './shaders/shadow_vertex.glsl', fragment_path: './shaders/shadow_frag.glsl')
+      @shadow ||= Engine::Shader.for('shadow_vertex.glsl', 'shadow_frag.glsl', source: :engine)
     end
 
     def self.point_shadow
-      @point_shadow ||= Engine::Shader.create(vertex_path: './shaders/point_shadow_vertex.glsl', fragment_path: './shaders/point_shadow_frag.glsl')
+      @point_shadow ||= Engine::Shader.for('point_shadow_vertex.glsl', 'point_shadow_frag.glsl', source: :engine)
     end
 
     def awake
@@ -96,7 +102,7 @@ module Engine
 
     def compile_shader(shader, type)
       handle = Engine::GL.CreateShader(type)
-      path = File.join(File.dirname(__FILE__), shader)
+      path = resolve_shader_path(shader)
       source = preprocess_shader(path)
       parse_texture_fallbacks(source)
       s_srcs = [source].pack('p')
@@ -104,6 +110,14 @@ module Engine
       Engine::GL.ShaderSource(handle, 1, s_srcs, s_lens)
       Engine::GL.CompileShader(handle)
       handle
+    end
+
+    def resolve_shader_path(shader)
+      if @source == :engine
+        File.join(ENGINE_DIR, "shaders", shader)
+      else
+        File.join(GAME_DIR, "shaders", shader)
+      end
     end
 
     def texture_fallback(name)
