@@ -8,15 +8,17 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
     strategy:
       matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
         ruby-version: ['3.4', '4.0']
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install system dependencies
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -25,6 +27,10 @@ jobs:
             libsdl2-mixer-dev \
             libglfw3-dev \
             libgl1-mesa-dev
+
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install imagemagick sdl2 sdl2_mixer
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
