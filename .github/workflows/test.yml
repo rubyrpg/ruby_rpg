@@ -19,6 +19,9 @@ jobs:
       - name: Install SDL2
         run: sudo apt-get install -y libsdl2-dev libsdl2-mixer-dev
 
+      - name: Install GLFW and OpenGL dependencies
+        run: sudo apt-get install -y libglfw3-dev libgl1-mesa-dev
+
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
