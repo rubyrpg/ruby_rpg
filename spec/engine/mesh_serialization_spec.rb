@@ -3,7 +3,7 @@
 describe Engine::Mesh do
   describe "serialization" do
     it "returns serializable_data with mesh_file and source" do
-      mesh = Engine::Mesh.from_engine("cube")
+      mesh = Engine::Mesh.for("cube", source: :engine)
 
       expect(mesh.serializable_data).to eq({
         mesh_file: "cube",
@@ -21,7 +21,7 @@ describe Engine::Mesh do
     end
 
     it "shares vertex_data cache across instances" do
-      mesh1 = Engine::Mesh.from_engine("cube")
+      mesh1 = Engine::Mesh.for("cube", source: :engine)
       mesh2 = Engine::Mesh.create(mesh_file: "cube", source: :engine)
 
       # Access vertex_data to trigger memoization
@@ -33,7 +33,7 @@ describe Engine::Mesh do
     end
 
     it "shares index_data cache across instances" do
-      mesh1 = Engine::Mesh.from_engine("cube")
+      mesh1 = Engine::Mesh.for("cube", source: :engine)
       mesh2 = Engine::Mesh.create(mesh_file: "cube", source: :engine)
 
       data1 = mesh1.index_data
@@ -44,9 +44,9 @@ describe Engine::Mesh do
   end
 
   describe "factory methods with caching" do
-    it "caches mesh instances from from_engine" do
-      mesh1 = Engine::Mesh.from_engine("cube")
-      mesh2 = Engine::Mesh.from_engine("cube")
+    it "caches mesh instances from for with source: :engine" do
+      mesh1 = Engine::Mesh.for("cube", source: :engine)
+      mesh2 = Engine::Mesh.for("cube", source: :engine)
 
       expect(mesh1).to be(mesh2)
     end
@@ -67,7 +67,7 @@ describe Engine::Mesh do
       ensure
         File.delete("#{base_path}.vertex_data") if File.exist?("#{base_path}.vertex_data")
         File.delete("#{base_path}.index_data") if File.exist?("#{base_path}.index_data")
-        Engine::Mesh.mesh_cache.delete(base_path)
+        Engine::Mesh.mesh_cache.delete([mesh_file, :game])
       end
     end
   end
@@ -82,7 +82,7 @@ describe Engine::Mesh do
       stub_const("MeshWrapper", wrapper_class)
       Engine::Serializable.register_class(wrapper_class)
 
-      mesh = Engine::Mesh.from_engine("cube")
+      mesh = Engine::Mesh.for("cube", source: :engine)
       wrapper = wrapper_class.create(mesh: mesh)
       result = Engine::Serialization::ObjectSerializer.serialize(wrapper)
 
@@ -101,7 +101,7 @@ describe Engine::Mesh do
       stub_const("MeshWrapper", wrapper_class)
       Engine::Serializable.register_class(wrapper_class)
 
-      mesh = Engine::Mesh.from_engine("cube")
+      mesh = Engine::Mesh.for("cube", source: :engine)
       wrapper = wrapper_class.create(mesh: mesh)
 
       serialized = Engine::Serialization::GraphSerializer.serialize(wrapper)

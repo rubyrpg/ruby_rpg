@@ -3,8 +3,9 @@
 :uuid: hdr-sphere-material-001
 :shader:
   :_class: Engine::Shader
-  :vertex_path: "./shaders/colour_vertex.glsl"
-  :fragment_path: "./shaders/colour_frag.glsl"
+  :vertex_path: colour_vertex.glsl
+  :fragment_path: colour_frag.glsl
+  :source: :engine
 :floats:
   :_class: Hash
   :value:

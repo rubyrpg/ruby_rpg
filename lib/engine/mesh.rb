@@ -7,11 +7,7 @@ module Engine
     attr_reader :mesh_file, :source
 
     def self.from_serializable_data(data)
-      if data[:source].to_sym == :engine
-        from_engine(data[:mesh_file])
-      else
-        self.for(data[:mesh_file])
-      end
+      self.for(data[:mesh_file], source: (data[:source] || :game).to_sym)
     end
 
     def serializable_data
@@ -26,14 +22,9 @@ module Engine
       @index_data ||= Mesh.load_index(base_path)
     end
 
-    def self.for(mesh_file)
-      base_path = File.join(GAME_DIR, "_imported", mesh_file)
-      mesh_cache[base_path] ||= create(mesh_file: mesh_file, source: :game)
-    end
-
-    def self.from_engine(mesh_file)
-      base_path = File.join(ENGINE_DIR, "assets", "_imported", mesh_file)
-      mesh_cache[base_path] ||= create(mesh_file: mesh_file, source: :engine)
+    def self.for(mesh_file, source: :game)
+      cache_key = [mesh_file, source]
+      mesh_cache[cache_key] ||= create(mesh_file: mesh_file, source: source)
     end
 
     def self.mesh_cache
