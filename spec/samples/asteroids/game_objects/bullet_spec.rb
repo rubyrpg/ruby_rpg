@@ -4,7 +4,7 @@ require_relative "../../../../samples/asteroids/game_objects/bullet"
 
 include TestDriver
 
-describe Asteroids::Bullet do
+describe Asteroids::Bullet, :system do
   before do
     stub_const("GAME_DIR", File.expand_path(File.join(__dir__, "..", "..", "..", "..", "samples", "asteroids")))
   end

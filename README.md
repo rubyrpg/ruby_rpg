@@ -25,6 +25,15 @@ Then you can run the samples:
 bundle exec ruby samples/cubes/cubes.rb
 ```
 
+## Testing
+```bash
+bundle exec rspec                    # run all tests
+bundle exec rspec --tag '~system'    # skip system tests (faster)
+bundle exec rspec spec/path/to_spec.rb  # run specific test
+```
+
+System tests launch the engine and render frames, so they're slower. Use `--tag ~system` for quicker feedback during development.
+
 ## Contributing
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
