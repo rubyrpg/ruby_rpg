@@ -22,7 +22,10 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true
+          bundler-cache: false
+
+      - name: Install gems
+        run: bundle install
 
       # - name: Compile native extensions
       #   run: bundle exec rake compile
@@ -30,7 +33,7 @@ jobs:
       - name: Debug - Test Ruby works
         run: ruby -e "puts 'Ruby is working!'"
 
-      - name: Debug - Test native_audio directly
-        run: bundle exec ruby -e "require 'native_audio'; puts 'native_audio loaded!'"
+      - name: Debug - Test ruby_rpg via bundle
+        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'; exit 0"
         env:
           SDL_AUDIODRIVER: dummy
