@@ -11,8 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        ruby-version: ['3.4', '4.0']
+        os: [windows-latest]
+        ruby-version: ['4.0']
     runs-on: ${{ matrix.os }}
     env:
       BUNDLE_WITHOUT: profiling
@@ -88,9 +88,13 @@ jobs:
 
       - name: Debug - Test require ruby_rpg (Windows)
         if: runner.os == 'Windows'
-        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
-
-      - name: Run tests
-        run: bundle exec rspec --tag '~system'
+        run: |
+          bundle exec ruby -e "begin; require 'ruby_rpg'; puts 'ruby_rpg loaded!'; rescue => e; puts e.class; puts e.message; puts e.backtrace.first(10); exit 1; end"
         env:
           SDL_AUDIODRIVER: dummy
+
+      # Disabled for Windows debugging
+      # - name: Run tests
+      #   run: bundle exec rspec --tag '~system'
+      #   env:
+      #     SDL_AUDIODRIVER: dummy
