@@ -6,6 +6,8 @@
 extern void glBindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format);
 extern void glDispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z);
 extern void glMemoryBarrier(GLbitfield barriers);
+#elif defined(_WIN32) || defined(__MINGW32__)
+#include <GL/glew.h>
 #else
 #include <GL/gl.h>
 #endif

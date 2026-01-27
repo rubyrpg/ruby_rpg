@@ -61,7 +61,16 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: true
+          bundler-cache: ${{ runner.os != 'Windows' }}
+
+      - name: Install GLEW (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: ridk exec pacman -S --noconfirm mingw-w64-ucrt-x86_64-glew
+
+      - name: Install gems (Windows)
+        if: runner.os == 'Windows'
+        run: bundle install
 
       - name: Compile native extensions
         run: bundle exec rake compile

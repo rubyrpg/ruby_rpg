@@ -11,6 +11,7 @@ when /linux/
   have_library('GL') or abort "OpenGL not found"
 when /mingw|mswin/
   have_library('opengl32') or abort "OpenGL not found"
+  have_library('glew32') or abort "GLEW not found"
 end
 
 create_makefile('gl_native')
