@@ -68,6 +68,13 @@ jobs:
         shell: cmd
         run: ridk exec pacman -S --noconfirm mingw-w64-ucrt-x86_64-glew
 
+      - name: Add MSYS2 to PATH (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $msys2Path = (Get-ChildItem -Path "C:\hostedtoolcache\windows\Ruby" -Filter "msys64" -Recurse -Directory | Select-Object -First 1).FullName
+          Add-Content $env:GITHUB_PATH "$msys2Path\ucrt64\bin"
+
       - name: Install gems (Windows)
         if: runner.os == 'Windows'
         run: bundle install
