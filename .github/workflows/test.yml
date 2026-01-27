@@ -14,87 +14,23 @@ jobs:
         os: [windows-latest]
         ruby-version: ['4.0']
     runs-on: ${{ matrix.os }}
-    env:
-      BUNDLE_WITHOUT: profiling
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install system dependencies (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            libmagickwand-dev \
-            libsdl2-dev \
-            libsdl2-mixer-dev \
-            libglfw3-dev \
-            libgl1-mesa-dev
-
-      - name: Install system dependencies (macOS)
-        if: runner.os == 'macOS'
-        run: brew install imagemagick
-
-      - name: Setup ImageMagick path (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: Add-Content $env:GITHUB_PATH "C:\ImageMagick"
-
-      - name: Uninstall bundled ImageMagick (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          $bundled = "C:\Program Files\ImageMagick-7.1.2-Q16-HDRI"
-          if (Test-Path "$bundled\unins000.exe") {
-            Start-Process -FilePath "$bundled\unins000.exe" -ArgumentList "/VERYSILENT /NORESTART" -Wait
-          }
-
-      - name: Install ImageMagick (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          $url = "https://github.com/rmagick/ImageMagick-binaries/raw/main/ImageMagick-7.1.2-8-Q16-x64-dll.exe"
-          Invoke-WebRequest -Uri $url -OutFile "ImageMagick-installer.exe"
-          Start-Process -FilePath "ImageMagick-installer.exe" -ArgumentList "/DIR=C:\ImageMagick /VERYSILENT /NORESTART /TASKS=install_Devel" -Wait
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
-          bundler-cache: ${{ runner.os != 'Windows' }}
+          bundler-cache: true
 
-      - name: Install GLEW (Windows)
-        if: runner.os == 'Windows'
-        shell: cmd
-        run: ridk exec pacman -S --noconfirm mingw-w64-ucrt-x86_64-glew
+      # - name: Compile native extensions
+      #   run: bundle exec rake compile
 
-      - name: Add MSYS2 to PATH (Windows)
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          $msys2Path = (Get-ChildItem -Path "C:\hostedtoolcache\windows\Ruby" -Filter "msys64" -Recurse -Directory | Select-Object -First 1).FullName
-          Add-Content $env:GITHUB_PATH "$msys2Path\ucrt64\bin"
-
-      - name: Install gems (Windows)
-        if: runner.os == 'Windows'
-        run: bundle install
-
-      - name: Compile native extensions
-        run: bundle exec rake compile
-
-      - name: Debug - Test Ruby works (Windows)
-        if: runner.os == 'Windows'
+      - name: Debug - Test Ruby works
         run: ruby -e "puts 'Ruby is working!'"
 
-      - name: Debug - Test require ruby_rpg (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          bundle exec ruby -e "begin; require 'ruby_rpg'; puts 'ruby_rpg loaded!'; rescue => e; puts e.class; puts e.message; puts e.backtrace.first(10); exit 1; end"
+      - name: Debug - Test require ruby_rpg
+        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
         env:
           SDL_AUDIODRIVER: dummy
-
-      # Disabled for Windows debugging
-      # - name: Run tests
-      #   run: bundle exec rspec --tag '~system'
-      #   env:
-      #     SDL_AUDIODRIVER: dummy

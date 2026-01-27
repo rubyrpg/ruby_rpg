@@ -27,5 +27,6 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables = ['import']
 
-  s.add_runtime_dependency 'rmagick', '~> 6.0', '>= 6.0.1'
+  # Temporarily disabled for Windows CI debugging
+  # s.add_runtime_dependency 'rmagick', '~> 6.0', '>= 6.0.1'
 end
