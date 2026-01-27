@@ -82,6 +82,14 @@ jobs:
       - name: Compile native extensions
         run: bundle exec rake compile
 
+      - name: Debug - Test Ruby works (Windows)
+        if: runner.os == 'Windows'
+        run: ruby -e "puts 'Ruby is working!'"
+
+      - name: Debug - Test require ruby_rpg (Windows)
+        if: runner.os == 'Windows'
+        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
+
       - name: Run tests
         run: bundle exec rspec --tag '~system'
         env:
