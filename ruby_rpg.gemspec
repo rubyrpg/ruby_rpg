@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
-  s.add_runtime_dependency "native_audio", "~> 0.2.0"
+  s.add_runtime_dependency "native_audio", "~> 0.4.0"
 
   # Temporarily disabled for Windows CI debugging
   # s.add_runtime_dependency 'concurrent-ruby'
