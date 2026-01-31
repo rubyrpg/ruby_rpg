@@ -13,6 +13,16 @@ jobs:
       matrix:
         os: [windows-latest]
         ruby-version: ['4.0']
+        include:
+          - os: ubuntu-latest
+            audio_env: NATIVE_AUDIO_DRIVER
+            audio_val: "null"
+          - os: macos-latest
+            audio_env: NATIVE_AUDIO_DRIVER
+            audio_val: "null"
+          - os: windows-latest
+            audio_env: DUMMY_AUDIO_BACKEND
+            audio_val: "true"
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -36,4 +46,4 @@ jobs:
       - name: Debug - Test ruby_rpg via bundle
         run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'; exit 0"
         env:
-          SDL_AUDIODRIVER: dummy
+          ${{ matrix.audio_env }}: ${{ matrix.audio_val }}
