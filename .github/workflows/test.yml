@@ -26,8 +26,8 @@ jobs:
         run: bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
-      - name: Test ruby_rpg loads
-        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
+      - name: Run tests
+        run: bundle exec rspec --tag '~system'
         env:
           NATIVE_AUDIO_DRIVER: "null"
 
@@ -50,8 +50,8 @@ jobs:
         run: bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
-      - name: Test ruby_rpg loads
-        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
+      - name: Run tests
+        run: bundle exec rspec --tag '~system'
         env:
           NATIVE_AUDIO_DRIVER: "null"
 
@@ -91,7 +91,7 @@ jobs:
         run: bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
-      - name: Test ruby_rpg loads
-        run: bundle exec ruby -e "require 'ruby_rpg'; puts 'ruby_rpg loaded!'"
+      - name: Run tests
+        run: bundle exec rspec --tag '~system'
         env:
           DUMMY_AUDIO_BACKEND: "true"
