@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../../spec_helper"
+require "tmpdir"
 
 class YamlTestSimple
   include Engine::Serializable
@@ -19,7 +20,7 @@ class YamlTestEmpty
 end
 
 describe Engine::Serialization::YamlPersistence do
-  let(:temp_dir) { "/tmp/yaml_persistence_test_#{SecureRandom.hex(4)}" }
+  let(:temp_dir) { File.join(Dir.tmpdir, "yaml_persistence_test_#{SecureRandom.hex(4)}") }
 
   before { Dir.mkdir(temp_dir) }
   after { FileUtils.rm_rf(temp_dir) }

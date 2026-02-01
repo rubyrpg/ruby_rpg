@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
+require "tmpdir"
+
 describe "Material file loading" do
-  let(:temp_file) { "/tmp/test_material_#{SecureRandom.hex(4)}.mat" }
+  let(:temp_file) { File.join(Dir.tmpdir, "test_material_#{SecureRandom.hex(4)}.mat") }
 
   after { File.delete(temp_file) if File.exist?(temp_file) }
 

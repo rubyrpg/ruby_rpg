@@ -9,6 +9,10 @@ Gem::Specification.new do |s|
             Dir.glob("ext/**/*.{rb,c,h}") +
             Dir.glob("vendor/glfw-*/lib-*/*.{dylib,dll}") +
             Dir.glob("vendor/glfw-*/LICENSE.md") +
+            Dir.glob("vendor/glew-*/include/**/*.h") +
+            Dir.glob("vendor/glew-*/lib/Release/x64/*.lib") +
+            Dir.glob("vendor/glew-*/bin/Release/x64/*.dll") +
+            Dir.glob("vendor/glew-*/LICENSE.txt") +
             ["README.md"]
   s.require_paths = ["lib"]
   s.extensions = Dir.glob("ext/*/extconf.rb")
@@ -16,7 +20,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
-  s.add_runtime_dependency "native_audio"
+  s.add_runtime_dependency "native_audio", "~> 0.4.0"
   s.add_runtime_dependency 'concurrent-ruby'
   s.add_runtime_dependency 'os'
   s.add_runtime_dependency 'matrix', '~> 0.3'

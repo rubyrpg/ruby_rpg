@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+# Preload vendored DLLs on Windows before loading native extensions
+if RUBY_PLATFORM =~ /mingw|mswin/
+  require 'fiddle'
+  glew_dll = File.expand_path('../vendor/glew-2.2.0-win32/bin/Release/x64/glew32.dll', __dir__)
+  Fiddle.dlopen(glew_dll)
+end
+
 require_relative 'engine/gl'
 require_relative 'engine/glfw'
 require 'concurrent'
@@ -101,6 +108,8 @@ if OS.windows?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "vendor", "glfw-3.4.bin.WIN64", "lib-static-ucrt", "glfw3.dll")))
 elsif OS.mac?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "vendor", "glfw-3.3.9.bin.MACOS", "lib-arm64", "libglfw.3.dylib")))
+elsif OS.linux?
+  GLFW.load_lib("libglfw.so.3")
 end
 GLFW.Init
 
