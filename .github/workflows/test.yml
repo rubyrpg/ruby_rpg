@@ -15,8 +15,8 @@ jobs:
         ruby-version: ['3.4', '4.0']
     steps:
       - uses: actions/checkout@v4
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y libmagickwand-dev
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y libmagickwand-dev libgl1-mesa-dev
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
