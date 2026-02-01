@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+# Add vendored DLL paths on Windows before loading native extensions
+if RUBY_PLATFORM =~ /mingw|mswin/
+  glew_dll_path = File.expand_path('../vendor/glew-2.2.0-win32/bin/Release/x64', __dir__)
+  ENV['PATH'] = "#{glew_dll_path};#{ENV['PATH']}"
+end
+
 require_relative 'engine/gl'
 require_relative 'engine/glfw'
 require 'concurrent'

@@ -10,6 +10,9 @@ when /darwin/
 when /linux/
   have_library('GL') or abort "OpenGL not found"
 when /mingw|mswin/
+  glew_dir = File.expand_path('../../../vendor/glew-2.2.0-win32', __FILE__)
+  $CFLAGS << " -I#{glew_dir}/include"
+  $LDFLAGS << " -L#{glew_dir}/lib/Release/x64"
   have_library('opengl32') or abort "OpenGL not found"
   have_library('glew32') or abort "GLEW not found"
 end

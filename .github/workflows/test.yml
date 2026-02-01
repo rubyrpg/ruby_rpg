@@ -84,9 +84,6 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: false
-      - name: Install GLEW
-        shell: cmd
-        run: ridk exec pacman -S --noconfirm mingw-w64-ucrt-x86_64-glew
       - name: Install gems
         run: bundle install
       - name: Compile native extensions
