@@ -9,7 +9,6 @@ require_relative '../lib/engine/path'
 require_relative '../lib/engine/tangent_calculator'
 
 require 'fileutils'
-require "rmagick"
 require "matrix"
 
 assets_path = ARGV[0]
@@ -19,6 +18,17 @@ FileUtils.mkdir_p(File.join(assets_path, '_imported'))
 
 fonts = Dir.glob("#{assets_path}/**/*.ttf")
 puts "found #{fonts.size} fonts"
+if fonts.any?
+  begin
+    require "rmagick"
+  rescue LoadError
+    puts "Error: Font import requires rmagick, which is not installed."
+    puts "To install:"
+    puts "  1. Install ImageMagick (e.g., `brew install imagemagick` on macOS)"
+    puts "  2. Add `gem 'rmagick'` to your Gemfile and run `bundle install`"
+    exit 1
+  end
+end
 fonts.each do |font|
   puts "importing #{font}"
   destination_image = (font.delete_prefix(assets_path)).gsub(/\.ttf$/, '.png')
