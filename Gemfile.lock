@@ -15,23 +15,56 @@ GEM
   remote: https://rubygems.org/
   specs:
     chunky_png (1.4.0)
+    coderay (1.1.3)
     concurrent-ruby (1.3.6)
+    csv (3.3.5)
+    diff-lcs (1.6.2)
     fiddle (1.1.8)
+    io-console (0.8.2)
     logger (1.7.0)
     matrix (0.4.3)
+    method_source (1.1.0)
     native_audio (0.4.0)
     observer (0.1.2)
     os (1.1.4)
+    ostruct (0.6.3)
     pkg-config (1.6.5)
+    pry (0.16.0)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+      reline (>= 0.6.0)
+    rake (13.3.1)
+    rake-compiler (1.3.1)
+      rake
+    reline (0.6.3)
+      io-console (~> 0.5)
     rmagick (6.1.5)
       observer (~> 0.1)
       pkg-config (~> 1.4)
+    rspec (3.13.2)
+      rspec-core (~> 3.13.0)
+      rspec-expectations (~> 3.13.0)
+      rspec-mocks (~> 3.13.0)
+    rspec-core (3.13.6)
+      rspec-support (~> 3.13.0)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-mocks (3.13.7)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.7)
 
 PLATFORMS
   ruby
   x64-mingw-ucrt
 
 DEPENDENCIES
+  csv
+  ostruct
+  pry (~> 0.14)
+  rake-compiler
+  rspec (~> 3.13)
   ruby_rpg!
 
 BUNDLED WITH
