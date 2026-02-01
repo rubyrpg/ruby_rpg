@@ -63,6 +63,22 @@ jobs:
         ruby-version: ['3.4', '4.0']
     steps:
       - uses: actions/checkout@v4
+      - name: Setup ImageMagick path
+        shell: powershell
+        run: Add-Content $env:GITHUB_PATH "C:\ImageMagick"
+      - name: Uninstall bundled ImageMagick
+        shell: powershell
+        run: |
+          $bundled = "C:\Program Files\ImageMagick-7.1.2-Q16-HDRI"
+          if (Test-Path "$bundled\unins000.exe") {
+            Start-Process -FilePath "$bundled\unins000.exe" -ArgumentList "/VERYSILENT /NORESTART" -Wait
+          }
+      - name: Install ImageMagick with dev headers
+        shell: powershell
+        run: |
+          $url = "https://github.com/rmagick/ImageMagick-binaries/raw/main/ImageMagick-7.1.2-8-Q16-x64-dll.exe"
+          Invoke-WebRequest -Uri $url -OutFile "ImageMagick-installer.exe"
+          Start-Process -FilePath "ImageMagick-installer.exe" -ArgumentList "/DIR=C:\ImageMagick /VERYSILENT /NORESTART /TASKS=install_Devel" -Wait
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
