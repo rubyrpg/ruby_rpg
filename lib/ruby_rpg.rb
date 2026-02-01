@@ -109,8 +109,6 @@ if OS.windows?
 elsif OS.mac?
   GLFW.load_lib(File.expand_path(File.join(__dir__, "..", "vendor", "glfw-3.3.9.bin.MACOS", "lib-arm64", "libglfw.3.dylib")))
 elsif OS.linux?
-  # TODO: Consider vendoring GLFW for Linux (like Mac/Windows) to avoid
-  # requiring users to install libglfw3 manually
   GLFW.load_lib("libglfw.so.3")
 end
 GLFW.Init
