@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "tmpdir"
 require_relative "../../samples/cubes/components/spinner"
 
 describe "Spinning cube serialization" do
@@ -91,7 +92,7 @@ describe "Spinning cube serialization" do
       components: [Cubes::Spinner.create(speed: 90)]
     )
 
-    temp_file = "/tmp/spinning_cube_#{SecureRandom.hex(4)}.yaml"
+    temp_file = File.join(Dir.tmpdir, "spinning_cube_#{SecureRandom.hex(4)}.yaml")
 
     begin
       Engine::Serialization::YamlPersistence.save(cube, temp_file)
