@@ -3,8 +3,6 @@
 module ShrinkRacer
   module UIText
     def self.create(pos, rotation, size, text, components: [])
-      font_path = "assets/arial.ttf"
-
       # Convert old position (x, y from bottom) to new Y-down offsets
       # Old system: y=0 at bottom, y increases upward
       # New system: top=0, bottom=height (Y-down)
@@ -24,7 +22,7 @@ module ShrinkRacer
             bottom_ratio: 1.0,
             bottom_offset: -size
           ),
-          Engine::Components::UI::FontRenderer.create(font: Engine::Font.create(font_file_path: font_path), string: text),
+          Engine::Components::UI::FontRenderer.create(font: Engine::Font.open_sans, string: text),
           *components
         ])
     end

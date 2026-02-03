@@ -24,8 +24,10 @@ GEM
     matrix (0.4.3)
     method_source (1.1.0)
     native_audio (0.4.0)
+    observer (0.1.2)
     os (1.1.4)
     ostruct (0.6.3)
+    pkg-config (1.6.5)
     pry (0.16.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -35,6 +37,9 @@ GEM
       rake
     reline (0.6.3)
       io-console (~> 0.5)
+    rmagick (6.1.5)
+      observer (~> 0.1)
+      pkg-config (~> 1.4)
     rspec (3.13.2)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -58,6 +63,7 @@ DEPENDENCIES
   ostruct
   pry (~> 0.14)
   rake-compiler
+  rmagick
   rspec (~> 3.13)
   ruby_rpg!
 

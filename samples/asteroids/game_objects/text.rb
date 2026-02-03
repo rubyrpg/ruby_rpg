@@ -3,8 +3,6 @@
 module Asteroids
   module Text
     def self.create(pos, rotation, size, text, components: [])
-      font_path = "assets/arial.ttf"
-
       # Convert old position (x, y from bottom) to new Y-down offsets
       left_offset = pos[0]
       top_offset = Engine::Window.framebuffer_height - pos[1] - size
@@ -22,7 +20,7 @@ module Asteroids
             bottom_ratio: 1.0,
             bottom_offset: -size
           ),
-          Engine::Components::UI::FontRenderer.create(font: Engine::Font.create(font_file_path: font_path), string: text),
+          Engine::Components::UI::FontRenderer.create(font: Engine::Font.open_sans, string: text),
           *components
         ])
     end

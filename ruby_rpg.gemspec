@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
             Dir.glob("vendor/glew-*/lib/Release/x64/*.lib") +
             Dir.glob("vendor/glew-*/bin/Release/x64/*.dll") +
             Dir.glob("vendor/glew-*/LICENSE.txt") +
-            ["README.md"]
+            ["README.md", "THIRD_PARTY_NOTICES.md"]
   s.require_paths = ["lib"]
   s.extensions = Dir.glob("ext/*/extconf.rb")
   s.homepage = "https://github.com/rubyrpg/ruby_rpg"

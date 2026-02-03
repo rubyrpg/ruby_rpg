@@ -9,7 +9,7 @@ require_relative "corners"
 require_relative "stencil_demos"
 
 def load_font
-  Engine::Font.create(font_file_path: "assets/Arial.ttf")
+  Engine::Font.open_sans
 end
 
 def create_ui_material(r, g, b, a = 1.0)

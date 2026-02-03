@@ -23,7 +23,7 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: false
       - name: Install gems
-        run: bundle install
+        run: bundle config set --local without development && bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
       - name: Run tests
@@ -45,7 +45,7 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: false
       - name: Install gems
-        run: bundle install
+        run: bundle config set --local without development && bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
       - name: Run tests
@@ -67,7 +67,7 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: false
       - name: Install gems
-        run: bundle install
+        run: bundle config set --local without development && bundle install
       - name: Compile native extensions
         run: bundle exec rake compile
       - name: Run tests

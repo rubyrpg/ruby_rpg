@@ -15,7 +15,7 @@ def create_center_panel(font)
     ]
   )
 
-  # Nested box with 20px margin
+  # Nested box with 20px margin, using Flex for vertical layout
   inner_panel = Engine::GameObject.create(
     name: "CenterPanelInner",
     parent: center_panel,
@@ -26,48 +26,32 @@ def create_center_panel(font)
         bottom_offset: 20,
         top_offset: 20
       ),
-      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
+      Engine::Components::UI::Flex.create(direction: :column, justify: :start, gap: 5)
     ]
   )
 
-  # Large title
-  Engine::GameObject.create(
-    name: "LargeText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_offset: 0,
-        bottom_ratio: 1.0, bottom_offset: -60
-      ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Large Title")
-    ]
-  )
+  # Font samples
+  fonts = [
+    { font: Engine::Font.open_sans, name: "Open Sans" },
+    { font: Engine::Font.noto_serif, name: "Noto Serif" },
+    { font: Engine::Font.jetbrains_mono, name: "JetBrains Mono" },
+    { font: Engine::Font.press_start_2p, name: "Press Start 2P" },
+    { font: Engine::Font.bangers, name: "Bangers" },
+    { font: Engine::Font.caveat, name: "Caveat" },
+    { font: Engine::Font.oswald, name: "Oswald" }
+  ]
 
-  # Medium text
-  Engine::GameObject.create(
-    name: "MediumText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_ratio: 0.5, top_offset: -10,
-        bottom_ratio: 0.5, bottom_offset: -30
-      ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Medium text here")
-    ]
-  )
-
-  # Small text
-  Engine::GameObject.create(
-    name: "SmallText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_ratio: 1.0, top_offset: -30,
-        bottom_offset: 0
-      ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Small footer text")
-    ]
-  )
+  fonts.each do |entry|
+    Engine::GameObject.create(
+      name: "#{entry[:name].gsub(' ', '')}Text",
+      parent: inner_panel,
+      components: [
+        Engine::Components::UI::Rect.create(flex_height: 30),
+        Engine::Components::UI::FontRenderer.create(font: entry[:font], string: entry[:name])
+      ]
+    )
+  end
 
   center_panel
 end
