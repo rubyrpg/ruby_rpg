@@ -1,6 +1,32 @@
 # frozen_string_literal: true
 
 describe Engine::Components::OrthographicCamera do
+  describe "when the camera has a parent" do
+    it "invalidates cached matrix when parent moves" do
+      camera = Engine::Components::OrthographicCamera.create(width: 10, height: 10, far: 10)
+      parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+      child = Engine::GameObject.create(
+        pos: Vector[0, 0, 0],
+        parent: parent,
+        components: [camera]
+      )
+
+      # Get initial matrix (caches it)
+      initial_matrix = camera.matrix
+
+      # Move the parent
+      parent.x = 100
+
+      # Simulate a frame update - this is where the cache should be invalidated
+      camera.update(0.016)
+
+      # The camera matrix should now reflect the parent's new position
+      updated_matrix = camera.matrix
+
+      expect(updated_matrix).not_to eq(initial_matrix)
+    end
+  end
+
   describe "#matrix" do
     it "returns the correct matrix with no position or rotation" do
       camera = Engine::Components::OrthographicCamera.create(width: 10, height: 10, far: 10)

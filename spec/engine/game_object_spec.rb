@@ -195,6 +195,86 @@ describe Engine::GameObject do
           expect(result.to_a.flatten[index]).to be_within(0.0001).of(value)
         end
       end
+
+      it "invalidates cached model_matrix when parent moves via pos=" do
+        parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+        child = Engine::GameObject.create(pos: Vector[10, 0, 0], parent: parent)
+
+        # Cache the child's model matrix
+        initial_matrix = child.model_matrix
+        expect(initial_matrix[3, 0]).to be_within(0.0001).of(10) # x position
+
+        # Move the parent
+        parent.pos = Vector[100, 0, 0]
+
+        # Child's model matrix should now reflect parent's new position
+        updated_matrix = child.model_matrix
+        expect(updated_matrix[3, 0]).to be_within(0.0001).of(110) # 10 + 100
+
+        # Verify the matrix object itself changed (cache invalidated)
+        expect(updated_matrix).not_to equal(initial_matrix)
+      end
+
+      it "invalidates cached model_matrix when parent moves via x=" do
+        parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+        child = Engine::GameObject.create(pos: Vector[10, 0, 0], parent: parent)
+
+        initial_matrix = child.model_matrix
+        expect(initial_matrix[3, 0]).to be_within(0.0001).of(10)
+
+        parent.x = 100
+
+        updated_matrix = child.model_matrix
+        expect(updated_matrix[3, 0]).to be_within(0.0001).of(110)
+        expect(updated_matrix).not_to equal(initial_matrix)
+      end
+
+      it "invalidates cached model_matrix when grandparent moves" do
+        grandparent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+        parent = Engine::GameObject.create(pos: Vector[10, 0, 0], parent: grandparent)
+        child = Engine::GameObject.create(pos: Vector[5, 0, 0], parent: parent)
+
+        initial_matrix = child.model_matrix
+        expect(initial_matrix[3, 0]).to be_within(0.0001).of(15) # 0 + 10 + 5
+
+        grandparent.x = 100
+
+        updated_matrix = child.model_matrix
+        expect(updated_matrix[3, 0]).to be_within(0.0001).of(115) # 100 + 10 + 5
+        expect(updated_matrix).not_to equal(initial_matrix)
+      end
+
+      it "invalidates cached model_matrix when parent rotates" do
+        parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+        child = Engine::GameObject.create(pos: Vector[10, 0, 0], parent: parent)
+
+        initial_matrix = child.model_matrix
+        expect(initial_matrix[3, 0]).to be_within(0.0001).of(10) # x = 10
+        expect(initial_matrix[3, 1]).to be_within(0.0001).of(0)  # y = 0
+
+        # Rotate parent 90 degrees around z-axis
+        parent.rotation = Engine::Quaternion.from_euler(Vector[0, 0, 90])
+
+        updated_matrix = child.model_matrix
+        # After 90 degree z rotation, child at (10,0) rotates
+        expect(updated_matrix[3, 0]).to be_within(0.0001).of(0)
+        expect(updated_matrix[3, 1].abs).to be_within(0.0001).of(10)
+        expect(updated_matrix).not_to equal(initial_matrix)
+      end
+
+      it "invalidates cached model_matrix when parent scales" do
+        parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+        child = Engine::GameObject.create(pos: Vector[10, 0, 0], parent: parent)
+
+        initial_matrix = child.model_matrix
+        expect(initial_matrix[3, 0]).to be_within(0.0001).of(10)
+
+        parent.scale = Vector[2, 2, 2]
+
+        updated_matrix = child.model_matrix
+        expect(updated_matrix[3, 0]).to be_within(0.0001).of(20) # 10 * 2
+        expect(updated_matrix).not_to equal(initial_matrix)
+      end
     end
   end
 
