@@ -21,6 +21,18 @@ module Engine
       @font_cache ||= {}
     end
 
+    def self.open_sans
+      self.for("OpenSans-Regular.ttf", source: :engine)
+    end
+
+    def self.noto_serif
+      self.for("NotoSerif-Regular.ttf", source: :engine)
+    end
+
+    def self.jetbrains_mono
+      self.for("JetBrainsMono-Regular.ttf", source: :engine)
+    end
+
     def self.from_serializable_data(data)
       self.for(data[:font_file_path], source: (data[:source] || :game).to_sym)
     end

@@ -30,42 +30,42 @@ def create_center_panel(font)
     ]
   )
 
-  # Large title
+  # Open Sans
   Engine::GameObject.create(
-    name: "LargeText",
+    name: "OpenSansText",
     parent: inner_panel,
     components: [
       Engine::Components::UI::Rect.create(
         top_offset: 0,
         bottom_ratio: 1.0, bottom_offset: -60
       ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Large Title")
+      Engine::Components::UI::FontRenderer.create(font: Engine::Font.open_sans, string: "Open Sans")
     ]
   )
 
-  # Medium text
+  # Noto Serif
   Engine::GameObject.create(
-    name: "MediumText",
+    name: "NotoSerifText",
     parent: inner_panel,
     components: [
       Engine::Components::UI::Rect.create(
-        top_ratio: 0.5, top_offset: -10,
-        bottom_ratio: 0.5, bottom_offset: -30
+        top_ratio: 0.5, top_offset: -20,
+        bottom_ratio: 0.5, bottom_offset: -40
       ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Medium text here")
+      Engine::Components::UI::FontRenderer.create(font: Engine::Font.noto_serif, string: "Noto Serif")
     ]
   )
 
-  # Small text
+  # JetBrains Mono
   Engine::GameObject.create(
-    name: "SmallText",
+    name: "JetBrainsMonoText",
     parent: inner_panel,
     components: [
       Engine::Components::UI::Rect.create(
-        top_ratio: 1.0, top_offset: -30,
+        top_ratio: 1.0, top_offset: -40,
         bottom_offset: 0
       ),
-      Engine::Components::UI::FontRenderer.create(font: font, string: "Small footer text")
+      Engine::Components::UI::FontRenderer.create(font: Engine::Font.jetbrains_mono, string: "JetBrains Mono")
     ]
   )
 
