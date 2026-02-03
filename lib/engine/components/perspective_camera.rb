@@ -22,11 +22,12 @@ module Engine::Components
           right = game_object.right
           up = game_object.up
           forward = game_object.forward
+          world_pos = game_object.world_pos
 
           transformation_matrix = Matrix[
-            [right[0], right[1], right[2], -right.dot(game_object.pos)],
-            [up[0], up[1], up[2], -up.dot(game_object.pos)],
-            [forward[0], forward[1], forward[2], -forward.dot(game_object.pos)],
+            [right[0], right[1], right[2], -right.dot(world_pos)],
+            [up[0], up[1], up[2], -up.dot(world_pos)],
+            [forward[0], forward[1], forward[2], -forward.dot(world_pos)],
             [0, 0, 0, 1]
           ]
 
@@ -41,7 +42,7 @@ module Engine::Components
     end
 
     def position
-      game_object.pos
+      game_object.world_pos
     end
 
     def projection
@@ -53,24 +54,22 @@ module Engine::Components
       right = game_object.right
       up = game_object.up
       forward = game_object.forward
-      pos = game_object.pos
+      world_pos = game_object.world_pos
 
       Matrix[
-        [right[0], right[1], right[2], -right.dot(pos)],
-        [up[0], up[1], up[2], -up.dot(pos)],
-        [forward[0], forward[1], forward[2], -forward.dot(pos)],
+        [right[0], right[1], right[2], -right.dot(world_pos)],
+        [up[0], up[1], up[2], -up.dot(world_pos)],
+        [forward[0], forward[1], forward[2], -forward.dot(world_pos)],
         [0, 0, 0, 1]
       ].transpose
     end
 
     def update(delta_time)
-      if game_object.rotation != @rotation || game_object.pos != @pos || game_object.scale != @scale
+      if game_object.world_transform_version != @cached_transform_version
         @matrix = nil
         @inverse_vp_matrix = nil
       end
-      @rotation = game_object.rotation.dup
-      @pos = game_object.pos.dup
-      @scale = game_object.scale.dup
+      @cached_transform_version = game_object.world_transform_version
     end
   end
 end

@@ -20,12 +20,20 @@ Engine.start do
     # Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0),
   ])
 
-  Engine::GameObject.create(
-    name: "Camera",
+  # Camera rig - parent handles movement, child has the camera component
+  # This tests that camera matrix updates when parent moves
+  camera_rig = Engine::GameObject.create(
+    name: "CameraRig",
     pos: Vector[0, 50, 0],
     rotation: Vector[20, 0, 0],
     components: [
-      Cubes::CameraRotator.new,
+      Cubes::CameraRotator.new
+    ])
+
+  Engine::GameObject.create(
+    name: "Camera",
+    parent: camera_rig,
+    components: [
       Engine::Components::PerspectiveCamera.create(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
