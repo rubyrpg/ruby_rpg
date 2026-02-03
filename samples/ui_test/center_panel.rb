@@ -15,7 +15,7 @@ def create_center_panel(font)
     ]
   )
 
-  # Nested box with 20px margin
+  # Nested box with 20px margin, using Flex for vertical layout
   inner_panel = Engine::GameObject.create(
     name: "CenterPanelInner",
     parent: center_panel,
@@ -26,48 +26,32 @@ def create_center_panel(font)
         bottom_offset: 20,
         top_offset: 20
       ),
-      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.2, 0.5, 0.7))
+      Engine::Components::UI::SpriteRenderer.create(material: create_ui_material(0.15, 0.15, 0.15)),
+      Engine::Components::UI::Flex.create(direction: :column, justify: :start, gap: 5)
     ]
   )
 
-  # Open Sans
-  Engine::GameObject.create(
-    name: "OpenSansText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_offset: 0,
-        bottom_ratio: 1.0, bottom_offset: -60
-      ),
-      Engine::Components::UI::FontRenderer.create(font: Engine::Font.open_sans, string: "Open Sans")
-    ]
-  )
+  # Font samples
+  fonts = [
+    { font: Engine::Font.open_sans, name: "Open Sans" },
+    { font: Engine::Font.noto_serif, name: "Noto Serif" },
+    { font: Engine::Font.jetbrains_mono, name: "JetBrains Mono" },
+    { font: Engine::Font.press_start_2p, name: "Press Start 2P" },
+    { font: Engine::Font.bangers, name: "Bangers" },
+    { font: Engine::Font.caveat, name: "Caveat" },
+    { font: Engine::Font.oswald, name: "Oswald" }
+  ]
 
-  # Noto Serif
-  Engine::GameObject.create(
-    name: "NotoSerifText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_ratio: 0.5, top_offset: -20,
-        bottom_ratio: 0.5, bottom_offset: -40
-      ),
-      Engine::Components::UI::FontRenderer.create(font: Engine::Font.noto_serif, string: "Noto Serif")
-    ]
-  )
-
-  # JetBrains Mono
-  Engine::GameObject.create(
-    name: "JetBrainsMonoText",
-    parent: inner_panel,
-    components: [
-      Engine::Components::UI::Rect.create(
-        top_ratio: 1.0, top_offset: -40,
-        bottom_offset: 0
-      ),
-      Engine::Components::UI::FontRenderer.create(font: Engine::Font.jetbrains_mono, string: "JetBrains Mono")
-    ]
-  )
+  fonts.each do |entry|
+    Engine::GameObject.create(
+      name: "#{entry[:name].gsub(' ', '')}Text",
+      parent: inner_panel,
+      components: [
+        Engine::Components::UI::Rect.create(flex_height: 30),
+        Engine::Components::UI::FontRenderer.create(font: entry[:font], string: entry[:name])
+      ]
+    )
+  end
 
   center_panel
 end

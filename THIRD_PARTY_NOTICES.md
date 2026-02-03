@@ -20,6 +20,30 @@ This project includes the following third-party fonts:
 - **License:** SIL Open Font License 1.1
 - **Copyright:** Copyright 2022 The Noto Project Authors
 
+## Press Start 2P
+
+- **Source:** https://github.com/googlefonts/press-start-2p
+- **License:** SIL Open Font License 1.1
+- **Copyright:** Copyright 2012 The Press Start 2P Project Authors
+
+## Bangers
+
+- **Source:** https://github.com/googlefonts/bangers
+- **License:** SIL Open Font License 1.1
+- **Copyright:** Copyright 2010 The Bangers Project Authors
+
+## Caveat
+
+- **Source:** https://github.com/googlefonts/caveat
+- **License:** SIL Open Font License 1.1
+- **Copyright:** Copyright 2014 The Caveat Project Authors
+
+## Oswald
+
+- **Source:** https://github.com/googlefonts/oswald
+- **License:** SIL Open Font License 1.1
+- **Copyright:** Copyright 2016 The Oswald Project Authors
+
 ---
 
 ## SIL Open Font License 1.1
