@@ -146,8 +146,8 @@ module Engine
     end
 
     def world_pos
-      model_matrix # ensure cache is up to date
-      @cached_world_pos
+      m = model_matrix
+      @cached_world_pos ||= Vector[m[3, 0], m[3, 1], m[3, 2]]
     end
 
     def local_to_world_coordinate(local)
@@ -180,10 +180,14 @@ module Engine
       current_version = world_transform_version
       return @cached_world_matrix if @cached_world_version == current_version
 
+      # Invalidate derived caches
+      @cached_world_pos = nil
+      @cached_right = nil
+      @cached_up = nil
+      @cached_forward = nil
+
       @cached_world_version = current_version
       @cached_world_matrix = compute_world_matrix
-      @cached_world_pos = Vector[@cached_world_matrix[3, 0], @cached_world_matrix[3, 1], @cached_world_matrix[3, 2]]
-      @cached_world_matrix
     end
 
     private def compute_local_matrix
@@ -248,21 +252,18 @@ module Engine
     end
 
     def up
-      return @up if @cached_up_rotation == rotation
-      @cached_up_rotation = rotation.dup
-      @up = local_to_world_direction(Vector[0, 1, 0])
+      model_matrix
+      @cached_up ||= local_to_world_direction(Vector[0, 1, 0])
     end
 
     def right
-      return @right if @cached_right_rotation == rotation
-      @cached_right_rotation = rotation.dup
-      @right = local_to_world_direction(Vector[1, 0, 0])
+      model_matrix
+      @cached_right ||= local_to_world_direction(Vector[1, 0, 0])
     end
 
     def forward
-      return @forward if @cached_forward_rotation == rotation
-      @cached_forward_rotation = rotation.dup
-      @forward = local_to_world_direction(Vector[0, 0, 1])
+      model_matrix
+      @cached_forward ||= local_to_world_direction(Vector[0, 0, 1])
     end
 
     def self.destroy_all

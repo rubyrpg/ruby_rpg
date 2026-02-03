@@ -25,6 +25,30 @@ describe Engine::Components::OrthographicCamera do
 
       expect(updated_matrix).not_to eq(initial_matrix)
     end
+
+    it "invalidates cached matrix when parent rotates" do
+      camera = Engine::Components::OrthographicCamera.create(width: 10, height: 10, far: 10)
+      parent = Engine::GameObject.create(pos: Vector[0, 0, 0])
+      child = Engine::GameObject.create(
+        pos: Vector[0, 0, 0],
+        parent: parent,
+        components: [camera]
+      )
+
+      # Get initial matrix (caches it)
+      initial_matrix = camera.matrix
+
+      # Rotate the parent
+      parent.rotation = Engine::Quaternion.from_euler(Vector[0, 90, 0])
+
+      # Simulate a frame update
+      camera.update(0.016)
+
+      # The camera matrix should now reflect the parent's new rotation
+      updated_matrix = camera.matrix
+
+      expect(updated_matrix).not_to eq(initial_matrix)
+    end
   end
 
   describe "#matrix" do
