@@ -14,7 +14,7 @@ module ShrinkRacer
           CarController.new(spinner),
         ]
       )
-      Engine::GameObject.create(
+      suv = Engine::GameObject.create(
         name: "SUV",
         pos: Vector[0, 0, 0],
         rotation: Vector[0, 0, 0],
@@ -29,12 +29,12 @@ module ShrinkRacer
         parent: parent
       )
 
-      # Headlights
+      # Headlights - parented to SUV so they spin with the car
       Engine::GameObject.create(
         name: "Headlight Left",
         pos: Vector[-0.75, 1, 0],
         rotation: Vector[0, 0, 0],
-        parent: parent,
+        parent: suv,
         components: [
           Engine::Components::SpotLight.create(
             range: 30,
@@ -49,7 +49,7 @@ module ShrinkRacer
         name: "Headlight Right",
         pos: Vector[0.75, 1, 0],
         rotation: Vector[0, 0, 0],
-        parent: parent,
+        parent: suv,
         components: [
           Engine::Components::SpotLight.create(
             range: 30,
