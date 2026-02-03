@@ -22,7 +22,7 @@ module Engine::Components
           right = game_object.right
           up = game_object.up
           forward = game_object.forward
-          world_pos = game_object.local_to_world_coordinate(Vector[0, 0, 0])
+          world_pos = game_object.world_pos
 
           transformation_matrix = Matrix[
             [right[0], right[1], right[2], -right.dot(world_pos)],
@@ -42,7 +42,7 @@ module Engine::Components
     end
 
     def position
-      game_object.local_to_world_coordinate(Vector[0, 0, 0])
+      game_object.world_pos
     end
 
     def projection
@@ -54,7 +54,7 @@ module Engine::Components
       right = game_object.right
       up = game_object.up
       forward = game_object.forward
-      world_pos = game_object.local_to_world_coordinate(Vector[0, 0, 0])
+      world_pos = game_object.world_pos
 
       Matrix[
         [right[0], right[1], right[2], -right.dot(world_pos)],

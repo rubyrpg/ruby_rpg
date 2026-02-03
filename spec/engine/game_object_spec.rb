@@ -99,6 +99,21 @@ describe Engine::GameObject do
     end
   end
 
+  describe "#world_pos" do
+    it "returns the position when there is no parent" do
+      object = Engine::GameObject.create(pos: Vector[10, 20, 30])
+
+      expect(object.world_pos).to eq(Vector[10, 20, 30])
+    end
+
+    it "returns the world position when there is a parent" do
+      parent = Engine::GameObject.create(pos: Vector[100, 200, 300])
+      child = Engine::GameObject.create(pos: Vector[10, 20, 30], parent: parent)
+
+      expect(child.world_pos).to eq(Vector[110, 220, 330])
+    end
+  end
+
   describe "#local_to_world_coordinate" do
     it "converts local coordinates to world coordinates when the object is at 0,0" do
       object = Engine::GameObject.create(pos: Vector[0.0, 0.0])

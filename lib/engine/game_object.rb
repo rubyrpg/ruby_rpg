@@ -145,6 +145,11 @@ module Engine
       @local_version += 1
     end
 
+    def world_pos
+      model_matrix # ensure cache is up to date
+      @cached_world_pos
+    end
+
     def local_to_world_coordinate(local)
       local_x4 = Matrix[[local[0], local[1], local[2], 1.0]]
       world = local_x4 * model_matrix
@@ -158,7 +163,7 @@ module Engine
     end
 
     def local_to_world_direction(local)
-      local_to_world_coordinate(local) - local_to_world_coordinate(Vector[0, 0, 0])
+      local_to_world_coordinate(local) - world_pos
     end
 
     def rotate_around(axis, angle)
@@ -177,6 +182,8 @@ module Engine
 
       @cached_world_version = current_version
       @cached_world_matrix = compute_world_matrix
+      @cached_world_pos = Vector[@cached_world_matrix[3, 0], @cached_world_matrix[3, 1], @cached_world_matrix[3, 2]]
+      @cached_world_matrix
     end
 
     private def compute_local_matrix

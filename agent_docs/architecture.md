@@ -74,7 +74,7 @@ Parent GameObject (world pos)
 
 Access:
 - `game_object.pos` - local position
-- `game_object.local_to_world_coordinate(Vector[0,0,0])` - computed world position
+- `game_object.world_pos` - computed world position
 - `game_object.local_to_world_coordinate(vec)` - transform local to world
 - `game_object.world_to_local_coordinate(vec)` - transform world to local
 

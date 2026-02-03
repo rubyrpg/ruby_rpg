@@ -41,7 +41,7 @@ module Engine::Components
     end
 
     def position
-      game_object.local_to_world_coordinate(Vector[0, 0, 0])
+      game_object.world_pos
     end
 
     def shadow_near
