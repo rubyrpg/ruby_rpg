@@ -29,6 +29,7 @@ module Rendering
         Engine::GL.Enable(Engine::GL::BLEND)
 
         composite_material.set_runtime_texture('debugTexture', render_texture.color_texture)
+        composite_material.set_vec2('texelSize', [1.0 / render_texture.width, 1.0 / render_texture.height])
         screen_quad.draw_with_material(composite_material)
 
         Engine::Debug.clear
