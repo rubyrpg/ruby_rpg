@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'ruby_rpg'
-  s.version = '0.1.2'
+  s.version = '0.1.3'
   s.authors = ['Max Hatfull']
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
