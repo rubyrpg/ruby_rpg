@@ -224,6 +224,12 @@ static VALUE rb_gl_depth_func(VALUE self, VALUE func) {
     return Qnil;
 }
 
+/* LineWidth(width) */
+static VALUE rb_gl_line_width(VALUE self, VALUE width) {
+    glLineWidth((GLfloat)NUM2DBL(width));
+    return Qnil;
+}
+
 /* DrawBuffer(mode) */
 static VALUE rb_gl_draw_buffer(VALUE self, VALUE mode) {
     glDrawBuffer((GLenum)NUM2INT(mode));
@@ -521,6 +527,7 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "create_shader", rb_gl_create_shader, 1);
     rb_define_module_function(mGLNative, "cull_face", rb_gl_cull_face, 1);
     rb_define_module_function(mGLNative, "depth_func", rb_gl_depth_func, 1);
+    rb_define_module_function(mGLNative, "line_width", rb_gl_line_width, 1);
     rb_define_module_function(mGLNative, "draw_buffer", rb_gl_draw_buffer, 1);
     rb_define_module_function(mGLNative, "draw_buffers", rb_gl_draw_buffers, 2);
     rb_define_module_function(mGLNative, "enable_vertex_attrib_array", rb_gl_enable_vertex_attrib_array, 1);

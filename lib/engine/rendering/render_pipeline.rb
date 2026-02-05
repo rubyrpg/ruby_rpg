@@ -30,6 +30,10 @@ module Rendering
 
       current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, normal_buffer, start_index: 1)
 
+      GpuTimer.measure(:debug) do
+        DebugDraw.draw(current_texture.framebuffer)
+      end
+
       GpuTimer.measure(:ui) do
         disable_depth_test
         current_texture.bind

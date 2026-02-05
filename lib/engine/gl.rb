@@ -232,6 +232,10 @@ module Engine
       GLNative.get_uniform_location(program, name)
     end
 
+    def self.LineWidth(width)
+      GLNative.line_width(width)
+    end
+
     def self.LinkProgram(program)
       GLNative.link_program(program)
     end
@@ -360,6 +364,7 @@ module Engine
     KEEP = 0x1E00
     LESS = 0x0201
     LINEAR = 0x2601
+    LINES = 0x0001
     LINK_STATUS = 0x8B82
     NEAREST = 0x2600
     NONE = 0
