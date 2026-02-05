@@ -3,6 +3,7 @@ require_relative "components/spotlight_controller"
 require_relative "components/sound_test"
 require_relative "components/camera_rotator"
 require_relative "components/spinner"
+require_relative "components/debug_line_test"
 
 def load_material(name)
   Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/#{name}.mat"))
@@ -43,7 +44,8 @@ Engine.start do
     material: load_material("hdr_sphere"),
     components: [
       Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/boom.wav")),
-      Cubes::SoundTest.new
+      Cubes::SoundTest.new,
+      Cubes::DebugLineTest.new
     ]
   )
   Engine::StandardObjects::Cube.create(
