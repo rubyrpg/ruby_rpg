@@ -7,7 +7,8 @@ module Rendering
     class << self
       def draw(target_framebuffer)
         lines = Engine::Debug.lines
-        return if lines.empty?
+        spheres = Engine::Debug.spheres
+        return if lines.empty? && spheres.empty?
 
         update_render_texture_size
 
@@ -20,8 +21,9 @@ module Rendering
         line_shader.use
         line_shader.set_mat4('camera', camera_matrix)
 
-        update_vertex_data(lines)
-        draw_lines(lines.size * 2)
+        update_vertex_data(lines, spheres)
+        vertex_count = lines.size * 2 + spheres.sum { |s| s[:segments] * 3 * 2 }
+        draw_lines(vertex_count)
 
         # Composite onto main framebuffer
         Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, target_framebuffer)
@@ -54,7 +56,7 @@ module Rendering
         @render_texture
       end
 
-      def update_vertex_data(lines)
+      def update_vertex_data(lines, spheres)
         vertex_data = []
 
         lines.each do |line|
@@ -65,11 +67,49 @@ module Rendering
           vertex_data << line[:color][0] << line[:color][1] << line[:color][2]
         end
 
+        spheres.each do |sphere|
+          add_sphere_vertices(vertex_data, sphere)
+        end
+
         Engine::GL.BindVertexArray(vao)
         Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, vbo)
 
         data = vertex_data.pack('f*')
         Engine::GL.BufferData(Engine::GL::ARRAY_BUFFER, data.bytesize, data, Engine::GL::DYNAMIC_DRAW)
+      end
+
+      def add_sphere_vertices(vertex_data, sphere)
+        center = sphere[:center]
+        radius = sphere[:radius]
+        color = sphere[:color]
+        segments = sphere[:segments]
+
+        # Generate 3 circles (XY, XZ, YZ planes)
+        [
+          ->(angle) { [Math.cos(angle), Math.sin(angle), 0] },  # XY plane
+          ->(angle) { [Math.cos(angle), 0, Math.sin(angle)] },  # XZ plane
+          ->(angle) { [0, Math.cos(angle), Math.sin(angle)] }   # YZ plane
+        ].each do |plane_fn|
+          segments.times do |i|
+            angle1 = (i.to_f / segments) * 2 * Math::PI
+            angle2 = ((i + 1).to_f / segments) * 2 * Math::PI
+
+            offset1 = plane_fn.call(angle1)
+            offset2 = plane_fn.call(angle2)
+
+            # Line start vertex
+            vertex_data << (center[0] + offset1[0] * radius)
+            vertex_data << (center[1] + offset1[1] * radius)
+            vertex_data << (center[2] + offset1[2] * radius)
+            vertex_data << color[0] << color[1] << color[2]
+
+            # Line end vertex
+            vertex_data << (center[0] + offset2[0] * radius)
+            vertex_data << (center[1] + offset2[1] * radius)
+            vertex_data << (center[2] + offset2[2] * radius)
+            vertex_data << color[0] << color[1] << color[2]
+          end
+        end
       end
 
       def draw_lines(vertex_count)
