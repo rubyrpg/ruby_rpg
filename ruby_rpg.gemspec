@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'ruby_rpg'
-  s.version = '0.1.4'
+  s.version = '0.1.5'
   s.authors = ['Max Hatfull']
   s.email = "max.hatfull@gmail.com"
   s.summary = "A game engine written in Ruby"
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_ruby_version = '>= 3.3.1'
 
-  s.add_runtime_dependency "native_audio", "~> 0.4.0"
+  s.add_runtime_dependency "native_audio", "~> 0.5.0"
   s.add_runtime_dependency 'concurrent-ruby'
   s.add_runtime_dependency 'os'
   s.add_runtime_dependency 'matrix', '~> 0.3'
