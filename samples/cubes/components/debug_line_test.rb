@@ -18,6 +18,11 @@ module Cubes
         pos + Vector[Math.cos(rad) * 15, 5, Math.sin(rad) * 15],
         color: [1, 1, 0]  # yellow
       )
+
+      # Draw debug spheres
+      Engine::Debug.sphere(pos + Vector[50, 0, 0], 20, color: [1, 0, 0])   # red sphere
+      Engine::Debug.sphere(pos + Vector[0, 50, 0], 15, color: [0, 1, 0])   # green sphere
+      Engine::Debug.sphere(pos + Vector[0, 0, 50], 10, color: [0, 0, 1])   # blue sphere
     end
   end
 end
