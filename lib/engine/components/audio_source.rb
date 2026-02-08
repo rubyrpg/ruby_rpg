@@ -42,12 +42,12 @@ module Engine::Components
       @clip.duration
     end
 
-    def enable_reverb(enabled = true)
-      @source.enable_reverb(enabled)
-    end
-
-    def set_reverb(room_size: 0.5, damping: 0.3, wet: 0.3, dry: 1.0)
-      @source.set_reverb(room_size: room_size, damping: damping, wet: wet, dry: dry)
+    def set_reverb(enabled: true, room_size: 0.5, damping: 0.3, wet: 0.3, dry: 1.0)
+      if enabled
+        @source.set_reverb(room_size: room_size, damping: damping, wet: wet, dry: dry)
+      else
+        @source.enable_reverb(false)
+      end
     end
 
     def add_delay_tap(time_ms:, volume:)

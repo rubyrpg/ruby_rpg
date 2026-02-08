@@ -43,7 +43,7 @@ Engine.start do
     scale: Vector[10, 10, 10],
     material: load_material("hdr_sphere"),
     components: [
-      Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/boom.wav")),
+      Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/knock.wav")),
       Cubes::SoundTest.new,
       Cubes::DebugLineTest.new
     ]
