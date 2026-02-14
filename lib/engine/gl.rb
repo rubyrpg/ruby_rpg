@@ -2,6 +2,10 @@ require 'gl_native'
 
 module Engine
   module GL
+    # Initialize GLEW (required on Windows before using OpenGL functions)
+    def self.InitGLEW
+      GLNative.init_glew
+    end
     # Cached methods - avoid redundant GL state changes
 
     def self.Enable(flag)

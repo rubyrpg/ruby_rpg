@@ -490,6 +490,17 @@ static VALUE rb_gl_memory_barrier(VALUE self, VALUE barriers) {
     return Qnil;
 }
 
+/* Initialize GLEW (Windows only) */
+static VALUE rb_gl_init_glew(VALUE self) {
+#if defined(_WIN32) || defined(__MINGW32__)
+    GLenum err = glewInit();
+    if (err != GLEW_OK) {
+        rb_raise(rb_eRuntimeError, "Failed to initialize GLEW: %s", glewGetErrorString(err));
+    }
+#endif
+    return Qnil;
+}
+
 /* Extension init */
 void Init_gl_native(void) {
     mGLNative = rb_define_module("GLNative");
@@ -567,4 +578,7 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "bind_image_texture", rb_gl_bind_image_texture, 7);
     rb_define_module_function(mGLNative, "dispatch_compute", rb_gl_dispatch_compute, 3);
     rb_define_module_function(mGLNative, "memory_barrier", rb_gl_memory_barrier, 1);
+
+    /* GLEW initialization (Windows only, no-op on other platforms) */
+    rb_define_module_function(mGLNative, "init_glew", rb_gl_init_glew, 0);
 }

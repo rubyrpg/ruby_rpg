@@ -23,6 +23,7 @@ module Engine
 
     Window.create_window
     GLFW.MakeContextCurrent(Window.window)
+    Engine::GL.InitGLEW
 
     Input.init
     Rendering::GpuTimer.enable if ENV['GPU_PROFILE']
