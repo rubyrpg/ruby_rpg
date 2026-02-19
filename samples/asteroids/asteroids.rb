@@ -1,7 +1,7 @@
 require_relative "../../lib/ruby_rpg"
 require "pry"
 
-Engine.start do
+Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::Input::KEY_F) do
   include Asteroids
 
   Rendering::RenderPipeline.set_skybox_colors(

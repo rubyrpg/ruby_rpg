@@ -4,9 +4,13 @@ GAME_DIR = File.expand_path(File.dirname($PROGRAM_NAME))
 ENGINE_DIR = File.expand_path(File.dirname(__FILE__))
 
 module Engine
-  def self.start(&first_frame_block)
+  def self.start(close_key: Input::KEY_ESCAPE, debug_key: nil, fullscreen_key: nil, &first_frame_block)
     Engine::AutoLoader.load
     return if ENV["BUILDING"] == "true"
+
+    Input.close_key = close_key
+    Input.debug_key = debug_key
+    Input.fullscreen_key = fullscreen_key
 
     open_window
     main_game_loop(&first_frame_block)

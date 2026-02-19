@@ -12,7 +12,7 @@ module Engine
       def create_window
         set_opengl_version
         decorations :disable
-        auto_iconify :disable
+        auto_iconify :enable
         @full_screen = true
         initial_video_mode = VideoMode.current_video_mode
         @window = GLFW.CreateWindow(
