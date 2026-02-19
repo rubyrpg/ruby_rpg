@@ -9,7 +9,7 @@ def load_material(name)
   Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/#{name}.mat"))
 end
 
-Engine.start do
+Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::Input::KEY_F) do
   include Cubes
 
   # Post processing effects

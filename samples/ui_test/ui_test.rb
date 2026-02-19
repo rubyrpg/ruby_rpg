@@ -47,7 +47,7 @@ def create_smiley_sprite
   )
 end
 
-Engine.start do
+Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::Input::KEY_F) do
   Rendering::RenderPipeline.set_skybox_colors(
     ground: Vector[0, 0, 0],
     horizon: Vector[0, 0, 0],

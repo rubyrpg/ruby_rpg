@@ -109,6 +109,10 @@ module Engine
     MOUSE_BUTTON_RIGHT = MOUSE_BUTTON_2
     MOUSE_BUTTON_MIDDLE = MOUSE_BUTTON_3
 
+    class << self
+      attr_accessor :close_key, :debug_key, :fullscreen_key
+    end
+
     def self.init
       @key_callback = GLFW::create_callback(:GLFWkeyfun) do |window, key, scancode, action, mods|
         Input.key_callback(key, action)
@@ -151,16 +155,16 @@ module Engine
 
     def self._on_key_down(key)
       keys[key] = :down
-      if key == KEY_ESCAPE
+
+      if close_key && key == close_key
         Engine.close
       end
 
-      if key == KEY_BACKSPACE
+      if debug_key && key == debug_key
         Engine::Debugging.breakpoint { binding.pry }
-        # Engine.breakpoint { debugger }
       end
 
-      if key == KEY_F
+      if fullscreen_key && key == fullscreen_key
         Engine::Window.toggle_full_screen
       end
     end
