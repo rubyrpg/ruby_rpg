@@ -3,6 +3,9 @@
 module Rendering
   module RenderPipeline
     def self.draw
+      # Skip rendering when window is minimized (e.g. alt-tab on Windows)
+      return if Engine::Window.framebuffer_width <= 0 || Engine::Window.framebuffer_height <= 0
+
       update_render_texture_size
       sync_transforms
       SkyboxRenderer.render_cubemap
