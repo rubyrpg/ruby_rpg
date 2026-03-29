@@ -98,12 +98,11 @@ module Engine::Components
         return if @cached_rect == rect
         @cached_rect = rect
 
-        # UV V=1 at screen bottom, V=0 at screen top (matches PNG top-to-bottom storage)
         vertices = [
-          rect.left,  rect.bottom, 0, 0, 1,  # bottom-left
-          rect.right, rect.bottom, 0, 1, 1,  # bottom-right
-          rect.right, rect.top,    0, 1, 0,  # top-right
-          rect.left,  rect.top,    0, 0, 0   # top-left
+          rect.left,  rect.bottom, 0, 0, 0,  # bottom-left
+          rect.right, rect.bottom, 0, 1, 0,  # bottom-right
+          rect.right, rect.top,    0, 1, 1,  # top-right
+          rect.left,  rect.top,    0, 0, 1   # top-left
         ]
 
         Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @vbo)

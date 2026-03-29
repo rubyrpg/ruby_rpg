@@ -103,8 +103,8 @@
       image:
         :_class: Engine::Texture
         :path: assets/chessboard.png
-        :flip: false
+
       normalMap:
         :_class: Engine::Texture
         :path: assets/brick_normal.png
-        :flip: false
+

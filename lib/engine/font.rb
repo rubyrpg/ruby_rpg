@@ -89,7 +89,9 @@ module Engine
           next
         end
         offsets << [horizontal_offset, vertical_offset]
-        horizontal_offset += 30 * scale_factor * font_metrics[index_table[char].to_s]["width"]
+        idx = index_table[char]
+        original_idx = (idx / GLYPH_COUNT) * GLYPH_COUNT + (GLYPH_COUNT - 1 - idx % GLYPH_COUNT)
+        horizontal_offset += 30 * scale_factor * font_metrics[original_idx.to_s]["width"]
       end
       offsets
     end
@@ -116,8 +118,8 @@ module Engine
             GLYPH_COUNT.times.each do |y|
               index = x * GLYPH_COUNT + y
               next if index >= 255
-              character = character(index)
-              hash[character] = index
+              flipped_index = x * GLYPH_COUNT + (GLYPH_COUNT - 1 - y)
+              hash[character(index)] = flipped_index
             end
           end
           hash
