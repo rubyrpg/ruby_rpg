@@ -70,7 +70,7 @@ module ShrinkRacer
       @material ||=
         begin
           material = Engine::Material.create(shader: Engine::Shader.default)
-          material.set_texture("image", Engine::Texture.for("assets/cars/Textures/colormap.png", flip: true))
+          material.set_texture("image", Engine::Texture.for("assets/cars/Textures/colormap.png"))
           material.set_texture("normalMap", nil)
           material.set_float("diffuseStrength", 0.5)
           material.set_float("specularStrength", 0.6)
