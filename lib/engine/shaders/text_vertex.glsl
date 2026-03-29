@@ -14,7 +14,7 @@ out vec2 TexCoords;
 vec2 getTexCoords()
 {
     int x = textIndex / 16;
-    int y = 15 - textIndex % 16;
+    int y = textIndex % 16;
     return (vec2(x, y) + texCoords) / 16.0;
 }
 

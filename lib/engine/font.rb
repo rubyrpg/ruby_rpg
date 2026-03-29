@@ -117,7 +117,8 @@ module Engine
               index = x * GLYPH_COUNT + y
               next if index >= 255
               character = character(index)
-              hash[character] = index
+              flipped_index = x * GLYPH_COUNT + (GLYPH_COUNT - 1 - y)
+              hash[character] = flipped_index
             end
           end
           hash
