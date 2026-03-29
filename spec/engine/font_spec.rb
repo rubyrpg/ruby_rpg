@@ -5,7 +5,7 @@ describe Engine::Font do
     it "returns the indices of the string" do
       font = Engine::Font.create(font_file_path:"spec/fixtures/UbuntuMono-R.ttf")
 
-      expect(font.string_indices("Hello")).to eq([71, 100, 107, 107, 110])
+      expect(font.string_indices("Hello")).to eq([72, 107, 100, 100, 97])
     end
   end
 

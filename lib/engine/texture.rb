@@ -19,7 +19,7 @@ module Engine
       load_texture
     end
 
-    def self.for(path, source: :game, **_)
+    def self.for(path, source: :game)
       full_path = if source == :engine
         File.expand_path(File.join(ENGINE_DIR, "assets", path))
       else

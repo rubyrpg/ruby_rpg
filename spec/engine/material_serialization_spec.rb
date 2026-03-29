@@ -11,7 +11,7 @@ describe "Material serialization" do
   let(:mock_texture) do
     texture = Engine::Texture.allocate
     texture.instance_variable_set(:@relative_path, "textures/test.png")
-    texture.instance_variable_set(:@flip, false)
+
     texture
   end
 
