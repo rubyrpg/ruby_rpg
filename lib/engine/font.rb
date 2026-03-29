@@ -80,8 +80,6 @@ module Engine
       scale_factor = 1 / (1024.0 * 2)
       horizontal_offset = 0.0
       vertical_offset = 0.0
-      font_path = resolve_font_json_path
-      font_metrics = JSON.parse File.read(font_path)
       string.chars.each do |char|
         if char == "\n"
           vertical_offset -= 1.0
@@ -89,7 +87,7 @@ module Engine
           next
         end
         offsets << [horizontal_offset, vertical_offset]
-        horizontal_offset += 30 * scale_factor * font_metrics[metrics_index_table[char].to_s]["width"]
+        horizontal_offset += 30 * scale_factor * char_widths[char]
       end
       offsets
     end
@@ -108,15 +106,17 @@ module Engine
       (index + 1).chr
     end
 
-    def metrics_index_table
-      @metrics_index_table ||=
+    def char_widths
+      @char_widths ||=
         begin
+          font_metrics = JSON.parse File.read(resolve_font_json_path)
           hash = {}
           GLYPH_COUNT.times do |x|
             GLYPH_COUNT.times.each do |y|
               index = x * GLYPH_COUNT + y
               next if index >= 255
-              hash[character(index)] = index
+              char = character(index)
+              hash[char] = font_metrics[index.to_s]["width"] if font_metrics[index.to_s]
             end
           end
           hash
