@@ -89,7 +89,9 @@ module Engine
           next
         end
         offsets << [horizontal_offset, vertical_offset]
-        horizontal_offset += 30 * scale_factor * font_metrics[(char.ord - 1).to_s]["width"]
+        idx = index_table[char]
+        original_idx = (idx / GLYPH_COUNT) * GLYPH_COUNT + (GLYPH_COUNT - 1 - idx % GLYPH_COUNT)
+        horizontal_offset += 30 * scale_factor * font_metrics[original_idx.to_s]["width"]
       end
       offsets
     end
