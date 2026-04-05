@@ -13,13 +13,13 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
   include Cubes
 
   # Post processing effects
-  Rendering::PostProcessingEffect.add_all([
-    Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0),
-    Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0),
-    # Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.2),
-    Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0),
-    # Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0),
-  ])
+  # Rendering::PostProcessingEffect.add_all([
+  #   Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0),
+  #   Rendering::PostProcessingEffect.ssr(max_steps: 128, max_ray_distance: 256.0, thickness: 5.0),
+  #   Rendering::PostProcessingEffect.tint(color: [1.0, 0.0, 0.0], intensity: 0.2),
+  #   Rendering::PostProcessingEffect.bloom(threshold: 0.8, intensity: 1.0, blur_passes: 3, blur_scale: 5.0),
+  #   Rendering::PostProcessingEffect.depth_of_field(focus_distance: 70.0, focus_range: 50.0, blur_amount: 2.0),
+  # ])
 
   # Camera rig - parent handles movement, child has the camera component
   # This tests that camera matrix updates when parent moves
@@ -38,82 +38,78 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
       Engine::Components::PerspectiveCamera.create(fov: 45.0, aspect: 1920.0 / 1080.0, near: 0.1, far: 1000.0)
     ])
 
-  sphere = Engine::StandardObjects::Sphere.create(
-    pos: Vector[0, 20, 0],
-    scale: Vector[10, 10, 10],
-    material: load_material("hdr_sphere"),
-    components: [
-      # Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/knock.wav")),
-      # Cubes::SoundTest.new,
-      Cubes::DebugLineTest.new
-    ]
-  )
-  Engine::StandardObjects::Cube.create(
-    pos: Vector[25, 20, -30],
-    scale: Vector[16, 16, 16],
-    components: [Spinner.create(speed: 45)]
-  )
+  # sphere = Engine::StandardObjects::Sphere.create(
+  #   pos: Vector[0, 20, 0],
+  #   scale: Vector[10, 10, 10],
+  #   material: load_material("hdr_sphere"),
+  #   components: [
+  #     Cubes::DebugLineTest.new
+  #   ]
+  # )
+  # Engine::StandardObjects::Cube.create(
+  #   pos: Vector[25, 20, -30],
+  #   scale: Vector[16, 16, 16],
+  #   components: [Spinner.create(speed: 45)]
+  # )
 
-  Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/floor.scene"))
-
-  # White backdrop plane behind the transparent cubes
-  backdrop_mat = Engine::Material.create(shader: Engine::Shader.default)
-  backdrop_mat.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
-  backdrop_mat.set_float("diffuseStrength", 0.8)
-  backdrop_mat.set_float("specularStrength", 0.1)
-  backdrop_mat.set_float("roughness", 0.9)
-  Engine::StandardObjects::Plane.create(
-    pos: Vector[-22, 20, -30],
-    scale: Vector[100, 100, 100],
-    material: backdrop_mat
+  # Distortion cube demo
+  distortion_mat = Engine::Material.create(
+    shader: Engine::Shader.for('mesh_vertex.glsl', 'oit_distortion_frag.glsl', source: :engine),
+    transparent: true
   )
-
-  # Point light near the transparent wall
-  Engine::GameObject.create(
-    name: "WallPointLight",
-    pos: Vector[-22, 20, 20],
-    components: [
-      Engine::Components::PointLight.create(range: 80, colour: Vector[0.4, 0.35, 0.3], cast_shadows: true)
-    ]
+  distortion_mat.set_vec3("baseColour", Vector[0.6, 0.8, 1.0])
+  distortion_mat.set_float("distortionStrength", 0.1)
+  distortion_mat.set_float("opacity", 0.4)
+  distortion_mat.set_float("diffuseStrength", 0.1)
+  distortion_mat.set_float("specularStrength", 3.0)
+  distortion_mat.set_float("specularPower", 64.0)
+  distortion_mat.set_float("roughness", 0.05)
+  Engine::StandardObjects::Sphere.create(
+    pos: Vector[0, 20, 5],
+    scale: Vector[24, 24, 24],
+    material: distortion_mat
   )
 
-  # Transparent wall of cubes (OIT demo) - offset in Z from the opaque wall
-  transparent_colors = [
-    Vector[1.0, 0.2, 0.2],  # red
-    Vector[0.2, 1.0, 0.2],  # green
-    Vector[0.2, 0.2, 1.0],  # blue
-    Vector[1.0, 1.0, 0.2],  # yellow
-    Vector[0.2, 1.0, 1.0],  # cyan
-  ]
-  5.times do |col|
-    4.times do |row|
-      mat = Engine::Material.create(
-        shader: Engine::Shader.default,
-        transparent: true
-      )
-      mat.set_vec3("baseColour", transparent_colors[col])
-      mat.set_float("diffuseStrength", 0.3)
-      mat.set_float("specularStrength", 2.0)
-      mat.set_float("specularPower", 32.0)
-      mat.set_float("roughness", 0.1)
-      mat.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
-      mat.set_float("opacity", 0.4)
+  # Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/floor.scene"))
+  Engine::Serialization::YamlPersistence.load_all([File.join(GAME_DIR, "assets/wall_of_cubes.scene")])
 
-      Engine::StandardObjects::Cube.create(
-        pos: Vector[-40 + col * 9, 5 + row * 9, -15],
-        scale: Vector[8, 8, 8],
-        material: mat,
-        components: []
-      )
-    end
-  end
+  # # Transparent wall of cubes (OIT demo) - offset in Z from the opaque wall
+  # transparent_colors = [
+  #   Vector[1.0, 0.2, 0.2],  # red
+  #   Vector[0.2, 1.0, 0.2],  # green
+  #   Vector[0.2, 0.2, 1.0],  # blue
+  #   Vector[1.0, 1.0, 0.2],  # yellow
+  #   Vector[0.2, 1.0, 1.0],  # cyan
+  # ]
+  # 5.times do |col|
+  #   4.times do |row|
+  #     mat = Engine::Material.create(
+  #       shader: Engine::Shader.default,
+  #       transparent: true
+  #     )
+  #     mat.set_vec3("baseColour", transparent_colors[col])
+  #     mat.set_float("diffuseStrength", 0.3)
+  #     mat.set_float("specularStrength", 2.0)
+  #     mat.set_float("specularPower", 32.0)
+  #     mat.set_float("roughness", 0.1)
+  #     mat.set_vec3("ambientLight", Vector[0.15, 0.15, 0.15])
+  #     mat.set_float("opacity", 0.4)
+  #
+  #     Engine::StandardObjects::Cube.create(
+  #       pos: Vector[-40 + col * 9, 5 + row * 9, -15],
+  #       scale: Vector[8, 8, 8],
+  #       material: mat,
+  #       components: []
+  #     )
+  #   end
+  # end
 
   Engine::GameObject.create(
     name: "DirectionalLight",
     pos: Vector[0, 50, 0],
     rotation: Vector[-70, 190, 0],
     components: [
-      Engine::Components::DirectionLight.create(colour: Vector[1,1,1], cast_shadows: true, shadow_distance: 150.0)
+      Engine::Components::DirectionLight.create(colour: Vector[2,2,2], cast_shadows: false, shadow_distance: 150.0)
     ]
   )
 

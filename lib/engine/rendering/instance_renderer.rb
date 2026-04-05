@@ -100,18 +100,33 @@ module Rendering
     private
 
     def set_oit_material_per_frame_data
-      oit_mat = oit_material
-      oit_mat.set_mat4("camera", Engine::Camera.instance.matrix)
-      oit_mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
-      oit_mat.set_cubemap("skybox", nil)
-      oit_mat.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)
-      oit_mat.set_runtime_texture("opaqueScene", OitRenderer.opaque_scene_texture)
-      oit_mat.set_vec2("screenSize", [Engine::Window.framebuffer_width.to_f, Engine::Window.framebuffer_height.to_f])
+      mat = transparent_material
+      mat.set_mat4("camera", Engine::Camera.instance.matrix)
+      mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
+      mat.set_cubemap("skybox", nil)
+      mat.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)
+      mat.set_runtime_texture("opaqueScene", OitRenderer.opaque_scene_texture)
+      mat.set_vec2("screenSize", [Engine::Window.framebuffer_width.to_f, Engine::Window.framebuffer_height.to_f])
 
-      # Copy material properties to OIT material
-      copy_material_properties(material, oit_mat)
-      update_oit_light_data(oit_mat)
-      oit_mat.update_shader
+      unless uses_custom_transparent_shader?
+        copy_material_properties(material, mat)
+      end
+      update_oit_light_data(mat)
+      mat.update_shader
+    end
+
+    def uses_custom_transparent_shader?
+      material.shader != Engine::Shader.default
+    end
+
+    def transparent_material
+      if uses_custom_transparent_shader?
+        # Custom shader already includes oit.glsl - use the material directly
+        material
+      else
+        # Default shader needs to be swapped to oit_accum
+        @oit_material ||= Engine::Material.create(shader: Engine::Shader.oit_accum)
+      end
     end
 
     def copy_material_properties(src, dst)
@@ -126,10 +141,6 @@ module Rendering
       src.instance_variable_get(:@vec3s)&.each do |name, val|
         dst.set_vec3(name, val)
       end
-    end
-
-    def oit_material
-      @oit_material ||= Engine::Material.create(shader: Engine::Shader.oit_accum)
     end
 
     def update_oit_light_data(mat)

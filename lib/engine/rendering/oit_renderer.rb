@@ -2,15 +2,12 @@
 
 module Rendering
   module OitRenderer
-    # Returns the render texture containing the composited result.
-    # scene_rt: render texture with the current scene (after skybox)
-    # output_rt: alternate render texture to composite into
-    # depth_rt: render texture whose depth buffer to use for depth testing
     # The opaque scene texture, available for transparent shaders to sample
     def self.opaque_scene_texture
       @opaque_scene_texture
     end
 
+    # Returns the render texture containing the composited result.
     def self.draw(scene_rt, output_rt, depth_rt, screen_quad, instance_renderers)
       return scene_rt unless has_transparent_renderers?(instance_renderers)
 
@@ -18,8 +15,9 @@ module Rendering
       resize_if_needed
 
       @opaque_scene_texture = scene_rt.color_texture
+      blit_opaque_to_distortion(scene_rt)
       draw_accumulation_pass(depth_rt, instance_renderers)
-      composite(scene_rt, output_rt, screen_quad)
+      composite(output_rt, screen_quad)
       output_rt
     end
 
@@ -41,15 +39,22 @@ module Rendering
 
       @accum_texture = create_texture(width, height, Engine::GL::RGBA16F, Engine::GL::RGBA, Engine::GL::FLOAT)
       @reveal_texture = create_texture(width, height, Engine::GL::R16F, Engine::GL::RED, Engine::GL::FLOAT)
+      @distortion_texture = create_texture(width, height, Engine::GL::RGBA16F, Engine::GL::RGBA, Engine::GL::FLOAT)
 
       Engine::GL.BindFramebuffer(Engine::GL::FRAMEBUFFER, @fbo)
       Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0, Engine::GL::TEXTURE_2D, @accum_texture, 0)
       Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT1, Engine::GL::TEXTURE_2D, @reveal_texture, 0)
+      Engine::GL.FramebufferTexture2D(Engine::GL::FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT2, Engine::GL::TEXTURE_2D, @distortion_texture, 0)
 
-      Engine::GL.DrawBuffers(2, [Engine::GL::COLOR_ATTACHMENT0, Engine::GL::COLOR_ATTACHMENT1].pack('L*'))
+      Engine::GL.DrawBuffers(3, [Engine::GL::COLOR_ATTACHMENT0, Engine::GL::COLOR_ATTACHMENT1, Engine::GL::COLOR_ATTACHMENT2].pack('L*'))
 
       status = Engine::GL.CheckFramebufferStatus(Engine::GL::FRAMEBUFFER)
       raise "OIT framebuffer not complete: #{status}" unless status == Engine::GL::FRAMEBUFFER_COMPLETE
+
+      # Create a secondary FBO for blitting opaque scene into distortion texture
+      blit_fbo_buf = ' ' * 4
+      Engine::GL.GenFramebuffers(1, blit_fbo_buf)
+      @blit_fbo = blit_fbo_buf.unpack1('L')
 
       @width = width
       @height = height
@@ -81,8 +86,22 @@ module Rendering
       Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @reveal_texture)
       Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::R16F, width, height, 0, Engine::GL::RED, Engine::GL::FLOAT, nil)
 
+      Engine::GL.BindTexture(Engine::GL::TEXTURE_2D, @distortion_texture)
+      Engine::GL.TexImage2D(Engine::GL::TEXTURE_2D, 0, Engine::GL::RGBA16F, width, height, 0, Engine::GL::RGBA, Engine::GL::FLOAT, nil)
+
       @width = width
       @height = height
+    end
+
+    def self.blit_opaque_to_distortion(scene_rt)
+      # Blit the opaque scene into the distortion texture as the starting point
+      Engine::GL.BindFramebuffer(Engine::GL::READ_FRAMEBUFFER, scene_rt.framebuffer)
+      Engine::GL.ReadBuffer(Engine::GL::COLOR_ATTACHMENT0)
+
+      Engine::GL.BindFramebuffer(Engine::GL::DRAW_FRAMEBUFFER, @blit_fbo)
+      Engine::GL.FramebufferTexture2D(Engine::GL::DRAW_FRAMEBUFFER, Engine::GL::COLOR_ATTACHMENT0, Engine::GL::TEXTURE_2D, @distortion_texture, 0)
+
+      Engine::GL.BlitFramebuffer(0, 0, @width, @height, 0, 0, @width, @height, Engine::GL::COLOR_BUFFER_BIT, Engine::GL::NEAREST)
     end
 
     def self.draw_accumulation_pass(depth_rt, instance_renderers)
@@ -96,7 +115,9 @@ module Rendering
 
       Engine::GL.Viewport(0, 0, @width, @height)
 
-      # Clear accumulation to (0,0,0,0)
+      # Clear accumulation to (0,0,0,0) - only attachments 0 and 1
+      # Distortion texture (attachment 2) keeps the blitted opaque scene
+      Engine::GL.DrawBuffers(2, [Engine::GL::COLOR_ATTACHMENT0, Engine::GL::COLOR_ATTACHMENT1].pack('L*'))
       Engine::GL.ClearColor(0.0, 0.0, 0.0, 0.0)
       Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
@@ -105,16 +126,18 @@ module Rendering
       Engine::GL.ClearColor(1.0, 0.0, 0.0, 0.0)
       Engine::GL.Clear(Engine::GL::COLOR_BUFFER_BIT)
 
-      # Restore drawing to both attachments
-      Engine::GL.DrawBuffers(2, [Engine::GL::COLOR_ATTACHMENT0, Engine::GL::COLOR_ATTACHMENT1].pack('L*'))
+      # Restore drawing to all 3 attachments
+      Engine::GL.DrawBuffers(3, [Engine::GL::COLOR_ATTACHMENT0, Engine::GL::COLOR_ATTACHMENT1, Engine::GL::COLOR_ATTACHMENT2].pack('L*'))
       Engine::GL.ClearColor(0.0, 0.0, 0.0, 0.0)
 
       # OIT blend modes:
       # Accumulation (0): additive (ONE, ONE)
       # Revealage (1): multiplicative (ZERO, ONE_MINUS_SRC_COLOR)
+      # Distortion (2): overwrite (ONE, ZERO)
       Engine::GL.Enable(Engine::GL::BLEND)
       Engine::GL.BlendFunci(0, Engine::GL::ONE, Engine::GL::ONE)
       Engine::GL.BlendFunci(1, Engine::GL::ZERO, Engine::GL::ONE_MINUS_SRC_COLOR)
+      Engine::GL.BlendFunci(2, Engine::GL::ONE, Engine::GL::ZERO)
 
       # Depth test ON, depth write OFF
       Engine::GL.Enable(Engine::GL::DEPTH_TEST)
@@ -130,13 +153,14 @@ module Rendering
       Engine::GL.BlendFunc(Engine::GL::SRC_ALPHA, Engine::GL::ONE_MINUS_SRC_ALPHA)
     end
 
-    def self.composite(scene_rt, output_rt, screen_quad)
+    def self.composite(output_rt, screen_quad)
       output_rt.bind
       Engine::GL.Disable(Engine::GL::DEPTH_TEST)
 
       composite_material.set_runtime_texture("accumTexture", @accum_texture)
       composite_material.set_runtime_texture("revealTexture", @reveal_texture)
-      screen_quad.draw(composite_material, scene_rt.color_texture)
+      # Use distortion texture (warped opaque scene) instead of original
+      screen_quad.draw(composite_material, @distortion_texture)
 
       Engine::GL.Enable(Engine::GL::DEPTH_TEST)
     end

@@ -12,11 +12,15 @@
 //       vec3 background = OitSampleOpaque();               // at current pixel
 //       vec3 distorted  = OitSampleOpaqueUV(uv + offset);  // with custom UV
 //
+//       // Optional: write a warped background to the distortion buffer
+//       OitDistort(distorted);
+//
 //       OitOutput(color, alpha);
 //   }
 
 layout(location = 0) out vec4 OitAccumulation;
 layout(location = 1) out float OitRevealage;
+layout(location = 2) out vec4 OitDistortionOut;
 
 uniform sampler2D opaqueScene;
 uniform vec2 screenSize;
@@ -37,6 +41,12 @@ vec2 OitScreenUV() {
     return gl_FragCoord.xy / screenSize;
 }
 
+// Write a warped version of the background to the distortion buffer.
+// Call this to replace the background at this pixel with a distorted version.
+void OitDistort(vec3 distortedScene) {
+    OitDistortionOut = vec4(distortedScene, 1.0);
+}
+
 // Write final color and alpha to OIT buffers.
 // color: the final RGB color (after lighting, effects, etc.)
 // alpha: transparency (0 = fully transparent, 1 = fully opaque)
@@ -53,4 +63,7 @@ void OitOutput(vec3 color, float alpha) {
 
     OitAccumulation = vec4(premultiplied.rgb * weight, alpha * weight);
     OitRevealage = alpha;
+    // Passthrough: preserve the blitted opaque scene in the distortion buffer.
+    // Shaders that distort should call OitDistort() after OitOutput() to override.
+    OitDistortionOut = vec4(OitSampleOpaque(), 1.0);
 }
