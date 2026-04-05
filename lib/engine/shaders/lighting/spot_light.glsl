@@ -28,7 +28,7 @@ float LinearizeDepth(float depth, float near, float far)
 
 float CalcSpotShadow(SpotLight light, int lightIndex, vec3 fragPos)
 {
-    if (!light.castsShadows || lightIndex >= NR_SHADOW_CASTING_SPOT_LIGHTS) {
+    if (!light.castsShadows || receiveShadows == 0 || lightIndex >= NR_SHADOW_CASTING_SPOT_LIGHTS) {
         return 0.0;
     }
 
