@@ -64,7 +64,7 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
     transparent: true
   )
   distortion_mat.set_vec3("baseColour", Vector[0.6, 0.8, 1.0])
-  distortion_mat.set_float("distortionStrength", 0.15)
+  distortion_mat.set_float("distortionStrength", -0.08)
   distortion_mat.set_float("opacity", 0.25)
   distortion_mat.set_float("diffuseStrength", 0.1)
   distortion_mat.set_float("specularStrength", 3.0)
@@ -73,7 +73,8 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
   Engine::StandardObjects::Sphere.create(
     pos: Vector[0, 20, 5],
     scale: Vector[24, 24, 24],
-    material: distortion_mat
+    material: distortion_mat,
+    components: [Spinner.create(speed: 30)]
   )
 
   # Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/floor.scene"))

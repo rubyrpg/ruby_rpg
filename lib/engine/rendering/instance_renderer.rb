@@ -102,6 +102,7 @@ module Rendering
     def set_oit_material_per_frame_data
       mat = transparent_material
       mat.set_mat4("camera", Engine::Camera.instance.matrix)
+      mat.set_mat4("viewMatrix", Engine::Camera.instance.view_matrix)
       mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
       mat.set_cubemap("skybox", nil)
       mat.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)

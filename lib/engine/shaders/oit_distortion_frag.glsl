@@ -6,22 +6,22 @@ in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
 
+uniform mat4 camera;
+uniform mat4 viewMatrix;
 uniform vec3 cameraPos;
 uniform float opacity = 0.3;
 uniform vec3 baseColour = vec3(1.0, 0.0, 0.0);
 uniform float distortionStrength = 0.03;
-uniform float refractionIndex = 0.95;
 
 void main()
 {
-    vec3 viewDir = normalize(FragPos - cameraPos);
     vec3 norm = normalize(Normal);
 
-    // Refract the view ray through the surface
-    vec3 refracted = refract(viewDir, norm, refractionIndex);
+    // Transform normal to view space (no aspect ratio distortion)
+    vec3 viewNorm = normalize(mat3(viewMatrix) * norm);
 
-    // UV offset from refraction
-    vec2 offset = (refracted.xy - viewDir.xy) * distortionStrength;
+    // Use view-space normal XY as distortion offset
+    vec2 offset = viewNorm.xy * distortionStrength;
 
     vec2 screenUV = OitScreenUV();
     vec3 distorted = OitSampleOpaqueUV(screenUV + offset);
