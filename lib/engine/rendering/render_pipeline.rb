@@ -20,7 +20,7 @@ module Rendering
         render_texture_a.bind
         clear_buffer
         Engine::GL.Disable(Engine::GL::BLEND)  # Disable blending to preserve alpha channel (roughness) in MRT
-        draw_3d
+        draw_3d_opaque
         Engine::GL.Enable(Engine::GL::BLEND)   # Re-enable for UI and post-processing
       end
 
@@ -31,7 +31,16 @@ module Rendering
         SkyboxRenderer.draw(render_texture_a, render_texture_b, screen_quad)
       end
 
-      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, normal_buffer, start_index: 1)
+      oit_result = nil
+      GpuTimer.measure(:oit) do
+        # After skybox, scene is in render_texture_b. OIT composites into render_texture_a.
+        # Depth buffer from render_texture_a (opaque pass) is used for depth testing.
+        oit_result = OitRenderer.draw(render_texture_b, render_texture_a, render_texture_a, screen_quad, instance_renderers)
+      end
+
+      # If OIT composited, result is in render_texture_a (index 0), otherwise still in b (index 1)
+      pp_start = oit_result == render_texture_a ? 0 : 1
+      current_texture = PostProcessingEffect.apply_all(render_texture_a, render_texture_b, screen_quad, normal_buffer, start_index: pp_start)
 
       GpuTimer.measure(:debug) do
         DebugDraw.draw(current_texture.framebuffer)
@@ -119,8 +128,11 @@ module Rendering
       end
     end
 
-    def self.draw_3d
-      instance_renderers.values.each(&:draw_all)
+    def self.draw_3d_opaque
+      instance_renderers.values.each do |renderer|
+        next if renderer.material.transparent?
+        renderer.draw_all
+      end
     end
 
     def self.draw_ui

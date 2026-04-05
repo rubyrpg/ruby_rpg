@@ -162,6 +162,18 @@ static VALUE rb_gl_blend_func(VALUE self, VALUE sfactor, VALUE dfactor) {
     return Qnil;
 }
 
+/* BlendFunci(buf, sfactor, dfactor) - per draw buffer blend function (GL 4.0) */
+static VALUE rb_gl_blend_func_i(VALUE self, VALUE buf, VALUE sfactor, VALUE dfactor) {
+    glBlendFunci((GLuint)NUM2UINT(buf), (GLenum)NUM2INT(sfactor), (GLenum)NUM2INT(dfactor));
+    return Qnil;
+}
+
+/* DepthMask(flag) */
+static VALUE rb_gl_depth_mask(VALUE self, VALUE flag) {
+    glDepthMask((GLboolean)NUM2INT(flag));
+    return Qnil;
+}
+
 /* BufferData(target, size, data, usage) */
 static VALUE rb_gl_buffer_data(VALUE self, VALUE target, VALUE size, VALUE data, VALUE usage) {
     const void *ptr = NIL_P(data) ? NULL : (const void *)RSTRING_PTR(data);
@@ -528,6 +540,7 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "attach_shader", rb_gl_attach_shader, 2);
     rb_define_module_function(mGLNative, "begin_query", rb_gl_begin_query, 2);
     rb_define_module_function(mGLNative, "blend_func", rb_gl_blend_func, 2);
+    rb_define_module_function(mGLNative, "blend_func_i", rb_gl_blend_func_i, 3);
     rb_define_module_function(mGLNative, "buffer_data", rb_gl_buffer_data, 4);
     rb_define_module_function(mGLNative, "buffer_sub_data", rb_gl_buffer_sub_data, 4);
     rb_define_module_function(mGLNative, "check_framebuffer_status", rb_gl_check_framebuffer_status, 1);
@@ -538,6 +551,7 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "create_shader", rb_gl_create_shader, 1);
     rb_define_module_function(mGLNative, "cull_face", rb_gl_cull_face, 1);
     rb_define_module_function(mGLNative, "depth_func", rb_gl_depth_func, 1);
+    rb_define_module_function(mGLNative, "depth_mask", rb_gl_depth_mask, 1);
     rb_define_module_function(mGLNative, "line_width", rb_gl_line_width, 1);
     rb_define_module_function(mGLNative, "draw_buffer", rb_gl_draw_buffer, 1);
     rb_define_module_function(mGLNative, "draw_buffers", rb_gl_draw_buffers, 2);

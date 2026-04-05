@@ -55,7 +55,48 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
   )
 
   Engine::Serialization::YamlPersistence.load(File.join(GAME_DIR, "assets/floor.scene"))
-  Engine::Serialization::YamlPersistence.load_all([File.join(GAME_DIR, "assets/wall_of_cubes.scene")])
+
+  # White backdrop plane behind the transparent cubes
+  backdrop_mat = Engine::Material.create(shader: Engine::Shader.default)
+  backdrop_mat.set_vec3("baseColour", Vector[1.0, 1.0, 1.0])
+  backdrop_mat.set_float("diffuseStrength", 0.8)
+  backdrop_mat.set_float("specularStrength", 0.1)
+  backdrop_mat.set_float("roughness", 0.9)
+  Engine::StandardObjects::Plane.create(
+    pos: Vector[-22, 20, -30],
+    scale: Vector[100, 100, 100],
+    material: backdrop_mat
+  )
+
+  # Transparent wall of cubes (OIT demo) - offset in Z from the opaque wall
+  transparent_colors = [
+    Vector[1.0, 0.2, 0.2],  # red
+    Vector[0.2, 1.0, 0.2],  # green
+    Vector[0.2, 0.2, 1.0],  # blue
+    Vector[1.0, 1.0, 0.2],  # yellow
+    Vector[0.2, 1.0, 1.0],  # cyan
+  ]
+  5.times do |col|
+    4.times do |row|
+      mat = Engine::Material.create(
+        shader: Engine::Shader.default,
+        transparent: true
+      )
+      mat.set_vec3("baseColour", transparent_colors[col])
+      mat.set_float("diffuseStrength", 0.5)
+      mat.set_float("specularStrength", 0.7)
+      mat.set_float("specularPower", 32.0)
+      mat.set_float("roughness", 0.7)
+      mat.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
+      mat.set_float("opacity", 0.4)
+
+      Engine::StandardObjects::Cube.create(
+        pos: Vector[-40 + col * 9, 5 + row * 9, -15],
+        scale: Vector[8, 8, 8],
+        material: mat
+      )
+    end
+  end
 
   Engine::GameObject.create(
     name: "DirectionalLight",

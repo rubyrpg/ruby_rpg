@@ -92,6 +92,14 @@ module Engine
       GLNative.blend_func(sfactor, dfactor)
     end
 
+    def self.BlendFunci(buf, sfactor, dfactor)
+      GLNative.blend_func_i(buf, sfactor, dfactor)
+    end
+
+    def self.DepthMask(flag)
+      GLNative.depth_mask(flag)
+    end
+
     def self.BlitFramebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
       GLNative.blit_framebuffer(src_x0, src_y0, src_x1, src_y1, dst_x0, dst_y0, dst_x1, dst_y1, mask, filter)
     end
@@ -372,7 +380,9 @@ module Engine
     LINK_STATUS = 0x8B82
     NEAREST = 0x2600
     NONE = 0
+    ONE = 1
     ONE_MINUS_SRC_ALPHA = 0x0303
+    ONE_MINUS_SRC_COLOR = 0x0301
     QUERY_RESULT = 0x8866
     READ_FRAMEBUFFER = 0x8CA8
     READ_WRITE = 0x88BA
@@ -385,6 +395,8 @@ module Engine
     RGBA32F = 0x8814
     SHADER_IMAGE_ACCESS_BARRIER_BIT = 0x00000020
     SHADING_LANGUAGE_VERSION = 0x8B8C
+    R16F = 0x822D
+    RED = 0x1903
     SRC_ALPHA = 0x0302
     STATIC_DRAW = 0x88E4
     STENCIL_BUFFER_BIT = 0x0400
@@ -410,6 +422,7 @@ module Engine
     UNSIGNED_INT_24_8 = 0x84FA
     VERTEX_SHADER = 0x8B31
     VERSION = 0x1F02
+    ZERO = 0
 
     # Texture units
     TEXTURE0 = 0x84C0

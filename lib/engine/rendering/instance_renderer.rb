@@ -52,6 +52,19 @@ module Rendering
       Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
     end
 
+    def draw_transparent
+      return if @mesh_renderers.empty?
+
+      set_oit_material_per_frame_data
+
+      Engine::GL.BindVertexArray(@vao)
+      update_vbo_buf
+      Engine::GL.BindBuffer(Engine::GL::ELEMENT_ARRAY_BUFFER, @ebo)
+      Engine::GL.BindBuffer(Engine::GL::ARRAY_BUFFER, @instance_vbo)
+
+      Engine::GL.DrawElementsInstanced(Engine::GL::TRIANGLES, mesh.index_data.length, Engine::GL::UNSIGNED_INT, 0, @mesh_renderers.count)
+    end
+
     def draw_depth_only(light_space_matrix)
       return if @mesh_renderers.empty?
 
@@ -85,6 +98,82 @@ module Rendering
     end
 
     private
+
+    def set_oit_material_per_frame_data
+      oit_mat = oit_material
+      oit_mat.set_mat4("camera", Engine::Camera.instance.matrix)
+      oit_mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
+      oit_mat.set_cubemap("skybox", nil)
+
+      # Copy material properties to OIT material
+      copy_material_properties(material, oit_mat)
+      update_oit_light_data(oit_mat)
+      oit_mat.update_shader
+    end
+
+    def copy_material_properties(src, dst)
+      # Copy texture uniforms
+      src.instance_variable_get(:@textures)&.each do |name, tex|
+        dst.set_texture(name, tex)
+      end
+      # Copy relevant float/vec uniforms
+      src.instance_variable_get(:@floats)&.each do |name, val|
+        dst.set_float(name, val)
+      end
+      src.instance_variable_get(:@vec3s)&.each do |name, val|
+        dst.set_vec3(name, val)
+      end
+    end
+
+    def oit_material
+      @oit_material ||= Engine::Material.create(shader: Engine::Shader.oit_accum)
+    end
+
+    def update_oit_light_data(mat)
+      Engine::Components::PointLight.point_lights.each_with_index do |light, i|
+        break if i >= 16
+        mat.set_float("pointLights[#{i}].sqrRange", light.range * light.range)
+        mat.set_vec3("pointLights[#{i}].position", light.position)
+        mat.set_vec3("pointLights[#{i}].colour", light.colour)
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        mat.set_int("pointLights[#{i}].castsShadows", has_shadow ? 1 : 0)
+        if has_shadow
+          mat.set_int("pointLights[#{i}].shadowLayerIndex", light.shadow_layer_index)
+          mat.set_float("pointLights[#{i}].shadowFar", light.shadow_far)
+        end
+      end
+      mat.set_cubemap_array("pointShadowMaps", RenderPipeline.point_shadow_map_array.depth_texture)
+
+      Engine::Components::DirectionLight.direction_lights.each_with_index do |light, i|
+        break if i >= 4
+        mat.set_vec3("directionalLights[#{i}].direction", light.direction)
+        mat.set_vec3("directionalLights[#{i}].colour", light.colour)
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        mat.set_int("directionalLights[#{i}].castsShadows", has_shadow ? 1 : 0)
+        if has_shadow
+          mat.set_mat4("directionalLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
+        end
+      end
+      mat.set_texture_array("directionalShadowMaps", RenderPipeline.directional_shadow_map_array.depth_texture)
+
+      Engine::Components::SpotLight.spot_lights.each_with_index do |light, i|
+        break if i >= 8
+        mat.set_vec3("spotLights[#{i}].position", light.position)
+        mat.set_vec3("spotLights[#{i}].direction", light.direction)
+        mat.set_float("spotLights[#{i}].sqrRange", light.range * light.range)
+        mat.set_vec3("spotLights[#{i}].colour", light.colour)
+        mat.set_float("spotLights[#{i}].innerCutoff", light.inner_cutoff)
+        mat.set_float("spotLights[#{i}].outerCutoff", light.outer_cutoff)
+        has_shadow = light.cast_shadows && !light.shadow_layer_index.nil?
+        mat.set_int("spotLights[#{i}].castsShadows", has_shadow ? 1 : 0)
+        if has_shadow
+          mat.set_mat4("spotLights[#{i}].lightSpaceMatrix", light.light_space_matrix)
+          mat.set_float("spotLights[#{i}].shadowNear", light.shadow_near)
+          mat.set_float("spotLights[#{i}].shadowFar", light.shadow_far)
+        end
+      end
+      mat.set_texture_array("spotShadowMaps", RenderPipeline.spot_shadow_map_array.depth_texture)
+    end
 
     def set_material_per_frame_data
       material.set_mat4("camera", Engine::Camera.instance.matrix)
