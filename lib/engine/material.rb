@@ -4,7 +4,7 @@ module Engine
   class Material
     include Serializable
 
-    serialize :shader, :floats, :ints, :vec2s, :vec3s, :vec4s, :mat4s, :textures, :transparent
+    serialize :shader, :floats, :ints, :vec2s, :vec3s, :vec4s, :mat4s, :textures, :transparent, :cast_shadows, :receive_shadows
 
     # Cache texture slot constants to avoid const_get every frame
     TEXTURE_SLOTS = Array.new(32) { |i| Object.const_get("Engine::GL::TEXTURE#{i}") }
@@ -14,7 +14,7 @@ module Engine
       Engine::GL.BindTexture(target, texture_id)
     end
 
-    attr_reader :shader, :transparent
+    attr_reader :shader, :transparent, :cast_shadows, :receive_shadows
 
     def self.default_white_texture
       @default_white_texture ||= create_1x1_texture(255, 255, 255, 255)
@@ -42,6 +42,14 @@ module Engine
 
     def transparent?
       @transparent || false
+    end
+
+    def cast_shadows?
+      @cast_shadows.nil? ? true : @cast_shadows
+    end
+
+    def receive_shadows?
+      @receive_shadows.nil? ? true : @receive_shadows
     end
 
     def set_mat4(name, value)

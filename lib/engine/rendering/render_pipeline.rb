@@ -105,6 +105,7 @@ module Rendering
     def self.render_shadow_map_to_layer(shadow_map_array, layer_index, light_space_matrix)
       shadow_map_array.bind_layer(layer_index)
       instance_renderers.values.each do |renderer|
+        next unless renderer.material.cast_shadows?
         renderer.draw_depth_only(light_space_matrix)
       end
     end
@@ -117,6 +118,7 @@ module Rendering
       6.times do |face_index|
         point_shadow_map_array.bind_face(layer_index, face_index)
         instance_renderers.values.each do |renderer|
+          next unless renderer.material.cast_shadows?
           renderer.draw_point_light_depth(matrices[face_index], light_pos, far_plane)
         end
       end

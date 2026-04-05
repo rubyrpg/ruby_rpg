@@ -104,6 +104,7 @@ module Rendering
       oit_mat.set_mat4("camera", Engine::Camera.instance.matrix)
       oit_mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
       oit_mat.set_cubemap("skybox", nil)
+      oit_mat.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)
 
       # Copy material properties to OIT material
       copy_material_properties(material, oit_mat)
@@ -179,6 +180,7 @@ module Rendering
       material.set_mat4("camera", Engine::Camera.instance.matrix)
       material.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
       material.set_cubemap("skybox", nil)
+      material.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)
 
       update_light_data
       material.update_shader

@@ -43,8 +43,8 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
     scale: Vector[10, 10, 10],
     material: load_material("hdr_sphere"),
     components: [
-      Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/knock.wav")),
-      Cubes::SoundTest.new,
+      # Engine::Components::AudioSource.create(clip_path: File.join(GAME_DIR, "assets/knock.wav")),
+      # Cubes::SoundTest.new,
       Cubes::DebugLineTest.new
     ]
   )
@@ -68,6 +68,15 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
     material: backdrop_mat
   )
 
+  # Point light near the transparent wall
+  Engine::GameObject.create(
+    name: "WallPointLight",
+    pos: Vector[-22, 20, 20],
+    components: [
+      Engine::Components::PointLight.create(range: 80, colour: Vector[0.4, 0.35, 0.3], cast_shadows: true)
+    ]
+  )
+
   # Transparent wall of cubes (OIT demo) - offset in Z from the opaque wall
   transparent_colors = [
     Vector[1.0, 0.2, 0.2],  # red
@@ -83,17 +92,18 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
         transparent: true
       )
       mat.set_vec3("baseColour", transparent_colors[col])
-      mat.set_float("diffuseStrength", 0.5)
-      mat.set_float("specularStrength", 0.7)
+      mat.set_float("diffuseStrength", 0.3)
+      mat.set_float("specularStrength", 2.0)
       mat.set_float("specularPower", 32.0)
-      mat.set_float("roughness", 0.7)
+      mat.set_float("roughness", 0.1)
       mat.set_vec3("ambientLight", Vector[0.02, 0.02, 0.02])
       mat.set_float("opacity", 0.4)
 
       Engine::StandardObjects::Cube.create(
         pos: Vector[-40 + col * 9, 5 + row * 9, -15],
         scale: Vector[8, 8, 8],
-        material: mat
+        material: mat,
+        components: []
       )
     end
   end
