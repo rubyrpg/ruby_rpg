@@ -105,6 +105,8 @@ module Rendering
       oit_mat.set_vec3("cameraPos", Engine::Camera.instance.game_object.pos)
       oit_mat.set_cubemap("skybox", nil)
       oit_mat.set_int("receiveShadows", material.receive_shadows? ? 1 : 0)
+      oit_mat.set_runtime_texture("opaqueScene", OitRenderer.opaque_scene_texture)
+      oit_mat.set_vec2("screenSize", [Engine::Window.framebuffer_width.to_f, Engine::Window.framebuffer_height.to_f])
 
       # Copy material properties to OIT material
       copy_material_properties(material, oit_mat)

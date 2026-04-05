@@ -6,12 +6,18 @@ module Rendering
     # scene_rt: render texture with the current scene (after skybox)
     # output_rt: alternate render texture to composite into
     # depth_rt: render texture whose depth buffer to use for depth testing
+    # The opaque scene texture, available for transparent shaders to sample
+    def self.opaque_scene_texture
+      @opaque_scene_texture
+    end
+
     def self.draw(scene_rt, output_rt, depth_rt, screen_quad, instance_renderers)
       return scene_rt unless has_transparent_renderers?(instance_renderers)
 
       ensure_targets_created
       resize_if_needed
 
+      @opaque_scene_texture = scene_rt.color_texture
       draw_accumulation_pass(depth_rt, instance_renderers)
       composite(scene_rt, output_rt, screen_quad)
       output_rt

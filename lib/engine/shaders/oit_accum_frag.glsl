@@ -1,7 +1,6 @@
 #version 400 core
 
-layout(location = 0) out vec4 Accumulation;
-layout(location = 1) out float Revealage;
+#include "oit/oit.glsl"
 
 in vec2 TexCoord;
 in vec3 Normal;
@@ -29,9 +28,6 @@ void main()
     vec3 colour = texSample.rgb * baseColour;
     float alpha = texSample.a * opacity;
 
-    // Discard fully transparent fragments
-    if (alpha < 0.01) discard;
-
     // Calculate world-space normal (with normal mapping if available)
     vec3 sampledNormal = texture(normalMap, TexCoord).rgb * 2.0 - 1.0;
     vec3 n = normalize(Normal);
@@ -48,17 +44,5 @@ void main()
     vec3 viewDir = normalize(cameraPos - FragPos);
     vec3 result = CalcAllLights(norm, FragPos, viewDir, diffuseStrength, specularStrength, specularPower);
 
-    vec4 premultiplied = vec4(colour * result * alpha, alpha);
-
-    // Weighted blended OIT weight function (McGuire & Bavoil 2013)
-    // Weight based on depth - closer fragments get more weight
-    float z = gl_FragCoord.z;
-    float weight = clamp(pow(min(1.0, alpha * 10.0) + 0.01, 3.0) * 1e8 *
-                         pow(1.0 - z * 0.9, 3.0), 1e-2, 3e3);
-
-    // Accumulation: premultiplied color * weight
-    Accumulation = vec4(premultiplied.rgb * weight, alpha * weight);
-
-    // Revealage: how much background shows through
-    Revealage = alpha;
+    OitOutput(colour * result, alpha);
 }
