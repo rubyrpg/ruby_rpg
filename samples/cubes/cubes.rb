@@ -12,6 +12,12 @@ end
 Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::Input::KEY_F) do
   include Cubes
 
+  Rendering::RenderPipeline.set_skybox_colors(
+    ground: Vector[0, 0, 0],
+    horizon: Vector[0, 0, 0],
+    sky: Vector[0, 0, 0]
+  )
+
   # Post processing effects
   # Rendering::PostProcessingEffect.add_all([
   #   Rendering::PostProcessingEffect.ssao(kernel_size: 16, radius: 5.0, bias: 0.025, power: 4.0),
@@ -58,8 +64,8 @@ Engine.start(debug_key: Engine::Input::KEY_BACKSPACE, fullscreen_key: Engine::In
     transparent: true
   )
   distortion_mat.set_vec3("baseColour", Vector[0.6, 0.8, 1.0])
-  distortion_mat.set_float("distortionStrength", 0.1)
-  distortion_mat.set_float("opacity", 0.4)
+  distortion_mat.set_float("distortionStrength", 0.15)
+  distortion_mat.set_float("opacity", 0.25)
   distortion_mat.set_float("diffuseStrength", 0.1)
   distortion_mat.set_float("specularStrength", 3.0)
   distortion_mat.set_float("specularPower", 64.0)

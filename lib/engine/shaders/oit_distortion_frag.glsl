@@ -10,16 +10,25 @@ uniform vec3 cameraPos;
 uniform float opacity = 0.3;
 uniform vec3 baseColour = vec3(1.0, 0.0, 0.0);
 uniform float distortionStrength = 0.03;
+uniform float refractionIndex = 0.95;
 
 void main()
 {
+    vec3 viewDir = normalize(FragPos - cameraPos);
+    vec3 norm = normalize(Normal);
+
+    // Refract the view ray through the surface
+    vec3 refracted = refract(viewDir, norm, refractionIndex);
+
+    // UV offset from refraction
+    vec2 offset = (refracted.xy - viewDir.xy) * distortionStrength;
+
     vec2 screenUV = OitScreenUV();
-    vec2 offset = vec2(distortionStrength, 0.0);
     vec3 distorted = OitSampleOpaqueUV(screenUV + offset);
 
-    // Tint via OIT (writes default passthrough to distortion buffer)
+    // Tint via OIT
     OitOutput(baseColour, opacity);
 
-    // Override distortion buffer with warped scene (must be after OitOutput)
+    // Write warped scene to distortion buffer
     OitDistort(distorted);
 }
