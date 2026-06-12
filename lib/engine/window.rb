@@ -12,11 +12,16 @@ module Engine
       def create_window
         set_opengl_version
         decorations :disable
-        auto_iconify :enable
+        auto_iconify :disable
         @full_screen = true
         initial_video_mode = VideoMode.current_video_mode
         @window = GLFW.CreateWindow(
-          initial_video_mode.width, initial_video_mode.height, DEFAULT_TITLE, primary_monitor, nil
+          initial_video_mode.width, initial_video_mode.height, DEFAULT_TITLE, nil, nil
+        )
+        GLFW.SetWindowMonitor(
+          @window, nil, 0, 0,
+          initial_video_mode.width, initial_video_mode.height,
+          GLFW::DONT_CARE
         )
       end
 
@@ -88,7 +93,8 @@ module Engine
 
       def set_to_full_screen
         @full_screen = true
-        GLFW.SetWindowMonitor(window, primary_monitor, 0, 0, width, height, refresh_rate)
+        vid = VideoMode.current_video_mode
+        GLFW.SetWindowMonitor(window, nil, 0, 0, vid.width, vid.height, GLFW::DONT_CARE)
       end
 
       def toggle_full_screen
