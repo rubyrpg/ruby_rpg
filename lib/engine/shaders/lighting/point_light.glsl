@@ -17,7 +17,7 @@ uniform samplerCubeArray pointShadowMaps;
 
 float CalcPointShadow(PointLight light, int lightIndex, vec3 fragPos)
 {
-    if (!light.castsShadows) {
+    if (!light.castsShadows || receiveShadows == 0) {
         return 0.0;
     }
 

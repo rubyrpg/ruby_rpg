@@ -2,7 +2,7 @@
 
 module Cubes
   class CameraRotator < Engine::Component
-    ROTATION_SPEED = 60
+    MOUSE_SENSITIVITY = 0.1
     MOVE_SPEED = 50
 
     def start
@@ -11,8 +11,8 @@ module Cubes
 
     def update(delta_time)
       mouse_delta = Engine::Input.mouse_delta
-      game_object.rotate_around(Vector[1, 0, 0], mouse_delta[1] * ROTATION_SPEED * delta_time)
-      game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, mouse_delta[0], 0] * ROTATION_SPEED * delta_time)
+      game_object.rotate_around(Vector[1, 0, 0], mouse_delta[1] * MOUSE_SENSITIVITY)
+      game_object.rotation *= Engine::Quaternion.from_euler(Vector[0, mouse_delta[0], 0] * MOUSE_SENSITIVITY)
 
       if Engine::Input.key?(Engine::Input::KEY_A)
         game_object.pos -= game_object.right * MOVE_SPEED * delta_time
