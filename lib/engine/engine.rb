@@ -39,7 +39,7 @@ module Engine
     Engine::GL.Enable(Engine::GL::CULL_FACE)
     Engine::GL.CullFace(Engine::GL::BACK)
 
-    GLFW.SwapInterval(0)
+    GLFW.SwapInterval(OS.windows? ? 1 : 0)
   end
 
   def self.main_game_loop(&first_frame_block)
