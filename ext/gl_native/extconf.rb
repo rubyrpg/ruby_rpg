@@ -9,6 +9,7 @@ when /darwin/
   $CFLAGS << " -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework/Headers"
 when /linux/
   have_library('GL') or abort "OpenGL not found"
+  have_library('GLEW') or abort "GLEW not found (install libglew-dev)"
 when /mingw|mswin/
   glew_dir = File.expand_path('../../../vendor/glew-2.2.0-win32', __FILE__)
   $CFLAGS << " -I#{glew_dir}/include"

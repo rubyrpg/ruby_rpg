@@ -6,7 +6,7 @@
 extern void glBindImageTexture(GLuint unit, GLuint texture, GLint level, GLboolean layered, GLint layer, GLenum access, GLenum format);
 extern void glDispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GLuint num_groups_z);
 extern void glMemoryBarrier(GLbitfield barriers);
-#elif defined(_WIN32) || defined(__MINGW32__)
+#elif defined(_WIN32) || defined(__MINGW32__) || defined(__linux__)
 #include <GL/glew.h>
 #else
 #include <GL/gl.h>
@@ -490,9 +490,9 @@ static VALUE rb_gl_memory_barrier(VALUE self, VALUE barriers) {
     return Qnil;
 }
 
-/* Initialize GLEW (Windows only) */
+/* Initialize GLEW (Windows and Linux) */
 static VALUE rb_gl_init_glew(VALUE self) {
-#if defined(_WIN32) || defined(__MINGW32__)
+#if defined(_WIN32) || defined(__MINGW32__) || defined(__linux__)
     GLenum err = glewInit();
     if (err != GLEW_OK) {
         rb_raise(rb_eRuntimeError, "Failed to initialize GLEW: %s", glewGetErrorString(err));
@@ -579,6 +579,6 @@ void Init_gl_native(void) {
     rb_define_module_function(mGLNative, "dispatch_compute", rb_gl_dispatch_compute, 3);
     rb_define_module_function(mGLNative, "memory_barrier", rb_gl_memory_barrier, 1);
 
-    /* GLEW initialization (Windows only, no-op on other platforms) */
+    /* GLEW initialization (Windows and Linux, no-op on macOS) */
     rb_define_module_function(mGLNative, "init_glew", rb_gl_init_glew, 0);
 }

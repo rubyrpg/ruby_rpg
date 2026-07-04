@@ -39,7 +39,7 @@ module Engine
     Engine::GL.Enable(Engine::GL::CULL_FACE)
     Engine::GL.CullFace(Engine::GL::BACK)
 
-    GLFW.SwapInterval(OS.windows? ? 1 : 0)
+    GLFW.SwapInterval(OS.mac? ? 0 : 1)
   end
 
   def self.main_game_loop(&first_frame_block)
@@ -74,13 +74,16 @@ module Engine
 
       Window.get_framebuffer_size
 
-      if OS.windows?
-        GLFW.SwapBuffers(Window.window)
-      else
+      if OS.mac?
+        # Async swap keeps the main thread free while waiting on the display link
         @swap_buffers_promise = Concurrent::Promise.new do
           GLFW.SwapBuffers(Window.window)
         end
         @swap_buffers_promise.execute
+      else
+        # GLX requires SwapBuffers on the thread owning the context, so
+        # Windows and Linux swap synchronously
+        GLFW.SwapBuffers(Window.window)
       end
 
       Engine::Input.update_key_states
