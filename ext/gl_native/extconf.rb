@@ -2,6 +2,10 @@
 
 require 'mkmf'
 
+# A GL call with no prototype gets an implicit int return, which truncates
+# pointers on 64-bit — fail the build instead
+$CFLAGS << " -Werror=implicit-function-declaration" unless RUBY_PLATFORM =~ /mswin/
+
 # Find OpenGL
 case RUBY_PLATFORM
 when /darwin/
