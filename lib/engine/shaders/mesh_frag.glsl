@@ -24,7 +24,7 @@ uniform float roughness = 0.5;
 void main()
 {
     // Sample texture and apply base colour tint
-    // (nil textures → white 1x1, baseColour defaults to white in Material)
+    // (nil textures -> white 1x1, baseColour defaults to white in Material)
     vec4 texSample = texture(image, TexCoord);
     vec3 colour = texSample.rgb * baseColour;
 
