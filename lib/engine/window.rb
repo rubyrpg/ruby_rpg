@@ -119,14 +119,6 @@ module Engine
         @framebuffer_height = height_buf.unpack1('L')
       end
 
-      # The minimum OpenGL version to request, as a "major.minor" string.
-      # Games that don't use the engine's OpenGL compute shaders can request
-      # a lower version (e.g. "4.0") to support older GPUs.
-      # Defaults to 4.3 for compute shader support, except on macOS where
-      # drivers only expose 4.1 core (compute is handled via Metal instead).
-      # macOS treats the requested version as a minimum and always returns
-      # a 4.1 core context for any 3.2+ request.
-      # https://www.glfw.org/docs/latest/window_guide.html#GLFW_CONTEXT_VERSION_MAJOR_hint
       def opengl_version
         @opengl_version || (OS.mac? ? "4.1" : "4.3")
       end
