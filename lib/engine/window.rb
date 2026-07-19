@@ -8,6 +8,7 @@ module Engine
     class << self
       attr_accessor :full_screen, :window, :window_title
       attr_reader :framebuffer_height, :framebuffer_width
+      attr_writer :opengl_version
 
       def create_window
         set_opengl_version
@@ -118,9 +119,22 @@ module Engine
         @framebuffer_height = height_buf.unpack1('L')
       end
 
+      # The minimum OpenGL version to request, as a "major.minor" string.
+      # Games that don't use the engine's OpenGL compute shaders can request
+      # a lower version (e.g. "4.0") to support older GPUs.
+      # Defaults to 4.3 for compute shader support, except on macOS where
+      # drivers only expose 4.1 core (compute is handled via Metal instead).
+      # macOS treats the requested version as a minimum and always returns
+      # a 4.1 core context for any 3.2+ request.
+      # https://www.glfw.org/docs/latest/window_guide.html#GLFW_CONTEXT_VERSION_MAJOR_hint
+      def opengl_version
+        @opengl_version || (OS.mac? ? "4.1" : "4.3")
+      end
+
       def set_opengl_version
-        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MAJOR, 4)
-        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MINOR, OS.mac? ? 1 : 3)
+        major, minor = opengl_version.split(".").map { |part| Integer(part) }
+        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MAJOR, major)
+        GLFW.WindowHint(GLFW::CONTEXT_VERSION_MINOR, minor)
         GLFW.WindowHint(GLFW::OPENGL_PROFILE, GLFW::OPENGL_CORE_PROFILE)
         GLFW.WindowHint(GLFW::OPENGL_FORWARD_COMPAT, GLFW::TRUE)
       end
