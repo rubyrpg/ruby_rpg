@@ -18,6 +18,10 @@ module Engine
         @window = GLFW.CreateWindow(
           initial_video_mode.width, initial_video_mode.height, DEFAULT_TITLE, nil, nil
         )
+        if @window.nil?
+          code, description = GLFW.GetError
+          raise "Failed to create GLFW window (error #{code}: #{description})"
+        end
         GLFW.SetWindowMonitor(
           @window, nil, 0, 0,
           initial_video_mode.width, initial_video_mode.height,

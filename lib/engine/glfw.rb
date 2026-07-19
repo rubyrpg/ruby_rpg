@@ -54,6 +54,10 @@ module GLFW
       GLFWNative.terminate
     end
 
+    def GetError
+      GLFWNative.get_error
+    end
+
     def CreateWindow(width, height, title, monitor, share)
       GLFWNative.create_window(width, height, title, monitor, share)
     end

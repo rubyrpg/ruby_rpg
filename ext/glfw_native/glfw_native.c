@@ -52,6 +52,7 @@ typedef const GLFWvidmode* (*PFN_glfwGetVideoMode)(GLFWmonitor*);
 typedef const GLFWvidmode* (*PFN_glfwGetVideoModes)(GLFWmonitor*, int*);
 typedef void (*PFN_glfwSetInputMode)(GLFWwindow*, int, int);
 typedef int (*PFN_glfwGetInputMode)(GLFWwindow*, int);
+typedef int (*PFN_glfwGetError)(const char**);
 
 /* Function pointers storage */
 static PFN_glfwInit pfn_glfwInit = NULL;
@@ -78,6 +79,7 @@ static PFN_glfwGetVideoMode pfn_glfwGetVideoMode = NULL;
 static PFN_glfwGetVideoModes pfn_glfwGetVideoModes = NULL;
 static PFN_glfwSetInputMode pfn_glfwSetInputMode = NULL;
 static PFN_glfwGetInputMode pfn_glfwGetInputMode = NULL;
+static PFN_glfwGetError pfn_glfwGetError = NULL;
 
 /* Library handle */
 static void* glfw_lib = NULL;
@@ -145,6 +147,7 @@ static VALUE rb_glfw_load_lib(VALUE self, VALUE path) {
     pfn_glfwGetVideoModes = (PFN_glfwGetVideoModes)load_func("glfwGetVideoModes");
     pfn_glfwSetInputMode = (PFN_glfwSetInputMode)load_func("glfwSetInputMode");
     pfn_glfwGetInputMode = (PFN_glfwGetInputMode)load_func("glfwGetInputMode");
+    pfn_glfwGetError = (PFN_glfwGetError)load_func("glfwGetError");
 
     return Qtrue;
 }
@@ -213,6 +216,14 @@ static VALUE rb_glfw_set_window_monitor(VALUE self, VALUE window, VALUE monitor,
     GLFWmonitor* mon = NIL_P(monitor) ? NULL : (GLFWmonitor*)(uintptr_t)NUM2ULL(monitor);
     pfn_glfwSetWindowMonitor(win, mon, NUM2INT(xpos), NUM2INT(ypos), NUM2INT(width), NUM2INT(height), NUM2INT(refresh_rate));
     return Qnil;
+}
+
+/* GetError() */
+static VALUE rb_glfw_get_error(VALUE self) {
+    if (!pfn_glfwGetError) return Qnil;
+    const char* description = NULL;
+    int code = pfn_glfwGetError(&description);
+    return rb_ary_new3(2, INT2NUM(code), description ? rb_str_new2(description) : Qnil);
 }
 
 /* WindowShouldClose(window) */
@@ -424,6 +435,7 @@ void Init_glfw_native(void) {
     rb_define_module_function(mGLFWNative, "set_window_attrib", rb_glfw_set_window_attrib, 3);
     rb_define_module_function(mGLFWNative, "set_window_title", rb_glfw_set_window_title, 2);
     rb_define_module_function(mGLFWNative, "set_window_monitor", rb_glfw_set_window_monitor, 7);
+    rb_define_module_function(mGLFWNative, "get_error", rb_glfw_get_error, 0);
     rb_define_module_function(mGLFWNative, "window_should_close", rb_glfw_window_should_close, 1);
     rb_define_module_function(mGLFWNative, "set_window_should_close", rb_glfw_set_window_should_close, 2);
     rb_define_module_function(mGLFWNative, "focus_window", rb_glfw_focus_window, 1);
