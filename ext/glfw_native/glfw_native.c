@@ -218,8 +218,7 @@ static VALUE rb_glfw_set_window_monitor(VALUE self, VALUE window, VALUE monitor,
     return Qnil;
 }
 
-/* GetError() - returns [code, description]
-   https://www.glfw.org/docs/latest/group__init.html#ga944986b4ec0b928d488141f92982aa18 */
+/* GetError() */
 static VALUE rb_glfw_get_error(VALUE self) {
     if (!pfn_glfwGetError) return Qnil;
     const char* description = NULL;

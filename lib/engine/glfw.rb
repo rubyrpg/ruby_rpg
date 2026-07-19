@@ -54,8 +54,6 @@ module GLFW
       GLFWNative.terminate
     end
 
-    # Returns [error_code, description] for the last GLFW error on the calling thread.
-    # https://www.glfw.org/docs/latest/group__init.html#ga944986b4ec0b928d488141f92982aa18
     def GetError
       GLFWNative.get_error
     end
