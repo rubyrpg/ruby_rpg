@@ -136,7 +136,9 @@ module Engine
       return "" if included.include?(path)
       included << path
 
-      source = File.read(path)
+      # Explicit encoding: the locale (and thus Ruby's default external
+      # encoding) is unreliable inside the Steam Linux Runtime container
+      source = File.read(path, encoding: Encoding::UTF_8)
       dir = File.dirname(path)
 
       source.gsub(/#include\s+"([^"]+)"/) do
