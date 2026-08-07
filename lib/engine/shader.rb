@@ -71,6 +71,10 @@ module Engine
       @point_shadow ||= Engine::Shader.for('point_shadow_vertex.glsl', 'point_shadow_frag.glsl', source: :engine)
     end
 
+    def self.oit_accum
+      @oit_accum ||= Engine::Shader.for('mesh_vertex.glsl', 'oit_accum_frag.glsl', source: :engine)
+    end
+
     def awake
       @texture_fallbacks = {}
       @cubemap_fallbacks = {}

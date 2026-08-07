@@ -1,5 +1,7 @@
 // Common lighting calculations shared by all light types
 
+uniform int receiveShadows = 1;
+
 // Calculates Phong diffuse and specular contribution
 // lightDir: normalized direction FROM fragment TO light
 // Returns vec2(diffuse, specular)
